@@ -1,0 +1,1 @@
+Las preguntas están diseñadas para ser respondidas con un valor numérico. Unicamente aquellas que se indican pueden ser respondidas con si/no.

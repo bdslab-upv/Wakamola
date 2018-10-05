@@ -1,0 +1,5 @@
+Hi human! I'm Avocadobot, a little bot created by TMU and UPV with the purpose of keeping you healthy!
+
+Before giving you some health tips, I'll need you to answer few questions about some of your habits.
+
+**DISCLAIMER: The risk calculation method has not been confirmed yet by a specialized physician. For now, it's an illustrative feature**

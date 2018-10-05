@@ -1,0 +1,8 @@
+:bust_in_silhouette: Personal
+:green_apple: Dieta
+:person_running: Actividad
+:green_heart: Wakaestado
+:memo: Consejos
+:speech_balloon: Compárteme
+:light_bulb: Acerca de Wakamola
+:point_right: Iniciar
