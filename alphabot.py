@@ -13,7 +13,6 @@ import csv
 
 # info to load at start
 # token is not in the source code for security
-#TOKEN = '561268964:AAFAaheSH5-EibQwla3X-HFnq745LM_QcFw'
 TOKEN = open('token.txt', 'r').read().split('\n')[0].strip()
 # URL to interact with the API
 URL = "https://api.telegram.org/bot{}/".format(TOKEN)
