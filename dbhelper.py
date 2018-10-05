@@ -16,7 +16,7 @@ def md5(id):
 class DBHelper:
     def __init__(self, dbname="alphahealth.sqlite"):
 
-        self.conn = mariadb.connect(user='root', password='trudianemonk35', database='bot', buffered=True)
+        self.conn = mariadb.connect(user='root', password='', database='bot', buffered=True)
         self.cursor = self.conn.cursor()
 
 
