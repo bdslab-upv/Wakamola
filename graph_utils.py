@@ -7,7 +7,7 @@ Create the graph from the database info.
 Complex network operations and visualization!
 '''
 
-def create_graph():
+def create_graph(name):
     # db instance
     db = DBHelper()
     # query the relationships
@@ -26,8 +26,8 @@ def create_graph():
 
         #bmis
         print(rel[0])
-        bmi1_ = db.getBMI(rel[0])
-        bmi2_ = db.getBMI(rel[1])
+        bmi1_ = round(db.getBMI(rel[0]), 1)
+        bmi2_ = round(db.getBMI(rel[1]), 1)
 
         G.add_node((in_[rel[0]], bmi1_))
         G.add_node((in_[rel[1]], bmi2_))
@@ -35,9 +35,15 @@ def create_graph():
         if rel[0] != rel[1]:
             G.add_edge((in_[rel[0]], bmi1_), (in_[rel[1]], bmi2_))
 
+    # export to cytoscape format
+    nx.write_graphml(G, 'graphs/'+name+'.xml')
+
+    # very basic visualization, just for error checking
     nx.draw_networkx(G)
     plt.show()
+    # return the graph for the TODO future methods
+    return G
 
 
 if __name__ == '__main__':
-    create_graph()
+    create_graph(name='cytoscape_graph')

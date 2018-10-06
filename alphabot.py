@@ -24,8 +24,8 @@ db.setup()
 nq_category = db.n_questions()
 global languages
 # yes / no answers
-negations = [el for el in open('negations.txt', 'r').read().split('\n') if el]
-afirmations = [el for el in open('afirmations.txt', 'r').read().split('\n') if el]
+negations = [el for el in open('strings/negations.txt', 'r').read().split('\n') if el]
+afirmations = [el for el in open('strings/afirmations.txt', 'r').read().split('\n') if el]
 # TODO default language
 def_lang_ = 'es'
 
@@ -197,11 +197,18 @@ def load_languages():
     langs_ = {}
     for f in listdir('strings'):
         dict_ = {}
-        with open('strings/'+f, 'r') as csvfile:
-            csv_ = csv.reader(csvfile, delimiter=';')
-            for row in csv_:
-                dict_[row[0]] = row[1]
-        langs_[f.split('.')[0]] = dict_
+        try:
+            with open('strings/'+f, 'r') as csvfile:
+                # may happen this is not a csv file
+                if not f.endswith('.csv'):
+                    continue
+                csv_ = csv.reader(csvfile, delimiter=';')
+                for row in csv_:
+                    dict_[row[0]] = row[1]
+            langs_[f.split('.')[0]] = dict_
+        except Exception as e :
+            log_entry(e)
+            continue # sanity check
 
     return langs_
 
