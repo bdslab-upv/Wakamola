@@ -228,7 +228,7 @@ class DBHelper:
         aux_ = self.cursor.fetchall()
         print(aux_)
         if len(aux_) != 2:
-            print('stas jodido kolega')
+            print('Not BMI available for', id_md5)
             return 0
 
         return float(aux_[0][0])/((float(aux_[1][0])/100)**2)
