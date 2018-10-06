@@ -16,7 +16,8 @@ def md5(id):
 class DBHelper:
     def __init__(self, dbname="alphahealth.sqlite"):
 
-        self.conn = mariadb.connect(user='root', password='trudianemonk35', database='bot', buffered=True)
+        self.conn = mariadb.connect(user='root', \
+            password=open('passwd', 'r').read().split('\n')[0].strip(), database='bot', buffered=True)
         self.cursor = self.conn.cursor()
 
 
@@ -187,18 +188,19 @@ class DBHelper:
     def add_relationship(self, id_user, contact, type):
         stmt = 'Insert into RELATIONSHIPS (active, passive, type) values (%s, %s, %s)'
         args = (md5(id_user), md5(contact), type)
-        print(args)
         self.cursor.execute(stmt, args)
         self.conn.commit()
 
-    def edit_relationship(self, id_user, contact, type):
+
+    def get_relationships(self):
         '''
-        NOT USED IN V2
+        yields all database relationships
         '''
-        stmt = 'UPDATE RELATIONSHIPS SET type = %s  where active = %s and passive = %s'
-        args = (type, md5(id_user), md5(contact))
-        self.cursor.execute(stmt, args)
-        self.conn.commit()
+        stmt = "select active, passive from RELATIONSHIPS"
+        self.cursor.execute(stmt)
+        for el in self.cursor.fetchall():
+            yield el
+
 
 
     def get_tip(self, language = 'en', category=-1):
@@ -216,6 +218,22 @@ class DBHelper:
             args = (language, category)
         self.cursor.execute(stmt, args)
         return choice([str(el[0]) for el in self.cursor.fetchall()])
+
+
+    def getBMI(self, id_md5):
+        stmt = "select answer from RESPONSES where id_user = %s and question <= 2 and Timestamp in (select max(Timestamp) \
+        from RESPONSES where id_user = %s and phase = 1 group by question)"
+        args = (id_md5, id_md5)
+        self.cursor.execute(stmt, args)
+        aux_ = self.cursor.fetchall()
+        print(aux_)
+        if len(aux_) != 2:
+            print('stas jodido kolega')
+            return 0
+
+        return float(aux_[0][0])/((float(aux_[1][0])/100)**2)
+
+
 
     def get_responses_category(self, phase, id_user):
         '''
