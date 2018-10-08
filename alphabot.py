@@ -40,7 +40,7 @@ def log_entry(entry):
     now = datetime.datetime.now()
     dateerror = now.strftime("%Y-%m-%d %H:%M")
     # open the log file in append mode
-    with open('error.log', 'a', encoding='unicode-escape') as log:
+    with open('error.log', 'a', encoding='utf-8') as log:
         log.write('\n'+dateerror+'\n')
         log.write(str(entry)+'\n\n')
 
@@ -198,7 +198,7 @@ def load_languages():
     for f in listdir('strings'):
         dict_ = {}
         try:
-            with open('strings/'+f, 'r') as csvfile:
+            with open('strings/'+f, 'r', encoding='utf-8') as csvfile:
                 # may happen this is not a csv file
                 if not f.endswith('.csv'):
                     continue
