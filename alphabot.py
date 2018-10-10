@@ -259,7 +259,9 @@ def go_main(chat, lang):
     db.change_phase(newphase = 0, id_user=chat)
     send_message(languages[lang]['select'], chat, main_menu_keyboard(chat, lang))
 
-
+'''
+# WARNING: This function is not used, but can be interesting
+# to use it in future versions
 def social_keyboard(lang, n_opt=2):
     items = [el.strip() for el in languages[lang]['keyboard_social'].split('\n') if el.strip()]
     keyboard = []
@@ -276,8 +278,7 @@ def social_keyboard(lang, n_opt=2):
         keyboard.append(aux)
     reply_markup = {"keyboard":keyboard, "one_time_keyboard": True}
     return json.dumps(reply_markup)
-
-
+'''
 
 
 def main_menu_keyboard(chat, lang=None):
@@ -298,12 +299,12 @@ def main_menu_keyboard(chat, lang=None):
                     [{'text':emoji.emojize(options[5]), 'switch_inline_query': languages[lang]['share']+' '+'https://telegram.me/alphahealthbot?start='+str(chat)}, {'text':emoji.emojize(options[6]), 'callback_data':'credits'}]]}
     return json.dumps(keyboard)
 
-def start_keyboard():
-    keyboard = {'inline_keyboard':[[{'text': 'Start', 'callback_data':'start'}]]}
-    return json.dumps(keyboard)
-
 
 def questionarie(num, chat, lang, msg=None):
+    '''
+    Method to start a questionnatie flow
+    TODO This can be parametrized and be way more general
+    '''
     db.change_phase(newphase= num, id_user=chat)
     if num == 1:
         send_photo('img/'+lang+'/personal.jpg', chat)
@@ -330,24 +331,14 @@ def extra_messages(phase, question, chat, lang):
     if phase == 2 and question == 10: # weekly questionnarie
         send_message(languages[lang]['food_weekly'], chat)
 
-    # activity
-    '''
-    if phase == 3 and question == 1:
-        send_message(languages[lang]['1_activity'], chat)
-
-    if phase == 3 and question == 3:
-        send_message(languages[lang]['2_activity'], chat)
-
-    if phase == 3 and question == 5:
-        send_message(languages[lang]['3_activity'], chat)
-
-    if phase == 3 and question == 7:
-        send_message(languages[lang]['4_activity'], chat)
-    '''
 
 def wakaestado(chat, lang):
+    '''
+    Piece of the standard flow to calculate and send the wakaestado
+    '''
     global languages
     completed = db.check_completed(chat)
+    print(completed)
     # put phase to 0
     db.change_phase(newphase = 0, id_user=chat)
 
@@ -530,19 +521,19 @@ def main():
         # obten los mensajes no vistos
         updates = get_updates(last_update_id)
         # si hay algun mensaje do work
-        #try:
-        if 'result' in updates and len(updates['result']) > 0: # REVIEW provisional patch for result error
-            last_update_id = get_last_update_id(updates) + 1
-            handle_updates(updates)
-            # hay que dejar descansar los servidores de telegram
-            time.sleep(0.2)
-        else:
-            # if no messages lets be gentle with telegram servers
-            time.sleep(1)
+        try:
+            if 'result' in updates and len(updates['result']) > 0: # REVIEW provisional patch for result error
+                last_update_id = get_last_update_id(updates) + 1
+                handle_updates(updates)
+                # hay que dejar descansar los servidores de telegram
+                time.sleep(0.2)
+            else:
+                # if no messages lets be gentle with telegram servers
+                time.sleep(1)
 
-        #except Exception as e:
-        #    print('Error ocurred, watch log!')
-        #    log_entry(str(updates))
+            except Exception as e:
+                print('Error ocurred, watch log!')
+                log_entry(str(updates))
 
 
 if __name__ == '__main__':

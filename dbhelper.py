@@ -45,7 +45,7 @@ class DBHelper:
 
     def setup(self):
         print("Checking database")
-        stmt = "CREATE TABLE IF NOT EXISTS STATUS (id_user varchar(32) PRIMARY KEY, phase int NOT NULL, question int NOT NULL, completed_personal int, completed_food int, completed_activity int, language text);"
+        stmt = "CREATE TABLE IF NOT EXISTS STATUS (id_user varchar(32) PRIMARY KEY, phase int NOT NULL, question int NOT NULL, completed_personal int, completed_food int, completed_activity int, language text, last_wakaestado float);"
         self.cursor.execute(stmt)
         self.conn.commit()
         # Questions table
@@ -53,7 +53,7 @@ class DBHelper:
         self.cursor.execute(stmt)
         self.conn.commit()
         # Responses table
-        stmt = "CREATE TABLE IF NOT EXISTS RESPONSES (id_user varchar(32), id_message int, question int, phase int, answer text, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id_user, id_message, question, phase));"
+        stmt = "CREATE TABLE IF NOT EXISTS RESPONSES (id_user varchar(32), id_message int, question int, phase int, answer float, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id_user, id_message, question, phase));"
         self.cursor.execute(stmt)
         self.conn.commit()
         # Tips table
@@ -71,7 +71,8 @@ class DBHelper:
 
 
     def register_user(self, id_user, language):
-        stmt = "INSERT INTO STATUS (id_user, phase, question,  completed_personal, completed_food, completed_activity, language) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+        stmt = 'insert INTO STATUS (id_user, phase, question,  completed_personal, \
+        completed_food, completed_activity, language) VALUES (%s, %s, %s, %s, %s, %s, %s)'
         # phase 0, question 0, not completed any questionarie
         args = (md5(id_user), 0, 0, 0, 0, 0, language)
         self.cursor.execute(stmt, args)
@@ -246,3 +247,25 @@ class DBHelper:
         args = (md5(id_user), phase, md5(id_user), phase)
         self.cursor.execute(stmt, args)
         return [float(el[0]) for el in self.cursor.fetchall()]
+
+    ################################
+    #
+    # "Crontab mecanics for version 3"
+    #
+    ################################
+
+    def set_last_wakaestado(self, id_user, score):
+        '''
+        After calculating the new wakaestado
+        store it in the db
+        '''
+        stmt = 'update STATUS SET last_wakaestado = %s where id_user = %s'
+        args = (score, md5(id_user))
+        self.cursor.execute(stmt, args)
+        self.cursor.commit()
+
+    def get_last_wakaestado(self, id_md5):
+        stmt = 'select last_wakaestado from STATUS where id_user = %s'
+        args = (id_md5,)
+        self.cursor.execute(stmt, args)
+        return self.cursor.fetchall()[0]
