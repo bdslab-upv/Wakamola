@@ -531,9 +531,9 @@ def main():
                 # if no messages lets be gentle with telegram servers
                 time.sleep(1)
 
-            except Exception as e:
-                print('Error ocurred, watch log!')
-                log_entry(str(updates))
+        except Exception as e:
+            print('Error ocurred, watch log!')
+            log_entry(str(updates))
 
 
 if __name__ == '__main__':
