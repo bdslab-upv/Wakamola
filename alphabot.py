@@ -531,13 +531,14 @@ def main():
         updates = get_updates(last_update_id)
         # si hay algun mensaje do work
         #try:
-        if len(updates["result"]) > 0:
+        if 'result' in updates and len(updates['result']) > 0: # REVIEW provisional patch for result error
             last_update_id = get_last_update_id(updates) + 1
             handle_updates(updates)
             # hay que dejar descansar los servidores de telegram
             time.sleep(0.2)
         else:
-            time.sleep(0.4)
+            # if no messages lets be gentle with telegram servers
+            time.sleep(1)
 
         #except Exception as e:
         #    print('Error ocurred, watch log!')
