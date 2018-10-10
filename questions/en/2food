@@ -1,50 +1,57 @@
-Milk
+﻿Milk: sake:
 Yoghurt
-Chocolate: bars, chocolates, 'Kit Kat', 'Mars' ...
-Inflated breakfast cereals ('Corn-Flakes', 'Kellog's')
-Marie biscuits
-Cookies with chocolate, custars, cream ...
-Muffins, sponge cake ...
-Doughnut, croissant ...
+Breakfast cereals
+Cookies without filling or covering: rice_cracker:
+Bread in sandwich or with meals: bread:
+Wholemeal bread
 
-Salad: lettuce, tomato, escarole ...
-Green beans, Swiss chard or spinach
-Garnishing vegetables: eggplant mushrooms
-Baked potatoes, fried or boiled
-Vegetable: lentils, chickpeas, beans
-White rice, paella
-Pasta: noodles, macaroni, spaghetti
-Soups and creams
+Olive oil
+Other oils: sunflower, soy, etc.
+Butter
 
-Eggs
-Chicken or turkey
-Beef, pork, lamb (steak, pie ...)
-Minced meat, sausage, hamburger
-White fish: hake, grouper ...
-Blue fish: Sardines, tuna, salmon ...
-Seafood: mussels, shrimp, squids
-Croquettes, dumplings, pizza
-Bread (in sandwich or with meals)
+Chocolate: tablet, chocolates, bars or others: chocolate_bar:
+Cookies with chocolate or cream: cookie:
+Muffins, sponge cake ...: shortcake:
+Donut, croissant, Ensaimada (Sweet pastry made from lard, flour, eggs, ail and water)...: donut:
 
-Salted ham, sweet ham, sausages
-Fresh cheese or low calorie cheese
+Salad: lettuce, tomato, endive, gazpacho ...: tomato:
+Green beans, chard or spinach: broccoli:
+Garnishing vegetables such as eggplant, mushrooms ... or vegetable creams: eggplant:
+Potatoes: french_fries:
+Vegetable: lentils, chickpeas, beans: pot_of_food:
+White rice, paella: cooked_rice:
+Pasta: noodles, macaroni, spaghetti: spaghetti:
+Soup noodles or rice: teacup_without_handle:
+
+Eggs: egg:
+Chicken or turkey: poultry_leg:
+Pork, lamb, steak ...: pig:
+Minced meat, sausage, hamburger, veal, sausages: hamburger:
+White Pesacado: hake, grouper ...: fishing_pole:
+Blue fish: Sardines, tuna, salmon ...: fish:
+Seafood: mussels, prawns, prawns, squid: fried_shrimp:
+Croquettes, empanadillas, pizza: pizza:
+
+Serrano ham, cold cuts (sausage, chorizo, salami, fuet ...): poultry_leg:
+Cooked ham type york
+White or fresh cheese (Burgos ...) or low calorie
 Other cheeses: cured, semi-cured, creamy
 
-Citrus fruits: orange, tangerine
-Other fruits: apple, pear, peach, banana ...
-Canned fruits (in syrup ...)
-Natural fruit juices
+Citrus fruits: orange, tangerine: tangerine:: lemon:
+Other fruits: apple, pear, peach, banana ...: pear:: red_apple:: banana:
+Canned fruits or syrup
+Natural fruit juices: tropical_drink:
 Commercial fruit juices
-Nuts: peanuts, hazelnuts, almonds ...
-Dairy desserts: custard, flan, cottage cheese
-Cream or chocolate cakes
-Snack bags ('Chips', 'Cheetos', 'Fritos' ...)
-Candies: jellybeans, candies
-Ice creams
+Nuts: peanuts, hazelnuts, almonds ...: chestnut:: chestnut:: chestnut:
+Dairy desserts: custard, custard, cottage cheese: custard:
+Cream or chocolate cakes: shortcake:
+Appetizer bags type (snack) chips
+Confectionery: jellybeans, candies: lollipop:: candy:
+Ice cream: ice_cream:
 
-Sugary drinks ('Coca-Cola', 'Fanta')
-Low calorie drinks ('Coca-Cola Light ...')
-Wine, Sangria
-Beer
-Alcohol-free beer
-Distilled drinks: whiskey, gin, cognac ...
+Coca-Cola, Fanta or other soft drinks sweetened drinks
+Low calorie drinks like Coca-Cola Light or Zero ...
+Wine, Sangria: wine_glass:
+Beer: clinking_beer_mugs:
+Alcohol-free beer: clinking_beer_mugs:
+Distilled drinks: whiskey, gin, cognac ...: cocktail_glass:
