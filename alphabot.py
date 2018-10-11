@@ -529,7 +529,7 @@ def main():
             time.sleep(0.2)
         else:
             # if no messages lets be gentle with telegram servers
-            time.sleep(1)
+            time.sleep(0.4)
 
         #except Exception as e:
         #    print('Error ocurred, watch log!')

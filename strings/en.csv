@@ -23,15 +23,15 @@ Graphic designers:
 -José Ros Diego
 -Mario Vilar Hernández
 "
-"end_activity";"Thanks for telling me about your physical activity. With everything we've talked about, I've calculated your Wakaestado, click on the button: green_heart: Wakaetado to know it.
+"end_activity";"Thanks for telling me about your physical activity. With everything we've talked about, I've calculated your Wakaestado, click on the button :green_heart: Wakaetado to know it.
 "
 "end_food";"I already know a lot about your diet, now let's talk about your weekly physical activity.
 
-Press: person_running: Activity to start.
+Press :person_running: Activity to start.
 "
 "end_personal";"Thanks for answering, I already know more about you.
 
-Can we now talk about your diet? Click on the button: green_apple: Diet
+Can we now talk about your diet? Click on the button :green_apple: Diet
 "
 "food_intro";"In the diet questionnaire you will have to indicate how many times of * average * you consume the following foods * PER DAY *.
 "
