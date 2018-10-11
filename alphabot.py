@@ -245,11 +245,11 @@ def filter_update(update):
 def process_edit(update):
     text = update["edited_message"]["text"]
     message_id = update['edited_message']['message_id']
-    if checkanswer(text):
-        try:
+    try:
+        if checkanswer(text):
             db.update_response_edited(message_id, text)
-        except:
-            log_entry('Captured error at editing message.')
+    except:
+        log_entry('Captured error at editing message.')
 
 
 def go_main(chat, lang):
