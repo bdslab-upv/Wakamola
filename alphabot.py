@@ -521,19 +521,19 @@ def main():
         # obten los mensajes no vistos
         updates = get_updates(last_update_id)
         # si hay algun mensaje do work
-        try:
-            if 'result' in updates and len(updates['result']) > 0: # REVIEW provisional patch for result error
-                last_update_id = get_last_update_id(updates) + 1
-                handle_updates(updates)
-                # hay que dejar descansar los servidores de telegram
-                time.sleep(0.2)
-            else:
-                # if no messages lets be gentle with telegram servers
-                time.sleep(1)
+        #try:
+        if 'result' in updates and len(updates['result']) > 0: # REVIEW provisional patch for result error
+            last_update_id = get_last_update_id(updates) + 1
+            handle_updates(updates)
+            # hay que dejar descansar los servidores de telegram
+            time.sleep(0.2)
+        else:
+            # if no messages lets be gentle with telegram servers
+            time.sleep(1)
 
-        except Exception as e:
-            print('Error ocurred, watch log!')
-            log_entry(str(updates))
+        #except Exception as e:
+        #    print('Error ocurred, watch log!')
+        #    log_entry(str(updates))
 
 
 if __name__ == '__main__':
