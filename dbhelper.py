@@ -275,5 +275,5 @@ class DBHelper:
         Return a list with all hashed ID users
         '''
         stmt = 'select id_user from STATUS'
-        self.cursor.execute(stmt, args)
+        self.cursor.execute(stmt)
         return self.cursor.fetchall()
