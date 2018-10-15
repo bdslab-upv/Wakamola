@@ -269,3 +269,11 @@ class DBHelper:
         args = (id_md5,)
         self.cursor.execute(stmt, args)
         return self.cursor.fetchall()[0]
+
+    def get_users_md5(self):
+        '''
+        Return a list with all hashed ID users
+        '''
+        stmt = 'select id_user from STATUS'
+        self.cursor.execute(stmt, args)
+        return self.cursor.fetchall()

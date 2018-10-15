@@ -35,6 +35,15 @@ def create_graph(name):
         if rel[0] != rel[1]:
             G.add_edge((in_[rel[0]], bmi1_), (in_[rel[1]], bmi2_))
 
+        # the isolated nodes TODO
+        users_ = db.get_users_md5()
+        for us in users_:
+            if us not in in_:
+                bmi_ = round(db.getBMI(us), 1)
+                in_[us] = len(in_)
+                G.add_node((in_[us], bmi_))
+
+
     # export to cytoscape format
     nx.write_graphml(G, 'graphs/'+name+'.xml')
 
