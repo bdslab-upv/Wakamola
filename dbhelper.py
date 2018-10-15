@@ -276,4 +276,5 @@ class DBHelper:
         '''
         stmt = 'select id_user from STATUS'
         self.cursor.execute(stmt)
-        return self.cursor.fetchall()
+        for el in self.cursor.fetchall():
+            yield el

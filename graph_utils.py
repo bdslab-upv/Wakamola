@@ -39,7 +39,7 @@ def create_graph(name):
         users_ = db.get_users_md5()
         for us in users_:
             if us not in in_:
-                bmi_ = round(db.getBMI(us), 1)
+                bmi_ = round(db.getBMI(us[0]), 1)
                 in_[us] = len(in_)
                 G.add_node((in_[us], bmi_))
 
