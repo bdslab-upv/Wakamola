@@ -174,8 +174,9 @@ def risk_activity(id_user, comp = False):
 
 	if comp == 0:
 		return 0
-
 	ans = db.get_responses_category(id_user=id_user, phase=3)
+	# REVIEW database explodes here, seek for error
+	print('flag:', comp, 'results:', ans)
 	# compute the METS-min/week
 	METS = ans[0]*ans[1]*8 + ans[2]*ans[3]*4 + ans[4]*ans[5]*3.3
 	# if physical activity is low this add risk score
