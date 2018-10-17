@@ -240,6 +240,7 @@ class DBHelper:
         '''
         Given one phase and one id, return all the answers of that user to that category
         '''
+        self.conn.commit()
         stmt = 'select answer from RESPONSES where \
                 id_user = %s and phase = %s  \
                 and Timestamp in (select max(Timestamp) \

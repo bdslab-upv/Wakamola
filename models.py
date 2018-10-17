@@ -101,6 +101,8 @@ def risk_personal(id_user, comp=False):
 	if comp == 0:
 		return 0
 	# TODO
+	ans = db.get_responses_category(id_user=id_user, phase=1)
+	print('flag:', comp, 'results:', ans)
 	return score
 
 def risk_nutrition(id_user, comp = False):
