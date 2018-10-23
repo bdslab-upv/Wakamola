@@ -99,10 +99,21 @@ def risk_personal(id_user, comp=False):
 	'''
 	score = 10
 	if comp == 0:
+		# if user does not have responen everything just take the bmi
+		bmi = db.getBMI(db.md5(id_user))
+		if bmi == 0: # sanity check
+			return 0
+
+	# TODO review
+	if bmi > 30:
 		return 0
-	# TODO
+	elif bmi >= 25 and bmi <= 30:
+		return 50
+	elif bmi < 25:
+		return 100
+
+	# TODO WARNING use the other information
 	ans = db.get_responses_category(id_user=id_user, phase=1)
-	print('flag:', comp, 'results:', ans)
 	return score
 
 def risk_nutrition(id_user, comp = False):
@@ -141,7 +152,7 @@ def risk_nutrition(id_user, comp = False):
 	score += table_1(group=1, n=ans[18])
 	score += table_1(group=1, n=ans[19])
 	score += table_1(group=1, n=ans[20])
-	# 5th block
+	# 5th block #21
 	score += table_1(group=5, n=ans[21])
 	score += table_1(group=5, n=ans[22])
 	score += table_1(group=5, n=ans[23])
@@ -151,7 +162,7 @@ def risk_nutrition(id_user, comp = False):
 	score += table_1(group=5, n=ans[27]) # marisco
 	# 28 have no score
 	# 6th block
-	score += table_1(group=7, n=ans[29]) #jamon
+	score += table_1(group=7, n=ans[29]) #jamon #29
 	# 30 have no score
 	score += table_1(group=4, n=ans[31])
 	score += table_1(group=4, n=ans[32])
@@ -169,30 +180,37 @@ def risk_nutrition(id_user, comp = False):
 	# 7th block
 	score += table_1(group=9, n=ans[44])
 	# last quesions have not asociated score
-	return score
+
+	# WARNING -> now we have 43 items!!
+	# get an scpre between 0-100 for this part
+	return score*100/43
 
 
 def risk_activity(id_user, comp = False):
 
 	if comp == 0:
 		return 0
+
 	ans = db.get_responses_category(id_user=id_user, phase=3)
-	# REVIEW database explodes here, seek for error
-	print('flag:', comp, 'results:', ans)
+	# WARNING Weights to be REVIEW 
 	# compute the METS-min/week
 	METS = ans[0]*ans[1]*8 + ans[2]*ans[3]*4 + ans[4]*ans[5]*3.3
 	# if physical activity is low this add risk score
 
 	# if its medium
 	if (ans[0] >= 3 and ans[1] >= 20) or ans[2] > 5 or ans[5] >= 30 or METS > 600:
-		return 20
+		return 50
 	# if its high
 	elif ans[0]>=3 or METS >= 1500:
-		return 50
+		return 100
 	# if its low
 	else:
 		return 0
 
 
 def obesity_risk(id_user, completed):
-	return risk_personal(id_user, completed[0]) + risk_nutrition(id_user, completed[1]) + risk_activity(id_user, completed[2])
+	# coeficient for each part
+	coef = (33, 34, 33)
+	return min(risk_personal(id_user, completed[0]) * coef[0] \
+	+ risk_nutrition(id_user, completed[1]) * coef[1] \
+	+ risk_activity(id_user, completed[2]) * coef[2], 100)

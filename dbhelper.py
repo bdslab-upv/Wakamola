@@ -7,18 +7,19 @@ import mysql.connector as mariadb
 
 
 
-def md5(id):
-        '''
-        Hashes id_user usign MD5. Ensures anonimity.
-        '''
-        return hashlib.md5(str(id).encode('utf-8')).hexdigest()
-
 class DBHelper:
     def __init__(self, dbname="alphahealth.sqlite"):
 
         self.conn = mariadb.connect(user='bothandler', \
             password=open('passwd', 'r').read().split('\n')[0].strip(), database='bot', buffered=True)
         self.cursor = self.conn.cursor()
+
+
+    def md5(id):
+            '''
+            Hashes id_user usign MD5. Ensures anonimity.
+            '''
+            return hashlib.md5(str(id).encode('utf-8')).hexdigest()    
 
 
     def load_questions(self):
@@ -40,7 +41,6 @@ class DBHelper:
                                 blanks += 1
         except Exception as e:
             print(e)
-
 
 
     def setup(self):
@@ -70,7 +70,6 @@ class DBHelper:
         print('Database ready!')
 
 
-
     def register_user(self, id_user, language):
         self.cursor = self.conn.cursor()
         stmt = 'insert INTO STATUS (id_user, phase, question,  completed_personal, \
@@ -80,6 +79,7 @@ class DBHelper:
         self.cursor.execute(stmt, args)
         self.conn.commit()
         self.cursor.close()
+
 
     def check_user(self, id_user):
         '''
@@ -94,6 +94,7 @@ class DBHelper:
         self.cursor.close()
         return len(rs) == 0
 
+
     def change_phase(self, newphase, id_user):
         self.cursor = self.conn.cursor()
         stmt = "UPDATE STATUS SET phase = %s , question = 1 where id_user = %s"
@@ -101,6 +102,7 @@ class DBHelper:
         self.cursor.execute(stmt, args)
         self.conn.commit()
         self.cursor.close()
+
 
     def get_phase_question(self, id_user):
         self.cursor = self.conn.cursor()
@@ -248,7 +250,6 @@ class DBHelper:
         return float(rs[0][0])/((float(rs[1][0])/100)**2)
 
 
-
     def get_responses_category(self, phase, id_user):
         '''
         Given one phase and one id, return all the answers of that user to that category
@@ -282,6 +283,7 @@ class DBHelper:
         self.cursor.commit()
         self.cursor.close()
 
+
     def get_last_wakaestado(self, id_md5):
         self.cursor = self.conn.cursor()
         stmt = 'select last_wakaestado from STATUS where id_user = %s'
@@ -290,6 +292,7 @@ class DBHelper:
         rs = self.cursor.fetchall()
         self.cursor.close()
         return rs
+
 
     def get_users_md5(self):
         '''
