@@ -92,29 +92,28 @@ def table_3(n):
 		return 0
 
 
-def risk_personal(id_user, comp=False):
+def risk_bmi(id_user, comp=False):
 	'''
 	Gives a risk score
 	this is a modular function in order be easier to update
 	'''
-	score = 10
-	if comp == 0:
-		# if user does not have responen everything just take the bmi
-		bmi = db.getBMI(db.md5(id_user))
-		if bmi == 0: # sanity check
-			return 0
 
-	# TODO review
-	if bmi > 30:
+	bmi = db.getBMI(db.md5(id_user))
+	if bmi == 0: # sanity check
 		return 0
-	elif bmi >= 25 and bmi <= 30:
+
+	# TODO REVIEW
+	if bmi >= 40:
+		return 0
+	elif bmi >= 35 and bmi < 40:
+		return 25
+	elif bmi >= 30 and bmi < 35:
 		return 50
+	elif bmi >= 25 and bmi < 30:
+		return 75
 	elif bmi < 25:
 		return 100
 
-	# TODO WARNING use the other information
-	ans = db.get_responses_category(id_user=id_user, phase=1)
-	return score
 
 def risk_nutrition(id_user, comp = False):
 	'''
@@ -182,7 +181,7 @@ def risk_nutrition(id_user, comp = False):
 	# last quesions have not asociated score
 
 	# WARNING -> now we have 43 items!!
-	# get an scpre between 0-100 for this part
+	# get an score between 0-100 for this part
 	return score*100/43
 
 
@@ -192,25 +191,24 @@ def risk_activity(id_user, comp = False):
 		return 0
 
 	ans = db.get_responses_category(id_user=id_user, phase=3)
-	# WARNING Weights to be REVIEW 
 	# compute the METS-min/week
 	METS = ans[0]*ans[1]*8 + ans[2]*ans[3]*4 + ans[4]*ans[5]*3.3
-	# if physical activity is low this add risk score
-
-	# if its medium
-	if (ans[0] >= 3 and ans[1] >= 20) or ans[2] > 5 or ans[5] >= 30 or METS > 600:
-		return 50
-	# if its high
-	elif ans[0]>=3 or METS >= 1500:
-		return 100
-	# if its low
-	else:
-		return 0
+	# this have to be reviewed for sure!
+	superior_limit = 1800
+	return (min(METS, superior_limit)/superior_limit)*100
 
 
 def obesity_risk(id_user, completed):
 	# coeficient for each part
-	coef = (33, 34, 33)
-	return min(risk_personal(id_user, completed[0]) * coef[0] \
+	coef = (0.33, 0.34, 0.33)
+	# compute disease risk
+	if completed[0]:
+		ans = db.get_responses_category(id_user=id_user, phase=1)
+		# if people is healthy risk = 1, if people have all conditions risk = 0.25
+		risk = 1 - sum([float(el) * -0.25 for el in ans[-3:]])
+	else:
+		risk = 1
+
+	return min(risk_bmi(id_user, completed[0]) * coef[0] \
 	+ risk_nutrition(id_user, completed[1]) * coef[1] \
-	+ risk_activity(id_user, completed[2]) * coef[2], 100)
+	+ risk_activity(id_user, completed[2]) * coef[2], 100) * risk

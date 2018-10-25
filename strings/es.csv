@@ -47,7 +47,7 @@ Otro
 "
 not_supported;"Este tipo de mensaje no tiene soporte de momento
 "
-numeric_response;"Las preguntas están diseñadas para ser respondidas con un valor numérico. Unicamente aquellas que se indican pueden ser respondidas con si/no.
+numeric_response;"Las preguntas están diseñadas para ser respondidas con un valor numérico *válido*. Unicamente aquellas que se indican pueden ser respondidas con si/no.
 "
 options;":bust_in_silhouette: Personal
 :green_apple: Dieta

@@ -5,8 +5,6 @@ import hashlib
 import mysql.connector as mariadb
 
 
-
-
 class DBHelper:
     def __init__(self, dbname="alphahealth.sqlite"):
 
@@ -15,11 +13,11 @@ class DBHelper:
         self.cursor = self.conn.cursor()
 
 
-    def md5(id):
+    def md5(self, id):
             '''
             Hashes id_user usign MD5. Ensures anonimity.
             '''
-            return hashlib.md5(str(id).encode('utf-8')).hexdigest()    
+            return hashlib.md5(str(id).encode('utf-8')).hexdigest()
 
 
     def load_questions(self):
@@ -75,7 +73,7 @@ class DBHelper:
         stmt = 'insert INTO STATUS (id_user, phase, question,  completed_personal, \
         completed_food, completed_activity, language) VALUES (%s, %s, %s, %s, %s, %s, %s)'
         # phase 0, question 0, not completed any questionarie
-        args = (md5(id_user), 0, 0, 0, 0, 0, language)
+        args = (self.md5(id_user), 0, 0, 0, 0, 0, language)
         self.cursor.execute(stmt, args)
         self.conn.commit()
         self.cursor.close()
@@ -88,7 +86,7 @@ class DBHelper:
         '''
         self.cursor = self.conn.cursor()
         stmt = 'select phase, question from STATUS where id_user = %s'
-        args = (md5(id_user), )
+        args = (self.md5(id_user), )
         self.cursor.execute(stmt, args)
         rs = list(self.cursor.fetchall())
         self.cursor.close()
@@ -98,7 +96,7 @@ class DBHelper:
     def change_phase(self, newphase, id_user):
         self.cursor = self.conn.cursor()
         stmt = "UPDATE STATUS SET phase = %s , question = 1 where id_user = %s"
-        args = (newphase, md5(id_user))
+        args = (newphase, self.md5(id_user))
         self.cursor.execute(stmt, args)
         self.conn.commit()
         self.cursor.close()
@@ -107,7 +105,7 @@ class DBHelper:
     def get_phase_question(self, id_user):
         self.cursor = self.conn.cursor()
         stmt = 'select phase, question from STATUS where id_user = %s'
-        args = (md5(id_user), )
+        args = (self.md5(id_user), )
         self.cursor.execute(stmt, args)
         rs = self.cursor.fetchone()
         self.cursor.close()
@@ -117,7 +115,7 @@ class DBHelper:
     def next_question(self, id_user):
         self.cursor = self.conn.cursor()
         stmt = "update STATUS set question = question +1 where id_user = %s"
-        args = (md5(id_user), )
+        args = (self.md5(id_user), )
         self.cursor.execute(stmt, args)
         self.conn.commit()
         self.cursor.close()
@@ -136,7 +134,7 @@ class DBHelper:
     def check_start(self, id_user):
         self.cursor = self.conn.cursor()
         stmt = "select count(*) from STATUS where id_user = %s"
-        args = (md5(id_user), )
+        args = (self.md5(id_user), )
         self.cursor.execute(stmt, args)
         rs = self.cursor.fetchall()
         self.cursor.close()
@@ -145,17 +143,20 @@ class DBHelper:
 
     def add_answer(self, id_user, phase, question, message_id, answer):
         self.cursor = self.conn.cursor()
-        stmt = "insert into RESPONSES (id_user, phase, question, answer, id_message) values(%s, %s, %s, %s, %s)"
-        args = (md5(id_user), phase, question, answer, message_id)
-        self.cursor.execute(stmt, args)
-        self.conn.commit()
+        try:
+            stmt = "insert into RESPONSES (id_user, phase, question, answer, id_message) values(%s, %s, %s, %s, %s)"
+            args = (self.md5(id_user), phase, question, answer, message_id)
+            self.cursor.execute(stmt, args)
+            self.conn.commit()
+        except:
+            print("Primary key exception for Add Answer - dbhelper")
         self.cursor.close()
 
 
     def update_response(self, id_user, phase, question, message_id, answer):
         self.cursor = self.conn.cursor()
         stmt = "update RESPONSES set answer = %s, id_message=%s where id_user = %s and phase = %s and question = %s"
-        args = (answer, message_id, md5(id_user), phase, question)
+        args = (answer, message_id, self.md5(id_user), phase, question)
         self.cursor.execute(stmt, args)
         self.conn.commit()
         self.cursor.close()
@@ -179,7 +180,7 @@ class DBHelper:
             stmt = 'update STATUS set completed_food = 1 where id_user = %s'
         elif phase == 3:
             stmt = 'update STATUS set completed_activity = 1 where id_user = %s'
-        args = (md5(id_user), )
+        args = (self.md5(id_user), )
         self.cursor.execute(stmt, args)
         self.conn.commit()
         self.cursor.close()
@@ -188,7 +189,7 @@ class DBHelper:
     def check_completed(self, id_user):
         self.cursor = self.conn.cursor()
         stmt = "select completed_personal, completed_food, completed_activity from STATUS where id_user = %s"
-        args = (md5(id_user), )
+        args = (self.md5(id_user), )
         self.cursor.execute(stmt, args)
         rs = self.cursor.fetchall()
         self.cursor.close()
@@ -214,7 +215,7 @@ class DBHelper:
     def add_relationship(self, id_user, contact, type):
         self.cursor = self.conn.cursor()
         stmt = 'Insert into RELATIONSHIPS (active, passive, type) values (%s, %s, %s)'
-        args = (md5(id_user), md5(contact), type)
+        args = (self.md5(id_user), self.md5(contact), type)
         self.cursor.execute(stmt, args)
         self.conn.commit()
         self.cursor.close()
@@ -244,7 +245,6 @@ class DBHelper:
         rs = self.cursor.fetchall()
         self.cursor.close()
         if len(rs) != 2:
-            print('Not BMI available for', id_md5)
             return 0
 
         return float(rs[0][0])/((float(rs[1][0])/100)**2)
@@ -259,7 +259,7 @@ class DBHelper:
                 id_user = %s and phase = %s  \
                 and Timestamp in (select max(Timestamp) \
                 from RESPONSES where id_user = %s and phase = %s group by question)'
-        args = (md5(id_user), phase, md5(id_user), phase)
+        args = (self.md5(id_user), phase, self.md5(id_user), phase)
         self.cursor.execute(stmt, args)
         rs = self.cursor.fetchall()
         self.cursor.close()
@@ -278,7 +278,7 @@ class DBHelper:
         '''
         self.cursor = self.conn.cursor()
         stmt = 'update STATUS SET last_wakaestado = %s where id_user = %s'
-        args = (score, md5(id_user))
+        args = (score, self.md5(id_user))
         self.cursor.execute(stmt, args)
         self.cursor.commit()
         self.cursor.close()

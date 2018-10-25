@@ -169,7 +169,36 @@ def checkanswer(str, sts):
             else:
                 return None, False
         else:
-            return float(str), True
+            aux_ = float(str)
+            # weight
+            if sts[0] == 1 and sts[1] == 1:
+                if aux_ < 35 or aux_ > 300:
+                    return None, False
+                else:
+                    return aux_, True
+
+
+            # height
+            if sts[0] == 1 and sts[1] == 2:
+                if aux_ < 130 or aux_ > 230:
+                    return None, False
+                else:
+                    return aux_, True
+
+
+            # age
+            if sts[0] == 1 and sts[1] == 2:
+                if aux_ < 5 or aux_ > 115:
+                    return None, False
+                else:
+                    return aux_, True
+
+            # other case REVIEW WARNING
+            if aux_ < 0 or aux_ > 25:
+                return None, False
+            else:
+                return aux_, True
+
     except ValueError:
         return None, False
 
@@ -344,14 +373,20 @@ def wakaestado(chat, lang):
 
     # check if completed all questionaries
     risk = obesity_risk(chat, completed)
+
+    # add the avocado emojis
+    avo_emojis_ = " :avocado:"
+    for its in range(int(risk/20)):
+        avo_emojis_ += avo_emojis_
+
     # Wakaestado completo
     if completed[0] and completed[1] and completed[2]:
         # obtain the obsity risk: 0, 1 or 2
-        send_message(languages[lang]['wakaestado']+' '+str(risk), chat)
+        send_message(emoji.emojize(languages[lang]['wakaestado']+' '+str(risk)+avo_emojis_), chat)
     # WakaEstado parcial
     else:
         # give a general advice
-        send_message(languages[lang]['wakaestado_parcial']+' '+str(risk), chat)
+        send_message(emoji.emojize(languages[lang]['wakaestado_parcial']+' '+str(risk)+avo_emojis_), chat)
     # imagen wakaestado
     send_photo('img/'+lang+'/wakaestado.jpg', chat)
     # instrucciones social
