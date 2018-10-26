@@ -375,9 +375,9 @@ def wakaestado(chat, lang):
     risk = obesity_risk(chat, completed)
 
     # add the avocado emojis
-    avo_emojis_ = " :avocado:"
+    avo_emojis_ = " :avocado: :avocado: :avocado:"
     for its in range(int(risk/20)):
-        avo_emojis_ += avo_emojis_
+        avo_emojis_ += " :avocado:"
 
     # Wakaestado completo
     if completed[0] and completed[1] and completed[2]:

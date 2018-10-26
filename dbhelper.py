@@ -132,6 +132,7 @@ class DBHelper:
 
 
     def check_start(self, id_user):
+        self.conn.commit()
         self.cursor = self.conn.cursor()
         stmt = "select count(*) from STATUS where id_user = %s"
         args = (self.md5(id_user), )
@@ -237,6 +238,7 @@ class DBHelper:
 
 
     def getBMI(self, id_md5):
+        self.conn.commit()
         self.cursor = self.conn.cursor()
         stmt = "select answer from RESPONSES where id_user = %s and question <= 2 and Timestamp in (select max(Timestamp) \
         from RESPONSES where id_user = %s and phase = 1 group by question)"
@@ -254,6 +256,7 @@ class DBHelper:
         '''
         Given one phase and one id, return all the answers of that user to that category
         '''
+        self.conn.commit()
         self.cursor = self.conn.cursor()
         stmt = 'select answer from RESPONSES where \
                 id_user = %s and phase = %s  \
