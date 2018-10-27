@@ -209,7 +209,7 @@ def obesity_risk(id_user, completed):
 	else:
 		risk = 1
 
-	print('Risk:' risk)	
+	print('Risk:', risk)	
 	return min(risk_bmi(id_user, completed[0]) * coef[0] \
 	+ risk_nutrition(id_user, completed[1]) * coef[1] \
 	+ risk_activity(id_user, completed[2]) * coef[2], 100) * risk
