@@ -108,12 +108,14 @@ def send_message(text, chat_id, reply_markup=None):
     get_url(url)
 
 
-def send_photo(localpath, chat_id):
+def send_photo(localpath, chat_id, caption = None):
     # give the name of a file in 'img' folder
     # send that image to the user
     url = URL + "sendPhoto"
     files = {'photo': open(localpath, 'rb')}
     data = {'chat_id' : chat_id}
+    if caption:
+        data['caption'] = caption
     r = requests.post(url, files=files, data=data)
 
 
@@ -409,6 +411,8 @@ def handle_updates(updates):
         elif text == None:
             lang = process_lang(update['message']['from']['language_code'])
             send_message(languages[lang]['not_supported'], chat)
+            continue
+
 
 
         # try to get current status
@@ -556,19 +560,21 @@ def main():
         # obten los mensajes no vistos
         updates = get_updates(last_update_id)
         # si hay algun mensaje do work
-        #try:
-        if 'result' in updates and len(updates['result']) > 0: # REVIEW provisional patch for result error
-            last_update_id = get_last_update_id(updates) + 1
-            handle_updates(updates)
-            # hay que dejar descansar los servidores de telegram
-            time.sleep(0.2)
-        else:
-            # if no messages lets be gentle with telegram servers
-            time.sleep(0.4)
+        try:
+            if 'result' in updates and len(updates['result']) > 0: # REVIEW provisional patch for result error
+                last_update_id = get_last_update_id(updates) + 1
+                handle_updates(updates)
+                # have to be gentle with the telegram server
+                time.sleep(0.5)
+            else:
+                # if no messages lets be *more* gentle with telegram servers
+                time.sleep(1)
 
-        #except Exception as e:
-        #    print('Error ocurred, watch log!')
-        #    log_entry(str(updates))
+        except Exception as e:
+            print('Error ocurred, watch log!')
+            log_entry(str(e))
+            # sleep 20 seconds so the problem may solve
+            time.sleep(20)
 
 
 if __name__ == '__main__':
