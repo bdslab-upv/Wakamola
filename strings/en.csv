@@ -7,8 +7,6 @@ action; text
 "
 4_activity;"The last question is about the time you spent ** sitting ** during the business days of the last * 7 ** days. This includes time spent at work, at home, in a class, and during Free time. You can include the time you spent sitting at a desk, visiting friends, reading, traveling by bus, or sitting or lying watching television.
 "
-be_number;"I´m Sorry, but the answer to this question should be a number!
-"
 credits;"People that have contributed to make this project possible:
 - Vicent Blanes, MSc
 - Juan M. García-Gómez, PhD
@@ -74,3 +72,4 @@ I'm going to ask you some questions to know you and give you a Wakaestado.
 
 I recommend you start with the questionnaire :bust_in_silhouette: Personal
 "
+_description;Wakamola A public health study conducted by UPV and TMU
