@@ -7,7 +7,9 @@ import mysql.connector as mariadb
 
 class DBHelper:
     def __init__(self, dbname="alphahealth.sqlite"):
-        reconnect()
+        self.conn = mariadb.connect(user='bothandler', \
+            password=open('passwd', 'r').read().split('\n')[0].strip(), database='bot', buffered=True)
+        self.cursor = self.conn.cursor()
 
 
 

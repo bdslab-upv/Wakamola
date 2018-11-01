@@ -347,8 +347,8 @@ def questionarie(num, chat, lang, msg=None):
     # throw first question
     q1 = db.get_question(phase=num, question=1, lang=lang)
     # error on the database
-    if q is None:
-        continue
+    if q1 is None:
+        return 
     extra_messages(num, 1, chat, lang)
     send_message(emoji.emojize(q1), chat)
 
