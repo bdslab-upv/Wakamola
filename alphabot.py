@@ -213,15 +213,12 @@ def checkanswer(str, sts):
 
 
 def process_lang(language):
-    '''
-    # TODO arreglar
+    # TODO include other language support
     aux = language.split('-')[0]
     if aux == 'en':
         return 'en'
     else:
         return 'es'
-    '''
-    return def_lang_
 
 
 def load_languages():
@@ -272,6 +269,7 @@ def filter_update(update):
 
     else: # inline query for example
         return False, None, None
+
 
 def process_edit(update):
     text = update["edited_message"]["text"]
@@ -348,6 +346,9 @@ def questionarie(num, chat, lang, msg=None):
         send_message(msg, chat)
     # throw first question
     q1 = db.get_question(phase=num, question=1, lang=lang)
+    # error on the database
+    if q is None:
+        continue
     extra_messages(num, 1, chat, lang)
     send_message(emoji.emojize(q1), chat)
 
@@ -522,6 +523,9 @@ def handle_updates(updates):
                 send_message(languages[lang]['numeric_response'], chat)
                 # repeat last question
                 q = db.get_question(status[0], status[1], lang)
+                # error on the database
+                if q is None:
+                    continue
                 send_message(emoji.emojize(q), chat)
                 continue
 
@@ -532,6 +536,9 @@ def handle_updates(updates):
                 db.next_question(chat)
                 # pick up next question
                 q = db.get_question(status[0], status[1]+1, lang)
+                # error on the database
+                if q is None:
+                    continue
                 # comprueba si tiene que lanzar algun mensaje antes de la pregunta
                 extra_messages(status[0], status[1]+1, chat, lang)
                 send_message(emoji.emojize(q), chat)

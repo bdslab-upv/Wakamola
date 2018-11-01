@@ -7,10 +7,8 @@ import mysql.connector as mariadb
 
 class DBHelper:
     def __init__(self, dbname="alphahealth.sqlite"):
+        reconnect()
 
-        self.conn = mariadb.connect(user='bothandler', \
-            password=open('passwd', 'r').read().split('\n')[0].strip(), database='bot', buffered=True)
-        self.cursor = self.conn.cursor()
 
 
     def md5(self, id):
@@ -41,6 +39,18 @@ class DBHelper:
             print(e)
 
 
+    def reconnect(self, dbname="alphahealth.sqlite"):
+        '''
+        Create a fresh connection to the database
+        also a new cursor
+        '''
+        self.conn = mariadb.connect(user='bothandler', \
+            password=open('passwd', 'r').read().split('\n')[0].strip(), database='bot', buffered=True)
+        self.cursor = self.conn.cursor()
+
+
+
+
     def setup(self):
         print("Checking database")
         stmt = "CREATE TABLE IF NOT EXISTS STATUS (id_user varchar(32) PRIMARY KEY, phase int NOT NULL, question int NOT NULL, completed_personal int, completed_food int, completed_activity int, language text, last_wakaestado float);"
@@ -69,14 +79,17 @@ class DBHelper:
 
 
     def register_user(self, id_user, language):
-        self.cursor = self.conn.cursor()
-        stmt = 'insert INTO STATUS (id_user, phase, question,  completed_personal, \
-        completed_food, completed_activity, language) VALUES (%s, %s, %s, %s, %s, %s, %s)'
-        # phase 0, question 0, not completed any questionarie
-        args = (self.md5(id_user), 0, 0, 0, 0, 0, language)
-        self.cursor.execute(stmt, args)
-        self.conn.commit()
-        self.cursor.close()
+        try:
+            self.cursor = self.conn.cursor()
+            stmt = 'insert INTO STATUS (id_user, phase, question,  completed_personal, \
+            completed_food, completed_activity, language) VALUES (%s, %s, %s, %s, %s, %s, %s)'
+            # phase 0, question 0, not completed any questionarie
+            args = (self.md5(id_user), 0, 0, 0, 0, 0, language)
+            self.cursor.execute(stmt, args)
+            self.conn.commit()
+            self.cursor.close()
+        except:
+            reconnect()
 
 
     def check_user(self, id_user):
@@ -84,62 +97,89 @@ class DBHelper:
         This function is for sanity check, just force the user to do the /start if
         its not registered on the status table
         '''
-        self.cursor = self.conn.cursor()
-        stmt = 'select phase, question from STATUS where id_user = %s'
-        args = (self.md5(id_user), )
-        self.cursor.execute(stmt, args)
-        rs = list(self.cursor.fetchall())
-        self.cursor.close()
-        return len(rs) == 0
+        try:
+            self.cursor = self.conn.cursor()
+            stmt = 'select phase, question from STATUS where id_user = %s'
+            args = (self.md5(id_user), )
+            self.cursor.execute(stmt, args)
+            rs = list(self.cursor.fetchall())
+            self.cursor.close()
+            return len(rs) == 0
+        except:
+            reconnect()
+            # WARNING check this
+            return True
 
 
     def change_phase(self, newphase, id_user):
-        self.cursor = self.conn.cursor()
-        stmt = "UPDATE STATUS SET phase = %s , question = 1 where id_user = %s"
-        args = (newphase, self.md5(id_user))
-        self.cursor.execute(stmt, args)
-        self.conn.commit()
-        self.cursor.close()
+        try:
+            self.cursor = self.conn.cursor()
+            stmt = "UPDATE STATUS SET phase = %s , question = 1 where id_user = %s"
+            args = (newphase, self.md5(id_user))
+            self.cursor.execute(stmt, args)
+            self.conn.commit()
+            self.cursor.close()
+        except:
+            reconnect()
+
 
 
     def get_phase_question(self, id_user):
-        self.cursor = self.conn.cursor()
-        stmt = 'select phase, question from STATUS where id_user = %s'
-        args = (self.md5(id_user), )
-        self.cursor.execute(stmt, args)
-        rs = self.cursor.fetchone()
-        self.cursor.close()
-        return rs
+        try:
+            self.cursor = self.conn.cursor()
+            stmt = 'select phase, question from STATUS where id_user = %s'
+            args = (self.md5(id_user), )
+            self.cursor.execute(stmt, args)
+            rs = self.cursor.fetchone()
+            self.cursor.close()
+            return rs
+        except:
+            reconnect()
+            return (0, 0)
+
 
 
     def next_question(self, id_user):
-        self.cursor = self.conn.cursor()
-        stmt = "update STATUS set question = question +1 where id_user = %s"
-        args = (self.md5(id_user), )
-        self.cursor.execute(stmt, args)
-        self.conn.commit()
-        self.cursor.close()
+        try:
+            self.cursor = self.conn.cursor()
+            stmt = "update STATUS set question = question +1 where id_user = %s"
+            args = (self.md5(id_user), )
+            self.cursor.execute(stmt, args)
+            self.conn.commit()
+            self.cursor.close()
+        except:
+            reconnect()
+
 
 
     def get_question(self, phase, question, lang):
-        self.cursor = self.conn.cursor()
-        stmt = 'select qtext from QUESTIONS where phase = %s and question = %s and language = %s'
-        args = (phase, question, str(lang))
-        self.cursor.execute(stmt, args)
-        rs = self.cursor.fetchall()
-        self.cursor.close()
-        return str([el[0] for el in rs ][0])
+
+        try:
+            self.cursor = self.conn.cursor()
+            stmt = 'select qtext from QUESTIONS where phase = %s and question = %s and language = %s'
+            args = (phase, question, str(lang))
+            self.cursor.execute(stmt, args)
+            rs = self.cursor.fetchall()
+            self.cursor.close()
+            return str([el[0] for el in rs ][0])
+        except:
+            reconnect()
+            return None
 
 
     def check_start(self, id_user):
-        self.conn.commit()
-        self.cursor = self.conn.cursor()
-        stmt = "select count(*) from STATUS where id_user = %s"
-        args = (self.md5(id_user), )
-        self.cursor.execute(stmt, args)
-        rs = self.cursor.fetchall()
-        self.cursor.close()
-        return int([el[0] for el in rs][0]) > 0
+        try:
+            self.conn.commit()
+            self.cursor = self.conn.cursor()
+            stmt = "select count(*) from STATUS where id_user = %s"
+            args = (self.md5(id_user), )
+            self.cursor.execute(stmt, args)
+            rs = self.cursor.fetchall()
+            self.cursor.close()
+            return int([el[0] for el in rs][0]) > 0
+        except:
+            reconnect()
+            return None
 
 
     def add_answer(self, id_user, phase, question, message_id, answer):
@@ -151,15 +191,7 @@ class DBHelper:
             self.conn.commit()
         except:
             print("Primary key exception for Add Answer - dbhelper")
-        self.cursor.close()
-
-
-    def update_response(self, id_user, phase, question, message_id, answer):
-        self.cursor = self.conn.cursor()
-        stmt = "update RESPONSES set answer = %s, id_message=%s where id_user = %s and phase = %s and question = %s"
-        args = (answer, message_id, self.md5(id_user), phase, question)
-        self.cursor.execute(stmt, args)
-        self.conn.commit()
+            reconnect()
         self.cursor.close()
 
 
@@ -174,6 +206,9 @@ class DBHelper:
 
 
     def completed_survey(self, id_user, phase):
+        '''
+        TODO error controls on this method
+        '''
         self.cursor = self.conn.cursor()
         if phase == 1:
             stmt = 'update STATUS set completed_personal = 1 where id_user = %s'
@@ -188,20 +223,22 @@ class DBHelper:
 
 
     def check_completed(self, id_user):
-        self.cursor = self.conn.cursor()
-        stmt = "select completed_personal, completed_food, completed_activity from STATUS where id_user = %s"
-        args = (self.md5(id_user), )
-        self.cursor.execute(stmt, args)
-        rs = self.cursor.fetchall()
-        self.cursor.close()
-        if len(rs) == 0:
+        try:
+            self.cursor = self.conn.cursor()
+            stmt = "select completed_personal, completed_food, completed_activity from STATUS where id_user = %s"
+            args = (self.md5(id_user), )
+            self.cursor.execute(stmt, args)
+            rs = self.cursor.fetchall()
+            self.cursor.close()
+            return [(el[0], el[1], el[2]) for el in rs][0]
+        except:
             return (False, False, False)
-        return [(el[0], el[1], el[2]) for el in rs][0]
 
 
     def n_questions(self):
         '''
         Return a dict with the number of question per phase
+        This method is called at the start, so no error control
         '''
         self.cursor = self.conn.cursor()
         aux = {}
@@ -214,12 +251,15 @@ class DBHelper:
 
 
     def add_relationship(self, id_user, contact, type):
-        self.cursor = self.conn.cursor()
-        stmt = 'Insert into RELATIONSHIPS (active, passive, type) values (%s, %s, %s)'
-        args = (self.md5(id_user), self.md5(contact), type)
-        self.cursor.execute(stmt, args)
-        self.conn.commit()
-        self.cursor.close()
+        try:
+            self.cursor = self.conn.cursor()
+            stmt = 'Insert into RELATIONSHIPS (active, passive, type) values (%s, %s, %s)'
+            args = (self.md5(id_user), self.md5(contact), type)
+            self.cursor.execute(stmt, args)
+            self.conn.commit()
+            self.cursor.close()
+        except:
+            reconnect()
 
 
     def get_relationships(self):
@@ -248,7 +288,6 @@ class DBHelper:
         self.cursor.close()
         if len(rs) != 2:
             return 0
-
         return float(rs[0][0])/((float(rs[1][0])/100)**2)
 
 
