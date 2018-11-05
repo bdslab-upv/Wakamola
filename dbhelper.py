@@ -84,7 +84,8 @@ class DBHelper:
             self.cursor.execute(stmt, args)
             self.conn.commit()
             self.cursor.close()
-        except:
+        except Exception as e:
+            print(e)
             self.reconnect()
 
     def check_user(self, id_user):
@@ -100,7 +101,7 @@ class DBHelper:
             rs = list(self.cursor.fetchall())
             self.cursor.close()
             return len(rs) == 0
-        except:
+        except Exception as e:
             self.reconnect()
             # WARNING check this
             return True
@@ -113,7 +114,8 @@ class DBHelper:
             self.cursor.execute(stmt, args)
             self.conn.commit()
             self.cursor.close()
-        except:
+        except Exception as e:
+            print(e)
             self.reconnect()
 
     def get_phase_question(self, id_user):
@@ -125,7 +127,8 @@ class DBHelper:
             rs = self.cursor.fetchone()
             self.cursor.close()
             return rs
-        except:
+        except Exception as e:
+            print(e)
             reconnect()
             return (0, 0)
 
@@ -137,7 +140,8 @@ class DBHelper:
             self.cursor.execute(stmt, args)
             self.conn.commit()
             self.cursor.close()
-        except:
+        except Exception as e:
+            print(e)
             self.reconnect()
 
     def get_question(self, phase, question, lang):
@@ -150,7 +154,8 @@ class DBHelper:
             rs = self.cursor.fetchall()
             self.cursor.close()
             return str([el[0] for el in rs][0])
-        except:
+        except Exception as e:
+            print(e)
             self.reconnect()
             return None
 
@@ -164,7 +169,8 @@ class DBHelper:
             rs = self.cursor.fetchall()
             self.cursor.close()
             return int([el[0] for el in rs][0]) > 0
-        except:
+        except Exception as e:
+            print(e)
             self.reconnect()
             return None
 
@@ -175,7 +181,8 @@ class DBHelper:
             args = (self.md5(id_user), phase, question, answer, message_id)
             self.cursor.execute(stmt, args)
             self.conn.commit()
-        except:
+        except Exception as e:
+            print(e)
             print("Primary key exception for Add Answer - dbhelper")
             self.reconnect()
         self.cursor.close()
@@ -214,7 +221,8 @@ class DBHelper:
             rs = self.cursor.fetchall()
             self.cursor.close()
             return [(el[0], el[1], el[2]) for el in rs][0]
-        except:
+        except Exception as e:
+            print(e)
             return (False, False, False)
 
     def n_questions(self):
@@ -239,7 +247,8 @@ class DBHelper:
             self.cursor.execute(stmt, args)
             self.conn.commit()
             self.cursor.close()
-        except:
+        except Exception as e:
+            print(e)
             self.reconnect()
 
     def get_relationships(self):
