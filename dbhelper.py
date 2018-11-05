@@ -1,4 +1,4 @@
-#import sqlite3
+# import sqlite3
 from os import listdir
 from random import choice
 import hashlib
@@ -7,32 +7,30 @@ import mysql.connector as mariadb
 
 class DBHelper:
     def __init__(self, dbname="alphahealth.sqlite"):
-        self.conn = mariadb.connect(user='bothandler', \
-            password=open('passwd', 'r').read().split('\n')[0].strip(), database='bot', buffered=True)
+        self.conn = mariadb.connect(user='bothandler',
+                                    password=open('passwd', 'r').read().split('\n')[0].strip(), database='bot',
+                                    buffered=True)
         self.cursor = self.conn.cursor()
 
-
-
     def md5(self, id):
-            '''
-            Hashes id_user usign MD5. Ensures anonimity.
-            '''
-            return hashlib.md5(str(id).encode('utf-8')).hexdigest()
-
+        '''
+        Hashes id_user usign MD5. Ensures anonimity.
+        '''
+        return hashlib.md5(str(id).encode('utf-8')).hexdigest()
 
     def load_questions(self):
         blanks = 0
         try:
             for lang in listdir('questions'):
                 # iterate over the phases
-                for i, phase in enumerate(sorted(listdir('questions/'+lang))):
-                    with open('questions/'+lang+'/'+phase, 'r', encoding='utf-8') as fich:
+                for i, phase in enumerate(sorted(listdir('questions/' + lang))):
+                    with open('questions/' + lang + '/' + phase, 'r', encoding='utf-8') as fich:
                         blanks = 0
                         lines = fich.read().split('\n')
                         for j, lin in enumerate(lines):
                             if lin.strip():
                                 stmt = 'INSERT INTO QUESTIONS VALUES(%s, %s, %s, %s)'
-                                args = (j+1-blanks, i+1, lin.strip(), lang)
+                                args = (j + 1 - blanks, i + 1, lin.strip(), lang)
                                 self.cursor.execute(stmt, args)
                                 self.conn.commit()
                             else:
@@ -40,18 +38,15 @@ class DBHelper:
         except Exception as e:
             print(e)
 
-
     def reconnect(self, dbname="alphahealth.sqlite"):
         '''
         Create a fresh connection to the database
         also a new cursor
         '''
-        self.conn = mariadb.connect(user='bothandler', \
-            password=open('passwd', 'r').read().split('\n')[0].strip(), database='bot', buffered=True)
+        self.conn = mariadb.connect(user='bothandler',
+                                    password=open('passwd', 'r').read().split('\n')[0].strip(), database='bot',
+                                    buffered=True)
         self.cursor = self.conn.cursor()
-
-
-
 
     def setup(self):
         print("Checking database")
@@ -79,7 +74,6 @@ class DBHelper:
         self.cursor.close()
         print('Database ready!')
 
-
     def register_user(self, id_user, language):
         try:
             self.cursor = self.conn.cursor()
@@ -91,8 +85,7 @@ class DBHelper:
             self.conn.commit()
             self.cursor.close()
         except:
-            reconnect()
-
+            self.reconnect()
 
     def check_user(self, id_user):
         '''
@@ -102,16 +95,15 @@ class DBHelper:
         try:
             self.cursor = self.conn.cursor()
             stmt = 'select phase, question from STATUS where id_user = %s'
-            args = (self.md5(id_user), )
+            args = (self.md5(id_user),)
             self.cursor.execute(stmt, args)
             rs = list(self.cursor.fetchall())
             self.cursor.close()
             return len(rs) == 0
         except:
-            reconnect()
+            self.reconnect()
             # WARNING check this
             return True
-
 
     def change_phase(self, newphase, id_user):
         try:
@@ -122,15 +114,13 @@ class DBHelper:
             self.conn.commit()
             self.cursor.close()
         except:
-            reconnect()
-
-
+            self.reconnect()
 
     def get_phase_question(self, id_user):
         try:
             self.cursor = self.conn.cursor()
             stmt = 'select phase, question from STATUS where id_user = %s'
-            args = (self.md5(id_user), )
+            args = (self.md5(id_user),)
             self.cursor.execute(stmt, args)
             rs = self.cursor.fetchone()
             self.cursor.close()
@@ -139,20 +129,16 @@ class DBHelper:
             reconnect()
             return (0, 0)
 
-
-
     def next_question(self, id_user):
         try:
             self.cursor = self.conn.cursor()
             stmt = "update STATUS set question = question +1 where id_user = %s"
-            args = (self.md5(id_user), )
+            args = (self.md5(id_user),)
             self.cursor.execute(stmt, args)
             self.conn.commit()
             self.cursor.close()
         except:
-            reconnect()
-
-
+            self.reconnect()
 
     def get_question(self, phase, question, lang):
 
@@ -163,26 +149,24 @@ class DBHelper:
             self.cursor.execute(stmt, args)
             rs = self.cursor.fetchall()
             self.cursor.close()
-            return str([el[0] for el in rs ][0])
+            return str([el[0] for el in rs][0])
         except:
-            reconnect()
+            self.reconnect()
             return None
-
 
     def check_start(self, id_user):
         try:
             self.conn.commit()
             self.cursor = self.conn.cursor()
             stmt = "select count(*) from STATUS where id_user = %s"
-            args = (self.md5(id_user), )
+            args = (self.md5(id_user),)
             self.cursor.execute(stmt, args)
             rs = self.cursor.fetchall()
             self.cursor.close()
             return int([el[0] for el in rs][0]) > 0
         except:
-            reconnect()
+            self.reconnect()
             return None
-
 
     def add_answer(self, id_user, phase, question, message_id, answer):
         self.cursor = self.conn.cursor()
@@ -193,9 +177,8 @@ class DBHelper:
             self.conn.commit()
         except:
             print("Primary key exception for Add Answer - dbhelper")
-            reconnect()
+            self.reconnect()
         self.cursor.close()
-
 
     def update_response_edited(self, id_message, answer):
         self.cursor = self.conn.cursor()
@@ -205,7 +188,6 @@ class DBHelper:
         self.cursor.execute(stmt, args)
         self.conn.commit()
         self.cursor.close()
-
 
     def completed_survey(self, id_user, phase):
         '''
@@ -218,24 +200,22 @@ class DBHelper:
             stmt = 'update STATUS set completed_food = 1 where id_user = %s'
         elif phase == 3:
             stmt = 'update STATUS set completed_activity = 1 where id_user = %s'
-        args = (self.md5(id_user), )
+        args = (self.md5(id_user),)
         self.cursor.execute(stmt, args)
         self.conn.commit()
         self.cursor.close()
-
 
     def check_completed(self, id_user):
         try:
             self.cursor = self.conn.cursor()
             stmt = "select completed_personal, completed_food, completed_activity from STATUS where id_user = %s"
-            args = (self.md5(id_user), )
+            args = (self.md5(id_user),)
             self.cursor.execute(stmt, args)
             rs = self.cursor.fetchall()
             self.cursor.close()
             return [(el[0], el[1], el[2]) for el in rs][0]
         except:
             return (False, False, False)
-
 
     def n_questions(self):
         '''
@@ -247,10 +227,9 @@ class DBHelper:
         stmt = "select count(*) from QUESTIONS where language='es' group by phase order by phase"
         self.cursor.execute(stmt)
         for i, el in enumerate(self.cursor.fetchall()):
-            aux[i+1] = el[0]
+            aux[i + 1] = el[0]
         self.cursor.close()
         return aux
-
 
     def add_relationship(self, id_user, contact, type):
         try:
@@ -261,8 +240,7 @@ class DBHelper:
             self.conn.commit()
             self.cursor.close()
         except:
-            reconnect()
-
+            self.reconnect()
 
     def get_relationships(self):
         '''
@@ -277,8 +255,6 @@ class DBHelper:
         for el in rs:
             yield el
 
-
-
     def getBMI(self, id_md5):
         self.conn.commit()
         self.cursor = self.conn.cursor()
@@ -290,8 +266,7 @@ class DBHelper:
         self.cursor.close()
         if len(rs) != 2:
             return 0
-        return float(rs[0][0])/((float(rs[1][0])/100)**2)
-
+        return float(rs[0][0]) / ((float(rs[1][0]) / 100) ** 2)
 
     def get_responses_category(self, phase, id_user):
         '''
@@ -327,7 +302,6 @@ class DBHelper:
         self.cursor.commit()
         self.cursor.close()
 
-
     def get_last_wakaestado(self, id_md5):
         self.cursor = self.conn.cursor()
         stmt = 'select last_wakaestado from STATUS where id_user = %s'
@@ -336,7 +310,6 @@ class DBHelper:
         rs = self.cursor.fetchall()
         self.cursor.close()
         return rs
-
 
     def get_users_md5(self):
         '''
