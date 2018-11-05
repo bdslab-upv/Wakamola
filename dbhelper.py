@@ -129,7 +129,7 @@ class DBHelper:
             return rs
         except Exception as e:
             print(e)
-            reconnect()
+            self.reconnect()
             return (0, 0)
 
     def next_question(self, id_user):
