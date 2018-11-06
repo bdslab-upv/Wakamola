@@ -4,8 +4,6 @@ import time
 import datetime
 from dbhelper import DBHelper
 import urllib
-from io import BytesIO
-from os.path import isfile
 from os import listdir
 import emoji
 from models import obesity_risk

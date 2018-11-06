@@ -48,6 +48,16 @@ class DBHelper:
                                     buffered=True)
         self.cursor = self.conn.cursor()
 
+
+    def close(self):
+        '''
+        Close the cursor and the connection
+        :return:
+        '''
+
+        self.cursor.close()
+        self.conn.close()
+
     def setup(self):
         print("Checking database")
         stmt = "CREATE TABLE IF NOT EXISTS STATUS (id_user varchar(32) PRIMARY KEY, phase int NOT NULL, question int NOT NULL, completed_personal int, completed_food int, completed_activity int, language text, last_wakaestado float);"
