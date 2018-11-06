@@ -156,12 +156,13 @@ def send_file(localpath, chat_id):
 #
 ###############################
 
-def checkanswer(str, sts):
+
+def checkanswer(str, status):
     '''
     Accepts numbers and yes/no questions
     '''
     try:
-        if sts[0] == 1 and sts[1] > 5: #personal questions
+        if status[0] == 1 and status[1] > 5:
             if str.lower() in afirmations:
                 return 1, True
             elif str.lower() in negations:
@@ -171,7 +172,7 @@ def checkanswer(str, sts):
         else:
             aux_ = float(str)
             # weight
-            if sts[0] == 1 and sts[1] == 1:
+            if status[0] == 1 and status[1] == 1:
                 if aux_ < 35 or aux_ > 300:
                     return None, False
                 else:
@@ -179,7 +180,7 @@ def checkanswer(str, sts):
 
 
             # height
-            if sts[0] == 1 and sts[1] == 2:
+            if status[0] == 1 and status[1] == 2:
                 if aux_ < 130 or aux_ > 230:
                     return None, False
                 else:
@@ -187,7 +188,7 @@ def checkanswer(str, sts):
 
 
             # age
-            if sts[0] == 1 and sts[1] == 2:
+            if status[0] == 1 and status[1] == 2:
                 if aux_ < 5 or aux_ > 115:
                     return None, False
                 else:
@@ -237,8 +238,6 @@ def load_languages():
             continue # sanity check
 
     return langs_
-
-
 
 
 def filter_update(update):
@@ -405,9 +404,9 @@ def handle_updates(updates):
         text, chat, message_id = filter_update(update)
 
         # no valid text
-        if text == False:
+        if text is False:
             continue
-        elif text == None:
+        elif text is None:
             lang = process_lang(update['message']['from']['language_code'])
             send_message(languages[lang]['not_supported'], chat)
             continue
@@ -441,13 +440,6 @@ def handle_updates(updates):
             send_photo('img/'+lang+'/welcome.jpg', chat)
             send_message(emoji.emojize(languages[lang]['welcome']), chat, main_menu_keyboard(chat, lang))
 
-
-            # take the username if exists
-            username = None
-            if 'message' in update and 'username' in update['message']['chat']:
-                username = update['message']['chat']['username']
-            if 'callback_query' in update and update['message']['chat']:
-                username = update['callback_query']['chat']['username']
             # insert user into the db, check collisions
             if not db.check_start(chat):
                 # sanity check
@@ -455,7 +447,7 @@ def handle_updates(updates):
                     db.register_user(id_user=chat, language=lang)
                 except Exception as e:
                     print(e)
-                    #log_entry("Error registering the user")
+                    # log_entry("Error registering the user")
             else:
                 db.change_phase(newphase = 0, id_user=chat)
 
@@ -473,7 +465,6 @@ def handle_updates(updates):
                     print('Error ocurred on relationship add')
                     log_entry(e)
 
-
         # Check if the user have done the start command
         elif db.check_user(chat):
             # if not, just register him and made him select
@@ -485,7 +476,7 @@ def handle_updates(updates):
         elif text.lower() == 'credits':
             # junst sed a message with the credits and return to the main menu
             send_message(languages[lang]['credits'], chat)
-            #send_file('theme definitivo.tdesktop-theme', chat)
+            # send_file('theme definitivo.tdesktop-theme', chat)
             go_main(chat, lang)
 
         elif text.lower() == 'personal':
@@ -510,7 +501,6 @@ def handle_updates(updates):
                 send_message(languages[lang]['select'], chat, main_menu_keyboard(chat, lang))
                 continue
 
-
             # TODO FLAW TO STORE LINEAL SH1T
             text, correct_ = checkanswer(text, status)
             if correct_:
@@ -526,7 +516,6 @@ def handle_updates(updates):
                     continue
                 send_message(emoji.emojize(q), chat)
                 continue
-
 
             # check for more questions in the same phase
             if nq_category[status[0]] > status[1]:

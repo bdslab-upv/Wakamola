@@ -1,17 +1,11 @@
 import json
-import requests
 import time
-import datetime
-from dbhelper import DBHelper
 import urllib
-from io import BytesIO
-from os import listdir
-import emoji # pero buat the fuck
-from models import obesity_risk
+import requests
 
 # info to load at start
 # token is not in the source code for security
-TOKEN  = '561268964:AAFAaheSH5-EibQwla3X-HFnq745LM_QcFw' #open('token.txt', 'r').read().split('\n')[0].strip()
+TOKEN = '561268964:AAFAaheSH5-EibQwla3X-HFnq745LM_QcFw' #open('token.txt', 'r').read().split('\n')[0].strip()
 # URL to interact with the API
 URL = "https://api.telegram.org/bot{}/".format(TOKEN)
 
@@ -47,7 +41,6 @@ def get_updates(offset=None):
 def get_last_update_id(updates):
     # el orden de llegada de los mensajes al bot produce un id creciente
     # devolvemos el maximo para saber por donde nos hemos quedado
-    update_ids = []
     return max([int(el['update_id']) for el in updates['result']])
 
 
@@ -118,7 +111,7 @@ def main():
             last_update_id = get_last_update_id(updates) + 1
             handle_updates(updates)
         # hay que dejar descansar los servidores de telegram
-        time.sleep(0.5)
+        time.sleep(1)
 
         #except Exception as e:
         #    print('Error ocurred, watch log!')
