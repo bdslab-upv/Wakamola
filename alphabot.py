@@ -11,9 +11,11 @@ import csv
 
 # info to load at start
 # token is not in the source code for security
-TOKEN = open('token.txt', 'r').read().split('\n')[0].strip()
+TOKEN = open('token_esbirro1.txt', 'r').read().split('\n')[0].strip()
 # URL to interact with the API
 URL = "https://api.telegram.org/bot{}/".format(TOKEN)
+# username of the BOT that is running
+BOT_USERNAME = 'eldemoni_esbirro1_bot'
 # handler to the database
 db = DBHelper()
 # set up
@@ -39,8 +41,8 @@ def log_entry(entry):
     dateerror = now.strftime("%Y-%m-%d %H:%M")
     # open the log file in append mode
     with open('error.log', 'a', encoding='utf-8') as log:
-        log.write('\n'+dateerror+'\n')
-        log.write(str(entry)+'\n\n')
+        log.write('\n' + dateerror + '\n')
+        log.write(str(entry) + '\n\n')
 
 
 #################
@@ -52,7 +54,7 @@ def log_entry(entry):
 def build_keyboard(items):
     # contruir un teclado para una vez
     keyboard = [[item] for item in items]
-    reply_markup = {"keyboard":keyboard, "one_time_keyboard": True}
+    reply_markup = {"keyboard": keyboard, "one_time_keyboard": True}
     return json.dumps(reply_markup)
 
 
@@ -106,22 +108,22 @@ def send_message(text, chat_id, reply_markup=None):
     get_url(url)
 
 
-def send_photo(localpath, chat_id, caption = None):
+def send_photo(localpath, chat_id, caption=None):
     # give the name of a file in 'img' folder
     # send that image to the user
     url = URL + "sendPhoto"
     files = {'photo': open(localpath, 'rb')}
-    data = {'chat_id' : chat_id}
+    data = {'chat_id': chat_id}
     if caption:
         data['caption'] = caption
-    r = requests.post(url, files=files, data=data)
+    requests.post(url, files=files, data=data)
 
 
 def send_sticker(sticker_id, chat_id):
     # send an sticker
     url = URL + "sendSticker"
     # atributtes
-    data = {'chat_id' : chat_id, 'sticker': sticker_id}
+    data = {'chat_id': chat_id, 'sticker': sticker_id}
     # it returns the same file if success, can be stored in a variable
     requests.post(url, data=data)
 
@@ -130,7 +132,7 @@ def forward(chat_from, msg_id, chat_id):
     # forward a messege
     url = URL + "forwardMessage"
     # atributtes
-    data = {'chat_id' : chat_id, 'from_chat_id': chat_from, 'message_id':msg_id}
+    data = {'chat_id': chat_id, 'from_chat_id': chat_from, 'message_id': msg_id}
     requests.post(url, data=data)
 
 
@@ -138,17 +140,19 @@ def send_GIF(localpath, chat_id):
     # sent a short video as a GIF
     url = URL + "sendVideo"
     # atributtes
-    files = {'video': open('img/'+localpath, 'rb')}
-    data = {'chat_id' : chat_id}
+    files = {'video': open('img/' + localpath, 'rb')}
+    data = {'chat_id': chat_id}
     requests.post(url, files=files, data=data)
+
 
 def send_file(localpath, chat_id):
     # sent a short video as a GIF
     url = URL + "sendDocument"
     # atributtes
     files = {'document': open(localpath, 'rb')}
-    data = {'chat_id' : chat_id}
+    data = {'chat_id': chat_id}
     print(requests.post(url, files=files, data=data))
+
 
 ###############################
 #
@@ -178,14 +182,12 @@ def checkanswer(str, status):
                 else:
                     return aux_, True
 
-
             # height
             if status[0] == 1 and status[1] == 2:
                 if aux_ < 130 or aux_ > 230:
                     return None, False
                 else:
                     return aux_, True
-
 
             # age
             if status[0] == 1 and status[1] == 2:
@@ -225,17 +227,17 @@ def load_languages():
     for f in listdir('strings'):
         dict_ = {}
         try:
-            with open('strings/'+f, 'r', encoding='utf-8') as csvfile:
+            with open('strings/' + f, 'r', encoding='utf-8') as csvfile:
                 # may happen this is not a csv file
                 if not f.endswith('.csv'):
                     continue
-                csv_ = csv.reader(csvfile, delimiter=';')
+                csv_ = csv.reader(csvfile, delimiter=',')
                 for row in csv_:
                     dict_[row[0]] = row[1]
             langs_[f.split('.')[0]] = dict_
-        except Exception as e :
+        except Exception as e:
             log_entry(e)
-            continue # sanity check
+            continue  # sanity check
 
     return langs_
 
@@ -243,13 +245,13 @@ def load_languages():
 def filter_update(update):
     if 'edited_message' in update:
         # check if text
-            if 'text' in update['edited_message']:
-                # update the answer
-                process_edit(update)
-                return False, update['edited_message']['chat']['id'], update['edited_message']['message_id']
-            else:
-                # returning none if it's an update without text
-                return None, update["message"]["chat"]["id"], None
+        if 'text' in update['edited_message']:
+            # update the answer
+            process_edit(update)
+            return False, update['edited_message']['chat']['id'], update['edited_message']['message_id']
+        else:
+            # returning none if it's an update without text
+            return None, update["message"]["chat"]["id"], None
 
     elif 'callback_query' in update:
         # data is the text sent by the callback as a msg
@@ -264,7 +266,7 @@ def filter_update(update):
             # return none if it's a message withpout text
             return None, update["message"]["chat"]["id"], update['message']['message_id']
 
-    else: # inline query for example
+    else:  # inline query for example
         return False, None, None
 
 
@@ -274,7 +276,7 @@ def process_edit(update):
     try:
         if checkanswer(text):
             db.update_response_edited(message_id, text)
-    except:
+    except Exception as e:
         log_entry('Captured error at editing message.')
 
 
@@ -282,32 +284,23 @@ def go_main(chat, lang):
     '''
     Macro for setting up one user to the main phase
     '''
-    db.change_phase(newphase = 0, id_user=chat)
+    db.change_phase(newphase=0, id_user=chat)
     send_message(languages[lang]['select'], chat, main_menu_keyboard(chat, lang))
 
-'''
-# WARNING: This function is not used, but can be interesting
-# to use it in future versions
-def social_keyboard(lang, n_opt=2):
-    items = [el.strip() for el in languages[lang]['keyboard_social'].split('\n') if el.strip()]
-    keyboard = []
-    count = 0
-    aux = []
-    for el in items:
-        aux.append(el)
-        count += 1
-        if count == 2:
-            keyboard.append(aux)
-            aux = []
-            count = 0
-    if aux:
-        keyboard.append(aux)
-    reply_markup = {"keyboard":keyboard, "one_time_keyboard": True}
-    return json.dumps(reply_markup)
-'''
+
+def social_rol_keyboard(chat, lang='en'):
+    '''
+    This is a keyboard created for selecting the type of person to share
+    '''
+    options = [el for el in languages[lang]['social_roles'].split('\n') if el]
+    keyboard = {'inline_keyboard': [[{'text': emoji.emojize(options[0]), 'callback_data': '$family'},
+                                     {'text': emoji.emojize(options[1]), 'callback_data': '$friend'}],
+                                    [{'text': emoji.emojize(options[2]), 'callback_data': '$coworker'},
+                                     {'text': emoji.emojize(options[3]), 'callback_data': '$far'}]]}
+    return json.dumps(keyboard)
 
 
-def main_menu_keyboard(chat, lang=None):
+def main_menu_keyboard(chat, lang='en'):
     options = [el for el in languages[lang]['options'].split('\n') if el]
     personal = options[0]
     food = options[1]
@@ -319,10 +312,12 @@ def main_menu_keyboard(chat, lang=None):
         food += '\t\t:white_heavy_check_mark:'
     if completed[2]:
         activity += '\t\t:white_heavy_check_mark:'
-    # TODO  anyadir texto en social
-    keyboard = {'inline_keyboard':[[{'text': emoji.emojize(personal), 'callback_data':'personal'},  {'text':emoji.emojize(food), 'callback_data':'food'}],
-                    [{'text':emoji.emojize(activity), 'callback_data':'activity'},{'text':emoji.emojize(options[3]), 'callback_data':'risk'}],
-                    [{'text':emoji.emojize(options[5]), 'switch_inline_query': languages[lang]['share']+' '+'https://telegram.me/alphahealthbot?start='+str(chat)}, {'text':emoji.emojize(options[6]), 'callback_data':'credits'}]]}
+    keyboard = {'inline_keyboard': [[{'text': emoji.emojize(personal), 'callback_data': 'personal'},
+                                     {'text': emoji.emojize(food), 'callback_data': 'food'}],
+                                    [{'text': emoji.emojize(activity), 'callback_data': 'activity'},
+                                     {'text': emoji.emojize(options[3]), 'callback_data': 'risk'}],
+                                    [{'text': emoji.emojize(options[5]), 'callback_data': 'share'},
+                                     {'text': emoji.emojize(options[6]), 'callback_data': 'credits'}]]}
     return json.dumps(keyboard)
 
 
@@ -331,13 +326,13 @@ def questionarie(num, chat, lang, msg=None):
     Method to start a questionnatie flow
     TODO This can be parametrized and be way more general
     '''
-    db.change_phase(newphase= num, id_user=chat)
+    db.change_phase(newphase=num, id_user=chat)
     if num == 1:
-        send_photo('img/'+lang+'/personal.jpg', chat)
+        send_photo('img/' + lang + '/personal.jpg', chat)
     elif num == 2:
-        send_photo('img/'+lang+'/food.jpg', chat)
+        send_photo('img/' + lang + '/food.jpg', chat)
     elif num == 3:
-        send_photo('img/'+lang+'/activity.jpg', chat)
+        send_photo('img/' + lang + '/activity.jpg', chat)
 
     if msg:
         send_message(msg, chat)
@@ -345,9 +340,13 @@ def questionarie(num, chat, lang, msg=None):
     q1 = db.get_question(phase=num, question=1, lang=lang)
     # error on the database
     if q1 is None:
-        return 
+        return
     extra_messages(num, 1, chat, lang)
     send_message(emoji.emojize(q1), chat)
+
+
+def create_shared_link(chat: str, social_role: str) -> str:
+    return 'https://telegram.me/{}?start={}AAA{}'.format(BOT_USERNAME, chat, social_role)
 
 
 def extra_messages(phase, question, chat, lang):
@@ -357,7 +356,7 @@ def extra_messages(phase, question, chat, lang):
     TODO parametrize this in order to be less horrendous
     '''
     # food
-    if phase == 2 and question == 10: # weekly questionnarie
+    if phase == 2 and question == 10:  # weekly questionnarie
         send_message(languages[lang]['food_weekly'], chat)
 
 
@@ -369,26 +368,26 @@ def wakaestado(chat, lang):
     completed = db.check_completed(chat)
     print(completed)
     # put phase to 0
-    db.change_phase(newphase = 0, id_user=chat)
+    db.change_phase(newphase=0, id_user=chat)
 
     # check if completed all questionaries
     risk = obesity_risk(chat, completed)
 
     # add the avocado emojis
     avo_emojis_ = " :avocado: :avocado: :avocado:"
-    for its in range(int(risk/20)):
+    for its in range(int(risk / 20)):
         avo_emojis_ += " :avocado:"
 
     # Wakaestado completo
     if completed[0] and completed[1] and completed[2]:
         # obtain the obsity risk: 0, 1 or 2
-        send_message(emoji.emojize(languages[lang]['wakaestado']+' '+str(risk)+avo_emojis_), chat)
+        send_message(emoji.emojize(languages[lang]['wakaestado'] + ' ' + str(risk) + avo_emojis_), chat)
     # WakaEstado parcial
     else:
         # give a general advice
-        send_message(emoji.emojize(languages[lang]['wakaestado_parcial']+' '+str(risk)+avo_emojis_), chat)
+        send_message(emoji.emojize(languages[lang]['wakaestado_parcial'] + ' ' + str(risk) + avo_emojis_), chat)
     # imagen wakaestado
-    send_photo('img/'+lang+'/wakaestado.jpg', chat)
+    send_photo('img/' + lang + '/wakaestado.jpg', chat)
     # instrucciones social
     if completed[0] and completed[1] and completed[2]:
         send_message(languages[lang]['social'], chat)
@@ -398,7 +397,7 @@ def wakaestado(chat, lang):
 def handle_updates(updates):
     global languages
     for update in updates["result"]:
-        #print(update)
+        # print(update)
         # controlar si hay texto
         # funcion auxiliar que trata eltipo de mensaje
         text, chat, message_id = filter_update(update)
@@ -411,14 +410,11 @@ def handle_updates(updates):
             send_message(languages[lang]['not_supported'], chat)
             continue
 
-
-
         # try to get current status
         try:
             status = db.get_phase_question(chat)
         except Exception as e:
             status = (0, 0)
-
 
         # get user language
         if 'message' in update:
@@ -433,11 +429,10 @@ def handle_updates(updates):
             else:
                 lang = def_lang_
 
-
         # start command / second condition it's for the shared link
         if text.lower() == 'start' or '/start' in text.lower():
             # wellcome message
-            send_photo('img/'+lang+'/welcome.jpg', chat)
+            send_photo('img/' + lang + '/welcome.jpg', chat)
             send_message(emoji.emojize(languages[lang]['welcome']), chat, main_menu_keyboard(chat, lang))
 
             # insert user into the db, check collisions
@@ -449,18 +444,20 @@ def handle_updates(updates):
                     print(e)
                     # log_entry("Error registering the user")
             else:
-                db.change_phase(newphase = 0, id_user=chat)
+                db.change_phase(newphase=0, id_user=chat)
 
             # check for the token
             aux = text.split(' ')
             # TOKEN CHECK -> AFTER REGISTRATION
             if len(aux) == 2:
-                # it comes with the token
-                friend_token = aux[1]
+                # it comes with the token. The separator is AAA
+                info_ = aux[1].split('AAA')
+                friend_token = info_[0]
+                role = info_[1]
                 try:
                     # all ids are ints
                     int(friend_token)
-                    db.add_relationship(chat, friend_token, 'shared')
+                    db.add_relationship(chat, friend_token, role)
                 except Exception as e:
                     print('Error ocurred on relationship add')
                     log_entry(e)
@@ -469,8 +466,19 @@ def handle_updates(updates):
         elif db.check_user(chat):
             # if not, just register him and made him select
             db.register_user(id_user=chat, language=lang)
-            db.change_phase(newphase = 0, id_user=chat)
+            db.change_phase(newphase=0, id_user=chat)
             send_message(languages[lang]['select'], chat)
+
+        elif text.startswith('$'):
+            # the different social roles option
+            if text == '$family' or text == '$friend' or text == '$coworker' or text == '$far':
+                role_ = text[1:]
+                send_photo('img/' + lang + '/' + role_ + '.jpg', chat, caption=create_shared_link(chat, role_))
+
+            # if its not a correct callback
+            else:
+                continue
+
 
         # Credits
         elif text.lower() == 'credits':
@@ -478,6 +486,12 @@ def handle_updates(updates):
             send_message(languages[lang]['credits'], chat)
             # send_file('theme definitivo.tdesktop-theme', chat)
             go_main(chat, lang)
+
+        elif text.lower() == 'share':
+            # Send a message with the role keyboard
+            send_message(languages[lang]['share'], chat, social_rol_keyboard(chat, lang))
+            continue
+
 
         elif text.lower() == 'personal':
             # set to phase and question 1
@@ -522,17 +536,17 @@ def handle_updates(updates):
                 # advance status
                 db.next_question(chat)
                 # pick up next question
-                q = db.get_question(status[0], status[1]+1, lang)
+                q = db.get_question(status[0], status[1] + 1, lang)
                 # error on the database
                 if q is None:
                     continue
                 # comprueba si tiene que lanzar algun mensaje antes de la pregunta
-                extra_messages(status[0], status[1]+1, chat, lang)
+                extra_messages(status[0], status[1] + 1, chat, lang)
                 send_message(emoji.emojize(q), chat)
             else:
                 # si lo es, actualiza estatus y "vuelve" al menu principal
                 db.completed_survey(chat, status[0])
-                db.change_phase(newphase = 0, id_user=chat)
+                db.change_phase(newphase=0, id_user=chat)
 
                 # NEW V2, depending on the questionnarie displat a diferent message
                 if status[0] == 1:
@@ -555,7 +569,7 @@ def main():
         updates = get_updates(last_update_id)
         # si hay algun mensaje do work
         try:
-            if 'result' in updates and len(updates['result']) > 0: # REVIEW provisional patch for result error
+            if 'result' in updates and len(updates['result']) > 0:  # REVIEW provisional patch for result error
                 last_update_id = get_last_update_id(updates) + 1
                 handle_updates(updates)
                 # have to be gentle with the telegram server
@@ -567,8 +581,10 @@ def main():
         except Exception as e:
             print('Error ocurred, watch log!')
             log_entry(str(e))
+            print(e)
             # sleep 20 seconds so the problem may solve
             time.sleep(20)
+
 
 
 if __name__ == '__main__':

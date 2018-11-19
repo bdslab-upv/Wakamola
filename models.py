@@ -91,7 +91,7 @@ def table_3(n):
         return 0
 
 
-def risk_bmi(id_user, comp=False, db=DBHelper()):
+def risk_bmi(id_user, db=DBHelper()):
     '''
     Gives a risk score
     this is a modular function in order be easier to update
@@ -120,8 +120,9 @@ def risk_nutrition(id_user, comp = False, db=DBHelper()):
     WARNING: untested rules
     '''
     score = 0
-    if comp == 0:
+    if not comp:
         return 0
+
     # obtain the responses
     ans = db.get_responses_category(id_user=id_user, phase=2)
 
@@ -186,7 +187,7 @@ def risk_nutrition(id_user, comp = False, db=DBHelper()):
 
 def risk_activity(id_user, comp = False, db = DBHelper()):
 
-    if comp == 0:
+    if not comp:
         return 0
 
     ans = db.get_responses_category(id_user=id_user, phase=3)
@@ -195,6 +196,14 @@ def risk_activity(id_user, comp = False, db = DBHelper()):
     # this have to be reviewed for sure!
     superior_limit = 1800
     return (min(METS, superior_limit)/superior_limit)*100
+
+
+def network_influence(id_user, comp = False, db = DBHelper):
+    if not comp:
+        return 0
+    # TODO implement network algortihm
+    return 0
+
 
 
 def obesity_risk(id_user, completed):
@@ -211,7 +220,7 @@ def obesity_risk(id_user, completed):
     else:
         risk = 1
 
-    part_1 = risk_bmi(id_user, completed[0], db) * coef[0]
+    part_1 = risk_bmi(id_user, db) * coef[0]
     part_2 = risk_nutrition(id_user, completed[1], db) * coef[1]
     part_3 = risk_activity(id_user, completed[2], db) * coef[2]
 

@@ -1,6 +1,4 @@
-# import sqlite3
 from os import listdir
-from random import choice
 import hashlib
 import mysql.connector as mariadb
 
@@ -215,7 +213,7 @@ class DBHelper:
             stmt = 'update STATUS set completed_personal = 1 where id_user = %s'
         elif phase == 2:
             stmt = 'update STATUS set completed_food = 1 where id_user = %s'
-        elif phase == 3:
+        else:
             stmt = 'update STATUS set completed_activity = 1 where id_user = %s'
         args = (self.md5(id_user),)
         self.cursor.execute(stmt, args)
@@ -310,30 +308,47 @@ class DBHelper:
     ################################
 
     def set_last_wakaestado(self, id_user, score):
-        '''
-        After calculating the new wakaestado
-        store it in the db
-        '''
-        self.cursor = self.conn.cursor()
-        stmt = 'update STATUS SET last_wakaestado = %s where id_user = %s'
-        args = (score, self.md5(id_user))
-        self.cursor.execute(stmt, args)
-        self.cursor.commit()
-        self.cursor.close()
+        """
+        :param id_user: Unhashed user id
+        :param score: Score obtained at last wakaestado
+        :return:
+        """
+        try:
+            self.cursor = self.conn.cursor()
+            stmt = 'update STATUS SET last_wakaestado = %s where id_user = %s'
+            args = (score, self.md5(id_user))
+            self.cursor.execute(stmt, args)
+            self.cursor.commit()
+            self.cursor.close()
+        except Exception as e:
+            print(e)
+            self.reconnect()
+
+
 
     def get_last_wakaestado(self, id_md5):
-        self.cursor = self.conn.cursor()
-        stmt = 'select last_wakaestado from STATUS where id_user = %s'
-        args = (id_md5,)
-        self.cursor.execute(stmt, args)
-        rs = self.cursor.fetchall()
-        self.cursor.close()
-        return rs
+        """
+        Method called during 'crontab' time
+        :param id_md5:
+        :return: Last wakaestado, -1 if error occurs
+        """
+        try:
+            self.cursor = self.conn.cursor()
+            stmt = 'select last_wakaestado from STATUS where id_user = %s'
+            args = (id_md5,)
+            self.cursor.execute(stmt, args)
+            rs = self.cursor.fetchall()
+            self.cursor.close()
+            return rs
+        except Exception as e:
+            print(e)
+            self.reconnect()
+            return -1
 
     def get_users_md5(self):
-        '''
-        Return a list with all hashed ID users
-        '''
+        """
+        :return: Generator with all hashed IDs on the system
+        """
         self.cursor = self.conn.cursor()
         stmt = 'select id_user from STATUS'
         self.cursor.execute(stmt)

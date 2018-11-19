@@ -1,13 +1,13 @@
-action; text
-1_activity;"Think of all the ** intense ** activities you have done in the last ** 7 days **. Physical activities ** intense ** refer to those activities that involve intense physical effort and that make you breathe a lot more intensely than usual. Think only of those physical activities you did during ** at least 10 minutes in a row **.
-"
-2_activity;"Think of all ** moderate ** activities you have done in the last ** 7 days ** **. Moderate activities ** are those that require moderate physical effort that makes you breathe somewhat more intensely than normal. Think only of those physical activities you did during ** at least 10 minutes in a row **.
-"
-3_activity;"Think about the time you spent ** walking ** in the last 7 days ** .This includes walking at work or at home, moving from one place to another, or any other walk that you could Do only for recreation, sports, exercise or leisure
-"
-4_activity;"The last question is about the time you spent ** sitting ** during the business days of the last * 7 ** days. This includes time spent at work, at home, in a class, and during Free time. You can include the time you spent sitting at a desk, visiting friends, reading, traveling by bus, or sitting or lying watching television.
-"
-credits;"People that have contributed to make this project possible:
+"action"," text",
+"1_activity","Think of all the ** intense ** activities you have done in the last ** 7 days **. Physical activities ** intense ** refer to those activities that involve intense physical effort and that make you breathe a lot more intensely than usual. Think only of those physical activities you did during ** at least 10 minutes in a row **.
+",
+"2_activity","Think of all ** moderate ** activities you have done in the last ** 7 days ** **. Moderate activities ** are those that require moderate physical effort that makes you breathe somewhat more intensely than normal. Think only of those physical activities you did during ** at least 10 minutes in a row **.
+",
+"3_activity","Think about the time you spent ** walking ** in the last 7 days ** .This includes walking at work or at home, moving from one place to another, or any other walk that you could Do only for recreation, sports, exercise or leisure
+",
+"4_activity","The last question is about the time you spent ** sitting ** during the business days of the last * 7 ** days. This includes time spent at work, at home, in a class, and during Free time. You can include the time you spent sitting at a desk, visiting friends, reading, traveling by bus, or sitting or lying watching television.
+",
+"credits","People that have contributed to make this project possible:
 - Vicent Blanes, MSc
 - Juan M. García-Gómez, PhD
 - Sabina Asensio, PhD
@@ -20,56 +20,60 @@ Graphic designers:
 -Cristina Alegre Rexachs
 -José Ros Diego
 -Mario Vilar Hernández
-"
-end_activity;"Thanks for telling me about your physical activity. With everything we've talked about, I've calculated your Wakaestado, click on the button :green_heart: Wakaetado to know it.
-"
-end_food;"I already know a lot about your diet, now let's talk about your weekly physical activity.
+",
+"end_activity","Thanks for telling me about your physical activity. With everything we've talked about, I've calculated your Wakaestado, click on the button :green_heart: Wakaetado to know it.
+",
+"end_food","I already know a lot about your diet, now let's talk about your weekly physical activity.
 
 Press :person_running: Activity to start.
-"
-end_personal;"Thanks for answering, I already know more about you.
+",
+"end_personal","Thanks for answering, I already know more about you.
 
 Can we now talk about your diet? Click on the button :green_apple: Diet
-"
-food_intro;"In the diet questionnaire you will have to indicate how many times of * average * you consume the following foods * PER DAY *.
-"
-food_weekly;"Perfect! Now I want to know now how many times you take the following foods * PER WEEK *
-"
-generic_tip;"You have not answered all the questions yet, a generic advice will be sent in the following phases of development
-"
-keyboard_social;"Family
+",
+"food_intro","In the diet questionnaire you will have to indicate how many times of * average * you consume the following foods * PER DAY *.
+",
+"food_weekly","Perfect! Now I want to know now how many times you take the following foods * PER WEEK *
+",
+"generic_tip","You have not answered all the questions yet, a generic advice will be sent in the following phases of development
+",
+"keyboard_social","Family
 Couple
 Friend
 Coworker
 Other
-"
-not_supported;"This type of message does not have support at the moment
-"
-numeric_response; Questions are designed to be answered with a *valid* numerical value, only those that are indicated can be answered with yes/no.
-options;":bust_in_silhouette: Personal
+",
+"not_supported","This type of message does not have support at the moment
+",
+"numeric_response"," Questions are designed to be answered with a *valid* numerical value"," only those that are indicated can be answered with yes/no."
+"options",":bust_in_silhouette: Personal
 :green_apple: Diet
 :person_running: Activity
 :green_heart: Wakaestado
 :memo: Tips
 :speech_balloon: Share me
 :light_bulb: About Wakamola
-"
-select;"Choose an option!
-"
-share;"Hi, I'm Wakamola, the bot that wants to keep you healthy, click on the link to accept your friend's invitation and chat with me!
-"
-social;"I would like to be able to help your friends and family too.
+",
+"select","Choose an option!
+",
+"share","Now select the type of relationship with the person you want to share the bot to
+",
+"social","I would like to be able to help your friends and family too.
 The better the wakaestado of your environment, the better it will be yours and I will update it for you periodically.
 To share me you only have to forward the next image.
 Thanks for sharing!
-"
-wakaestado;"The score of your Wakaestado is:
-"
-wakaestado_parcial;"At the moment, and in the absence of all the accounts, the score of your Wakaestado is:
-"
-welcome;"Hello, happy to talk to you!
+",
+"wakaestado","The score of your Wakaestado is:
+",
+"wakaestado_parcial","At the moment, and in the absence of all the accounts, the score of your Wakaestado is:
+",
+"welcome","Hello, happy to talk to you!
 I'm going to ask you some questions to know you and give you a Wakaestado.
 
 I recommend you start with the questionnaire :bust_in_silhouette: Personal
-"
-_description;Wakamola A public health study conducted by UPV and TMU
+",
+"_description","Wakamola A public health study conducted by UPV and TMU",
+"social_roles","Family
+Friend
+Coworker
+Distant Family",

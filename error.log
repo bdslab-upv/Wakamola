@@ -1,16 +1,36 @@
-\n2018-10-06 16:43\n'_io.TextIOWrapper' object has no attribute 'endswith'\n\n\n2018-10-06 16:43\n'_io.TextIOWrapper' object has no attribute 'endswith'\n\n\n2018-10-06 16:43\n'_io.TextIOWrapper' object has no attribute 'endswith'\n\n\n2018-10-06 16:43\n'_io.TextIOWrapper' object has no attribute 'endswith'\n\n\n2018-10-06 16:43\n'_io.TextIOWrapper' object has no attribute 'endswith'\n\n\n2018-10-06 16:43\n'_io.TextIOWrapper' object has no attribute 'endswith'\n\n
-2018-10-11 10:01
+
+2018-11-19 11:50
 list index out of range
 
 
-2018-10-11 10:26
+2018-11-19 11:50
 list index out of range
 
 
-2018-10-11 10:29
+2018-11-19 11:50
+'en'
+
+
+2018-11-19 11:51
 list index out of range
 
 
-2018-10-11 10:32
+2018-11-19 11:51
 list index out of range
+
+
+2018-11-19 11:52
+'es'
+
+
+2018-11-19 11:53
+list index out of range
+
+
+2018-11-19 11:53
+list index out of range
+
+
+2018-11-19 12:23
+invalid literal for int() with base 10: '6771943AAAcoworker'
 
