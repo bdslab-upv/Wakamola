@@ -56,7 +56,7 @@ Other
 ",
 "select","Choose an option!
 ",
-"share","Now select the type of relationship with the person you want to share the bot to
+"share","Now select the type of relationship with the person you want to share the bot to and forward them the invitation!
 ",
 "social","I would like to be able to help your friends and family too.
 The better the wakaestado of your environment, the better it will be yours and I will update it for you periodically.
@@ -79,3 +79,4 @@ Coworker :briefcase:
 Other :thumbs_up:
 Continue talking with Wakamola :avocado:",
 "share_caption","Click the link to meet Wakamola",
+"share_more","Share with more people!",

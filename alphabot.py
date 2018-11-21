@@ -111,7 +111,7 @@ def send_message(text, chat_id, reply_markup=None):
     get_url(url)
 
 
-def send_photo(localpath, chat_id, caption=None):
+def send_photo(localpath, chat_id, caption=None, reply_markup=None):
     # give the name of a file in 'img' folder
     # send that image to the user
     url = URL + "sendPhoto"
@@ -245,39 +245,49 @@ def load_languages():
     return langs_
 
 
+def get_chat(update):
+    if 'edited_message' in update and'text' in update['edited_message']:
+        return update['edited_message']['chat']['id']
+
+    elif 'callback_query' in update:
+        return update['callback_query']['from']['id']
+
+    else:
+        return update["message"]["chat"]["id"]
+
+
 def filter_update(update):
     if 'edited_message' in update:
-        # check if text
         if 'text' in update['edited_message']:
-            # update the answer
             process_edit(update)
-            return False, update['edited_message']['chat']['id'], update['edited_message']['message_id']
+            return False, update['edited_message']['message_id']
         else:
-            # returning none if it's an update without text
-            return None, update["message"]["chat"]["id"], None
+            # returning none if it's an update without text -> i.e and image
+            return None,  None
 
     elif 'callback_query' in update:
         # data is the text sent by the callback as a msg
-        return update['callback_query']['data'], update['callback_query']['from']['id'], \
-               update['callback_query']['message']['message_id']
+        return update['callback_query']['data'], update['callback_query']['message']['message_id']
 
     elif 'message' in update:
         if 'text' in update['message']:
-            return update["message"]["text"].strip(), update["message"]["chat"]["id"], update['message']['message_id']
+            return update["message"]["text"].strip(), update['message']['message_id']
 
         else:
             # return none if it's a message withpout text
-            return None, update["message"]["chat"]["id"], update['message']['message_id']
+            return None, update['message']['message_id']
 
     else:  # inline query for example
-        return False, None, None
+        return False, None
 
 
 def process_edit(update):
     text = update["edited_message"]["text"]
     message_id = update['edited_message']['message_id']
+    # get the status of that message_id
+    status = db.get_status_by_id_message(message_id)
     try:
-        if checkanswer(text):
+        if checkanswer(text, status):
             db.update_response_edited(message_id, text)
     except Exception as e:
         log_entry('Captured error at editing message.')
@@ -400,10 +410,9 @@ def wakaestado(chat, lang):
 def handle_updates(updates):
     global languages
     for update in updates["result"]:
-        # print(update)
-        # controlar si hay texto
-        # funcion auxiliar que trata eltipo de mensaje
-        text, chat, message_id = filter_update(update)
+
+        chat = get_chat(update)
+        text, message_id = filter_update(update)
 
         # no valid text
         if text is False:
@@ -413,13 +422,8 @@ def handle_updates(updates):
             send_message(languages[lang]['not_supported'], chat)
             continue
 
-        # try to get current status
-        try:
-            status = db.get_phase_question(chat)
-        except Exception as e:
-            status = (0, 0)
-
         # get user language
+        lang = def_lang_
         if 'message' in update:
             if 'language_code' in update['message']['from']:
                 lang = process_lang(update['message']['from']['language_code'])
@@ -429,8 +433,7 @@ def handle_updates(updates):
         elif 'callback_query' in update:
             if 'language_code' in update['callback_query']['from']:
                 lang = process_lang(update['callback_query']['from']['language_code'])
-            else:
-                lang = def_lang_
+
 
         # start command / second condition it's for the shared link
         if text.lower() == 'start' or '/start' in text.lower():
@@ -477,7 +480,9 @@ def handle_updates(updates):
             if text in roles:
                 role_ = text[1:]
                 send_photo('img/' + lang + '/' + role_ + '.jpg', chat,
-                           caption=languages[lang]['share_caption']+': '+create_shared_link(chat, role_))
+                           caption= languages[lang]['share_caption']+': '+create_shared_link(chat, role_))
+                send_message(languages[lang]['share_more'], chat, social_rol_keyboard(chat, lang))
+                continue
 
             # if its not a correct callback
             else:
@@ -527,7 +532,6 @@ def handle_updates(updates):
                 send_message(languages[lang]['select'], chat, main_menu_keyboard(chat, lang))
                 continue
 
-            # TODO FLAW TO STORE LINEAL SH1T
             text, correct_ = checkanswer(text, status)
             if correct_:
                 # store the user response

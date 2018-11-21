@@ -301,6 +301,24 @@ class DBHelper:
         self.cursor.close()
         return [float(el[0]) for el in rs]
 
+    def get_status_by_id_message(self, id_message):
+        '''
+        Given one id_message, return the question and phase asociated
+        :param id_message:
+        :return: tuple
+        '''
+        try:
+            self.conn.commit()
+            self.cursor = self.conn.cursor()
+            stmt = 'select phase, question from RESPONSES where id_message = %s'
+            self.cursor.execute(stmt, (id_message,))
+            rs = self.cursor.fetchall()
+            self.cursor.close()
+            return tuple(rs[0])
+        except:
+            self.reconnect()
+            return None
+
     ################################
     #
     # "Crontab mecanics for version 3"
