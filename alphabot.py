@@ -26,6 +26,9 @@ global languages
 # yes / no answers
 negations = [el for el in open('strings/negations.txt', 'r').read().split('\n') if el]
 afirmations = [el for el in open('strings/afirmations.txt', 'r').read().split('\n') if el]
+# role calls -> avoid hardcodding them in different places
+roles = ['$family', '$friend', '$coworker', '$other']
+
 # TODO default language
 def_lang_ = 'en'
 
@@ -293,10 +296,11 @@ def social_rol_keyboard(chat, lang='en'):
     This is a keyboard created for selecting the type of person to share
     '''
     options = [el for el in languages[lang]['social_roles'].split('\n') if el]
-    keyboard = {'inline_keyboard': [[{'text': emoji.emojize(options[0]), 'callback_data': '$family'},
-                                     {'text': emoji.emojize(options[1]), 'callback_data': '$friend'}],
-                                    [{'text': emoji.emojize(options[2]), 'callback_data': '$coworker'},
-                                     {'text': emoji.emojize(options[3]), 'callback_data': '$far'}]]}
+    keyboard = {'inline_keyboard': [[{'text': emoji.emojize(options[0]), 'callback_data': roles[0]},
+                                     {'text': emoji.emojize(options[1]), 'callback_data': roles[1]}],
+                                    [{'text': emoji.emojize(options[2]), 'callback_data': roles[2]},
+                                     {'text': emoji.emojize(options[3]), 'callback_data': roles[3]}],
+                                    [{'text': emoji.emojize(options[4]), 'callback_data': '_back_main'}]]}
     return json.dumps(keyboard)
 
 
@@ -391,7 +395,6 @@ def wakaestado(chat, lang):
     # instrucciones social
     if completed[0] and completed[1] and completed[2]:
         send_message(languages[lang]['social'], chat)
-    go_main(chat=chat, lang=lang)
 
 
 def handle_updates(updates):
@@ -471,14 +474,14 @@ def handle_updates(updates):
 
         elif text.startswith('$'):
             # the different social roles option
-            if text == '$family' or text == '$friend' or text == '$coworker' or text == '$far':
+            if text in roles:
                 role_ = text[1:]
-                send_photo('img/' + lang + '/' + role_ + '.jpg', chat, caption=create_shared_link(chat, role_))
+                send_photo('img/' + lang + '/' + role_ + '.jpg', chat,
+                           caption=languages[lang]['share_caption']+': '+create_shared_link(chat, role_))
 
             # if its not a correct callback
             else:
                 continue
-
 
         # Credits
         elif text.lower() == 'credits':
@@ -492,26 +495,35 @@ def handle_updates(updates):
             send_message(languages[lang]['share'], chat, social_rol_keyboard(chat, lang))
             continue
 
-
+        # return from the share phase
+        elif text == '_back_main':
+            go_main(chat, lang)
+            continue
         elif text.lower() == 'personal':
             # set to phase and question 1
             questionarie(1, chat, lang)
             continue
+
         elif text.lower() == 'food':
             # set to phase and question 2
             questionarie(2, chat, lang, msg=languages[lang]['food_intro'])
+            continue
+
         elif text.lower() == 'activity':
             # set to phase and question 3
             questionarie(3, chat, lang)
+            continue
 
         elif text.lower() == 'risk':
-            # encapsulated code
+            # already contain
             wakaestado(chat, lang)
+            go_main(chat=chat, lang=lang)
+            continue
 
         else:
             # rescata a que responde
             status = db.get_phase_question(chat)
-            if (status[0] == 0):
+            if status[0] == 0:
                 send_message(languages[lang]['select'], chat, main_menu_keyboard(chat, lang))
                 continue
 
