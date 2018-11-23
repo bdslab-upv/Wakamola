@@ -56,8 +56,7 @@ Other
 ",
 "select","Choose an option!
 ",
-"share","Now select the type of relationship with the person you want to share the bot to and forward them the invitation!
-",
+,,
 "social","I would like to be able to help your friends and family too.
 The better the wakaestado of your environment, the better it will be yours and I will update it for you periodically.
 To share me you only have to forward the next image.
@@ -73,10 +72,14 @@ I'm going to ask you some questions to know you and give you a Wakaestado.
 I recommend you start with the questionnaire :bust_in_silhouette: Personal
 ",
 "_description","Wakamola A public health study conducted by UPV and TMU",
-"social_roles","Family :family:
-Friend :busts_in_silhouette:
-Coworker :briefcase:
-Other :thumbs_up:
-Continue talking with Wakamola :avocado:",
-"share_caption","Click the link to meet Wakamola",
+"social_roles","Home :house:
+Family :woman: :man: :old_woman:
+Friends  :busts_in_silhouette:
+Work :briefcase:
+I’m done sharing :thumbs_up:",
+"share","Thanks for wanting to share! Now select the group of people you want to share with me",
+"share3","Now share the next image and keep sharing with as many groups as you want.",
+"share2","Select the group of people with whom you want to share.",
+"share_caption","Hello, I'm Wakamola!
+With this link you can meet me and talk with me about healthy habits:",
 "share_more","Share with more people!",

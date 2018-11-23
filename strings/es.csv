@@ -60,8 +60,6 @@ Otro
 "
 "select","¡Elige una opción!
 "
-"share","Ahora selecciona el tipo de relación con la persona con la que desea compartir el bot y reenviales la invitación!s
-"
 "social","Me gustaría poder ayudar también a tus amigos y familiares. 
 Cuanto mejor sea el wakaestado de tu entorno mejor será el tuyo e iré actualizandolo para ti periódicamente.
 Para compartirme únicamente tienes que reenviar la siguiente imagen.
@@ -76,10 +74,14 @@ Voy a hacerte algunas preguntas para conocerte y poder darte un Wakaestado.
 
 Te recomiendo que empieces por el cuestionario :bust_in_silhouette: Personal
 "
-"social_roles","Familia :family:
-Amigo  :busts_in_silhouette:
-Compañero de trabajo :briefcase:
-Otro :thumbs_up:
-Continuar hablando con Wakamola :avocado:"
-"share_caption","Pulsa el enlace para conocer a Wakamola"
+"social_roles","Casa :house:
+Familia :woman: :man: :old_woman:
+Amigos  :busts_in_silhouette:
+Trabajo :briefcase:
+He terminado de compartir :thumbs_up:"
+"share","¡Gracias por querer compartirme! Ahora selecciona el grupo de personas con las que quieres compartirme"
+"share3","Ahora comparte la siguiente imagen y sigue compartiéndome con tantos  grupos como quieras."
+"share2","Selecciona el grupo de las personas con las que quieres compartirme."
+"share_caption","¡Hola soy Wakamola! 
+Con este enlace podrás conocerme y hablar conmigo sobre hábitos saludables:"
 "share_more","¡Comparte con más gente!"

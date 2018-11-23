@@ -479,8 +479,9 @@ def handle_updates(updates):
             # the different social roles option
             if text in roles:
                 role_ = text[1:]
+                send_message(languages[lang]['share3'], chat)
                 send_photo('img/' + lang + '/' + role_ + '.jpg', chat,
-                           caption= languages[lang]['share_caption']+': '+create_shared_link(chat, role_))
+                           caption=languages[lang]['share_caption']+' '+create_shared_link(chat, role_))
                 send_message(languages[lang]['share_more'], chat, social_rol_keyboard(chat, lang))
                 continue
 
@@ -498,6 +499,7 @@ def handle_updates(updates):
         elif text.lower() == 'share':
             # Send a message with the role keyboard
             send_message(languages[lang]['share'], chat, social_rol_keyboard(chat, lang))
+            send_message(languages[lang]['share2'], chat)
             continue
 
         # return from the share phase
@@ -600,7 +602,6 @@ def main():
             print(e)
             # sleep 20 seconds so the problem may solve
             time.sleep(20)
-
 
 
 if __name__ == '__main__':
