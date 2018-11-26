@@ -27,7 +27,7 @@ global languages
 negations = [el for el in open('strings/negations.txt', 'r').read().split('\n') if el]
 afirmations = [el for el in open('strings/afirmations.txt', 'r').read().split('\n') if el]
 # role calls -> avoid hardcodding them in different places
-roles = ['$family', '$friend', '$coworker', '$other']
+roles = ['home', '$family', '$friend', '$coworker']
 
 # TODO default language
 def_lang_ = 'en'
