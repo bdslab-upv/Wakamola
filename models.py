@@ -182,7 +182,7 @@ def risk_nutrition(id_user, comp = False, db=DBHelper()):
 
     # WARNING -> now we have 43 items!!
     # get an score between 0-100 for this part
-    return score*100/43
+    return score*10/43
 
 
 def risk_activity(id_user, comp = False, db = DBHelper()):
@@ -205,8 +205,13 @@ def network_influence(id_user, comp = False, db = DBHelper):
     return 0
 
 
-
 def obesity_risk(id_user, completed):
+    '''
+    Update for "explained version"
+    :param id_user:
+    :param completed:
+    :return: score, dict with the subscores
+    '''
     # make connection
     db = DBHelper()
 
@@ -223,11 +228,20 @@ def obesity_risk(id_user, completed):
     part_1 = risk_bmi(id_user, db) * coef[0]
     part_2 = risk_nutrition(id_user, completed[1], db) * coef[1]
     part_3 = risk_activity(id_user, completed[2], db) * coef[2]
+    network_correction = network_influence(id_user) # TODO EDIT THIS ON NETWORK IMPLEMENTATION
 
+    # pack the different parts
+    partial_scores = {
+        'bmi': part_1/coef[0],
+        'nutrition': part_2/coef[1],
+        'activity': part_3/coef[2],
+        'risk': 1 - risk,
+        'network': network_correction
+    }
     # close stuff
     db.close()
     del db
+    return min(part_1 + part_2 + part_3 + network_correction, 100) * risk, partial_scores
 
-    return min(part_1 + part_2+ part_3, 100) * risk
 
 

@@ -27,7 +27,7 @@ global languages
 negations = [el for el in open('strings/negations.txt', 'r').read().split('\n') if el]
 afirmations = [el for el in open('strings/afirmations.txt', 'r').read().split('\n') if el]
 # role calls -> avoid hardcodding them in different places
-roles = ['home', '$family', '$friend', '$coworker']
+roles = ['$home', '$family', '$friend', '$coworker']
 
 # TODO default language
 def_lang_ = 'en'
@@ -335,6 +335,16 @@ def main_menu_keyboard(chat, lang='en'):
     return json.dumps(keyboard)
 
 
+def detailed_wakamola_keyboard(chat, lang='en'):
+    '''
+    A simple button for getting a detailed wakamola explanation
+    '''
+    global languages
+    keyboard = {'inline_keyboard': [[{'text': languages[lang]['get_details'], 'callback_data': 'risk_full'}]]}
+    return json.dumps(keyboard)
+
+
+
 def questionarie(num, chat, lang, msg=None):
     '''
     Method to start a questionnatie flow
@@ -374,37 +384,71 @@ def extra_messages(phase, question, chat, lang):
         send_message(languages[lang]['food_weekly'], chat)
 
 
+def avocados(score):
+    '''
+    This function returns a String
+    containing N avocado emojis
+    '''
+    avo_emojis_ = " :avocado: :avocado: :avocado:"
+    for its in range(int(score / 20)):
+        avo_emojis_ += " :avocado:"
+    return avo_emojis_
+
+
 def wakaestado(chat, lang):
     '''
     Piece of the standard flow to calculate and send the wakaestado
     '''
     global languages
     completed = db.check_completed(chat)
-    print(completed)
     # put phase to 0
     db.change_phase(newphase=0, id_user=chat)
 
-    # check if completed all questionaries
-    risk = obesity_risk(chat, completed)
+    # final risk and "explanation"
+    risk, _ = obesity_risk(chat, completed)
+    risk = round(risk)
 
-    # add the avocado emojis
-    avo_emojis_ = " :avocado: :avocado: :avocado:"
-    for its in range(int(risk / 20)):
-        avo_emojis_ += " :avocado:"
-
-    # Wakaestado completo
+    # Full Wakaestado
     if completed[0] and completed[1] and completed[2]:
-        # obtain the obsity risk: 0, 1 or 2
-        send_message(emoji.emojize(languages[lang]['wakaestado'] + ' ' + str(risk) + avo_emojis_), chat)
-    # WakaEstado parcial
+        # append the button for the whole description
+        send_message(emoji.emojize(languages[lang]['wakaestado'] + ' ' + str(risk) + avocados(risk)), chat,
+                     detailed_wakamola_keyboard(chat, lang))
+    # WakaEstado partial
     else:
         # give a general advice
-        send_message(emoji.emojize(languages[lang]['wakaestado_parcial'] + ' ' + str(risk) + avo_emojis_), chat)
+        send_message(emoji.emojize(languages[lang]['wakaestado_parcial'] + ' ' + str(risk) + avocados(risk)), chat)
     # imagen wakaestado
     send_photo('img/' + lang + '/wakaestado.jpg', chat)
     # instrucciones social
     if completed[0] and completed[1] and completed[2]:
         send_message(languages[lang]['social'], chat)
+
+
+def wakaestado_detailed(chat, lang):
+    '''
+    This piece of code throws a message explaining the whole score
+    WARNING: Only allow this is all the questions are complete
+    '''
+    global languages
+    completed = db.check_completed(chat)
+    # check all answers are completed
+    # Its sanity check
+    if not all(completed):
+        go_main(chat, lang)
+        return
+
+    _, partial_scores = obesity_risk(chat, completed)
+
+    details = languages[lang]['wakaestado_detail']
+    # nutrition, activity, bmi, risk, network
+    three_avocados = ' :avocado: :avocado: :avocado:'
+    details = details.format(str(round(partial_scores['nutrition'])) + three_avocados,
+                             str(round(partial_scores['activity'])) + three_avocados,
+                             str(round(partial_scores['bmi'])) + three_avocados,
+                             str(round(partial_scores['risk'])) + three_avocados,
+                             str(round(partial_scores['network'])) + three_avocados)
+
+    send_message(emoji.emojize(details), chat)
 
 
 def handle_updates(updates):
@@ -433,7 +477,6 @@ def handle_updates(updates):
         elif 'callback_query' in update:
             if 'language_code' in update['callback_query']['from']:
                 lang = process_lang(update['callback_query']['from']['language_code'])
-
 
         # start command / second condition it's for the shared link
         if text.lower() == 'start' or '/start' in text.lower():
@@ -499,7 +542,7 @@ def handle_updates(updates):
         elif text.lower() == 'share':
             # Send a message with the role keyboard
             send_message(languages[lang]['share'], chat, social_rol_keyboard(chat, lang))
-            send_message(languages[lang]['share2'], chat)
+            #send_message(languages[lang]['share2'], chat)
             continue
 
         # return from the share phase
@@ -522,8 +565,13 @@ def handle_updates(updates):
             continue
 
         elif text.lower() == 'risk':
-            # already contain
-            wakaestado(chat, lang)
+            wakaestado(chat=chat, lang=lang)
+            go_main(chat=chat, lang=lang)
+            continue
+
+        # TODO explain wakastatus
+        elif text.lower() == 'risk_full':
+            wakaestado_detailed(chat=chat, lang=lang)
             go_main(chat=chat, lang=lang)
             continue
 
@@ -586,22 +634,23 @@ def main():
         # obten los mensajes no vistos
         updates = get_updates(last_update_id)
         # si hay algun mensaje do work
-        try:
-            if 'result' in updates and len(updates['result']) > 0:  # REVIEW provisional patch for result error
-                last_update_id = get_last_update_id(updates) + 1
-                handle_updates(updates)
-                # have to be gentle with the telegram server
-                time.sleep(0.5)
-            else:
-                # if no messages lets be *more* gentle with telegram servers
-                time.sleep(1)
-
+        #try:
+        if 'result' in updates and len(updates['result']) > 0:  # REVIEW provisional patch for result error
+            last_update_id = get_last_update_id(updates) + 1
+            handle_updates(updates)
+            # have to be gentle with the telegram server
+            time.sleep(0.5)
+        else:
+            # if no messages lets be *more* gentle with telegram servers
+            time.sleep(1)
+        '''
         except Exception as e:
             print('Error ocurred, watch log!')
             log_entry(str(e))
             print(e)
             # sleep 20 seconds so the problem may solve
             time.sleep(20)
+        '''
 
 
 if __name__ == '__main__':
