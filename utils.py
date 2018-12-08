@@ -1,11 +1,20 @@
 import networkx as nx
 from dbhelper import DBHelper
 import matplotlib.pyplot as plt
+import hashlib
 
 '''
-Create the graph from the database info.
-Complex network operations and visualization!
+Refactored to be a general utils class
+MD5 was moved here in order to be more general
 '''
+
+
+def md5(id_user):
+    '''
+    Hashes id_user usign MD5. Ensures anonimity.
+    '''
+    return hashlib.md5(str(id_user).encode('utf-8')).hexdigest()
+
 
 def create_graph(name):
     # db instance
@@ -42,7 +51,6 @@ def create_graph(name):
                 bmi_ = round(db.getBMI(us[0]), 1)
                 in_[us] = len(in_)
                 G.add_node((in_[us], bmi_))
-
 
     # export to cytoscape format
     nx.write_graphml(G, 'graphs/'+name+'.xml')

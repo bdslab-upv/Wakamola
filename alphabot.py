@@ -5,17 +5,22 @@ import datetime
 from dbhelper import DBHelper
 import urllib
 from os import listdir
+import sys
 import emoji
 from models import obesity_risk
 import csv
+from utils import md5
 
-# info to load at start
-# token is not in the source code for security
-TOKEN = open('token_esbirro1.txt', 'r').read().split('\n')[0].strip()
+__ACTIVE_BOT_SECURITY_INFO = 'token_alphabot.txt'
+
+with open(__ACTIVE_BOT_SECURITY_INFO, 'r') as sec_info:
+    credentials_text = sec_info.read().split('\n')
+    TOKEN = credentials_text[0]
+    BOT_USERNAME = credentials_text[1]
+
 # URL to interact with the API
 URL = "https://api.telegram.org/bot{}/".format(TOKEN)
-# username of the BOT that is running
-BOT_USERNAME = 'eldemoni_esbirro1_bot'
+
 # handler to the database
 db = DBHelper()
 # set up
@@ -101,6 +106,12 @@ def get_last_update_id(updates):
 #   TELEGRAM API MACROS
 #
 #################
+
+def getMe():
+    # Check API method
+    getme = URL + "getMe"
+    print(get_url(getme))
+
 
 def send_message(text, chat_id, reply_markup=None):
     text = urllib.parse.quote_plus(text)
@@ -241,7 +252,6 @@ def load_languages():
         except Exception as e:
             log_entry(e)
             continue  # sanity check
-
     return langs_
 
 
@@ -344,7 +354,6 @@ def detailed_wakamola_keyboard(chat, lang='en'):
     return json.dumps(keyboard)
 
 
-
 def questionarie(num, chat, lang, msg=None):
     '''
     Method to start a questionnatie flow
@@ -420,8 +429,8 @@ def wakaestado(chat, lang):
     # imagen wakaestado
     send_photo('img/' + lang + '/wakaestado.jpg', chat)
     # instrucciones social
-    if completed[0] and completed[1] and completed[2]:
-        send_message(languages[lang]['social'], chat)
+    #if completed[0] and completed[1] and completed[2]:
+    #    send_message(languages[lang]['social'], chat)
 
 
 def wakaestado_detailed(chat, lang):
@@ -438,7 +447,6 @@ def wakaestado_detailed(chat, lang):
         return
 
     _, partial_scores = obesity_risk(chat, completed)
-
     details = languages[lang]['wakaestado_detail']
     # nutrition, activity, bmi, risk, network
     three_avocados = ' :avocado: :avocado: :avocado:'
@@ -451,11 +459,14 @@ def wakaestado_detailed(chat, lang):
     send_message(emoji.emojize(details), chat)
 
 
-def handle_updates(updates):
+def handle_updates(updates, debug=False):
     global languages
     for update in updates["result"]:
 
-        chat = get_chat(update)
+        if debug:
+            print(update)
+        # TODO WARNING, CHECK IF WE NEED MORE TRANSFORMATIONS
+        chat = md5(get_chat(update))
         text, message_id = filter_update(update)
 
         # no valid text
@@ -625,10 +636,19 @@ def handle_updates(updates):
 
 
 def main():
+    # CHECK API
+    getMe()
+
     global languages
     languages = load_languages()
     # variable para controlar el numero de mensajes
     last_update_id = None
+
+    # check for debug
+    debug = False
+    if len(sys.argv) == 2 and sys.argv[1] == '-d':
+        debug = True
+
     # bucle infinito
     while True:
         # obten los mensajes no vistos
@@ -637,7 +657,7 @@ def main():
         #try:
         if 'result' in updates and len(updates['result']) > 0:  # REVIEW provisional patch for result error
             last_update_id = get_last_update_id(updates) + 1
-            handle_updates(updates)
+            handle_updates(updates, debug)
             # have to be gentle with the telegram server
             time.sleep(0.5)
         else:

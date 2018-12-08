@@ -1,6 +1,9 @@
 from os import listdir
-import hashlib
 import mysql.connector as mariadb
+
+'''
+Refactored: ALL id_user is now the hashed version
+'''
 
 
 class DBHelper:
@@ -10,11 +13,6 @@ class DBHelper:
                                     buffered=True)
         self.cursor = self.conn.cursor()
 
-    def md5(self, id):
-        '''
-        Hashes id_user usign MD5. Ensures anonimity.
-        '''
-        return hashlib.md5(str(id).encode('utf-8')).hexdigest()
 
     def load_questions(self):
         blanks = 0
@@ -88,7 +86,7 @@ class DBHelper:
             stmt = 'insert INTO STATUS (id_user, phase, question,  completed_personal, \
             completed_food, completed_activity, language) VALUES (%s, %s, %s, %s, %s, %s, %s)'
             # phase 0, question 0, not completed any questionarie
-            args = (self.md5(id_user), 0, 0, 0, 0, 0, language)
+            args = (id_user, 0, 0, 0, 0, 0, language)
             self.cursor.execute(stmt, args)
             self.conn.commit()
             self.cursor.close()
@@ -104,7 +102,7 @@ class DBHelper:
         try:
             self.cursor = self.conn.cursor()
             stmt = 'select phase, question from STATUS where id_user = %s'
-            args = (self.md5(id_user),)
+            args = (id_user,)
             self.cursor.execute(stmt, args)
             rs = list(self.cursor.fetchall())
             self.cursor.close()
@@ -118,7 +116,7 @@ class DBHelper:
         try:
             self.cursor = self.conn.cursor()
             stmt = "UPDATE STATUS SET phase = %s , question = 1 where id_user = %s"
-            args = (newphase, self.md5(id_user))
+            args = (newphase, id_user)
             self.cursor.execute(stmt, args)
             self.conn.commit()
             self.cursor.close()
@@ -130,7 +128,7 @@ class DBHelper:
         try:
             self.cursor = self.conn.cursor()
             stmt = 'select phase, question from STATUS where id_user = %s'
-            args = (self.md5(id_user),)
+            args = (id_user,)
             self.cursor.execute(stmt, args)
             rs = self.cursor.fetchone()
             self.cursor.close()
@@ -144,7 +142,7 @@ class DBHelper:
         try:
             self.cursor = self.conn.cursor()
             stmt = "update STATUS set question = question +1 where id_user = %s"
-            args = (self.md5(id_user),)
+            args = (id_user,)
             self.cursor.execute(stmt, args)
             self.conn.commit()
             self.cursor.close()
@@ -172,7 +170,7 @@ class DBHelper:
             self.conn.commit()
             self.cursor = self.conn.cursor()
             stmt = "select count(*) from STATUS where id_user = %s"
-            args = (self.md5(id_user),)
+            args = (id_user,)
             self.cursor.execute(stmt, args)
             rs = self.cursor.fetchall()
             self.cursor.close()
@@ -186,7 +184,7 @@ class DBHelper:
         self.cursor = self.conn.cursor()
         try:
             stmt = "insert into RESPONSES (id_user, phase, question, answer, id_message) values(%s, %s, %s, %s, %s)"
-            args = (self.md5(id_user), phase, question, answer, message_id)
+            args = (id_user, phase, question, answer, message_id)
             self.cursor.execute(stmt, args)
             self.conn.commit()
         except Exception as e:
@@ -215,7 +213,7 @@ class DBHelper:
             stmt = 'update STATUS set completed_food = 1 where id_user = %s'
         else:
             stmt = 'update STATUS set completed_activity = 1 where id_user = %s'
-        args = (self.md5(id_user),)
+        args = (id_user,)
         self.cursor.execute(stmt, args)
         self.conn.commit()
         self.cursor.close()
@@ -224,7 +222,7 @@ class DBHelper:
         try:
             self.cursor = self.conn.cursor()
             stmt = "select completed_personal, completed_food, completed_activity from STATUS where id_user = %s"
-            args = (self.md5(id_user),)
+            args = (id_user,)
             self.cursor.execute(stmt, args)
             rs = self.cursor.fetchall()
             self.cursor.close()
@@ -251,12 +249,11 @@ class DBHelper:
         try:
             self.cursor = self.conn.cursor()
             stmt = 'Insert into RELATIONSHIPS (active, passive, type) values (%s, %s, %s)'
-            args = (self.md5(id_user), self.md5(contact), type)
+            args = (id_user, contact, type)
             self.cursor.execute(stmt, args)
             self.conn.commit()
             self.cursor.close()
         except Exception as e:
-            print(e)
             self.reconnect()
 
     def get_relationships(self):
@@ -272,12 +269,34 @@ class DBHelper:
         for el in rs:
             yield el
 
-    def getBMI(self, id_md5):
+    def get_user_relationships(self, id_user):
+        '''
+        Return a list of MD5 id's for all the relationshios of one person
+        '''
+        try:
+            self.cursor = self.conn.cursor()
+            # active list
+            stmt1 = "select active from RELATIONSHIPS where passive = (?)"
+            stmt2 = "select passive from RELATIONSHIPS where active = (?)"
+            args = (id_user, )
+            self.cursor.execute(stmt1, args)
+            rs1 = self.cursor.fetchall()
+            self.cursor.execute(stmt2, args)
+            rs2 = self.cursor.fetchall()
+            self.cursor.close()
+            return list(set([el[0] for el in rs1+rs2]))
+        except Exception as e:
+            print(e)
+            self.reconnect()
+
+
+
+    def getBMI(self, id_user):
         self.conn.commit()
         self.cursor = self.conn.cursor()
         stmt = "select answer from RESPONSES where id_user = %s and question <= 2 and Timestamp in (select max(Timestamp) \
         from RESPONSES where id_user = %s and phase = 1 group by question)"
-        args = (id_md5, id_md5)
+        args = (id_user, id_user)
         self.cursor.execute(stmt, args)
         rs = self.cursor.fetchall()
         self.cursor.close()
@@ -295,7 +314,7 @@ class DBHelper:
                 id_user = %s and phase = %s  \
                 and Timestamp in (select max(Timestamp) \
                 from RESPONSES where id_user = %s and phase = %s group by question)'
-        args = (self.md5(id_user), phase, self.md5(id_user), phase)
+        args = (id_user, phase, id_user, phase)
         self.cursor.execute(stmt, args)
         rs = self.cursor.fetchall()
         self.cursor.close()
@@ -334,7 +353,7 @@ class DBHelper:
         try:
             self.cursor = self.conn.cursor()
             stmt = 'update STATUS SET last_wakaestado = %s where id_user = %s'
-            args = (score, self.md5(id_user))
+            args = (score, id_user)
             self.cursor.execute(stmt, args)
             self.cursor.commit()
             self.cursor.close()
@@ -344,16 +363,16 @@ class DBHelper:
 
 
 
-    def get_last_wakaestado(self, id_md5):
+    def get_last_wakaestado(self, id_user):
         """
         Method called during 'crontab' time
-        :param id_md5:
+        :param id_user:
         :return: Last wakaestado, -1 if error occurs
         """
         try:
             self.cursor = self.conn.cursor()
             stmt = 'select last_wakaestado from STATUS where id_user = %s'
-            args = (id_md5,)
+            args = (id_user,)
             self.cursor.execute(stmt, args)
             rs = self.cursor.fetchall()
             self.cursor.close()
@@ -363,7 +382,7 @@ class DBHelper:
             self.reconnect()
             return -1
 
-    def get_users_md5(self):
+    def get_users(self):
         """
         :return: Generator with all hashed IDs on the system
         """

@@ -97,7 +97,7 @@ def risk_bmi(id_user, db=DBHelper()):
     this is a modular function in order be easier to update
     '''
 
-    bmi = db.getBMI(db.md5(id_user))
+    bmi = db.getBMI(id_user)
     if bmi == 0: # sanity check
         return 0
 
@@ -201,8 +201,11 @@ def risk_activity(id_user, comp = False, db = DBHelper()):
 def network_influence(id_user, comp = False, db = DBHelper):
     if not comp:
         return 0
-    # TODO implement network algortihm
-    return 0
+    # get the WakaStatus of each of the "neighbours"
+    #friends = db.get_user_relationships(id_user)
+    # now obtain the wakascore for them
+
+
 
 
 def obesity_risk(id_user, completed):
@@ -235,7 +238,7 @@ def obesity_risk(id_user, completed):
         'bmi': part_1/coef[0],
         'nutrition': part_2/coef[1],
         'activity': part_3/coef[2],
-        'risk': 1 - risk,
+        'risk': (1 - risk) * 100, # for better visualization
         'network': network_correction
     }
     # close stuff
