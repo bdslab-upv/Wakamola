@@ -11,7 +11,7 @@ from models import obesity_risk
 import csv
 from utils import md5
 
-__ACTIVE_BOT_SECURITY_INFO = 'token_alphabot.txt'
+__ACTIVE_BOT_SECURITY_INFO = 'token_esbirro1.txt'
 
 with open(__ACTIVE_BOT_SECURITY_INFO, 'r') as sec_info:
     credentials_text = sec_info.read().split('\n')
