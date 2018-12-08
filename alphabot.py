@@ -34,7 +34,7 @@ afirmations = [el for el in open('strings/afirmations.txt', 'r').read().split('\
 # role calls -> avoid hardcodding them in different places
 roles = ['$home', '$family', '$friend', '$coworker']
 
-# TODO default language
+#default language
 def_lang_ = 'en'
 
 
@@ -86,7 +86,7 @@ def get_updates(offset=None):
     # peticion para obtener las novedades
     url = URL + "getUpdates"
     # offset es el numero del ultimo mensaje recibido
-    # el objetivo es no volver a pedirlo todo
+    # el objetivo es no volver a pedirlo to-do
     if offset:
         url += "?offset={}".format(offset)
     # llamada a la funcion auxiliar
@@ -307,7 +307,7 @@ def go_main(chat, lang):
     '''
     Macro for setting up one user to the main phase
     '''
-    db.change_phase(newphase=0, id_user=chat)
+    db.change_phase(newphase=0, id_user=md5(chat))
     send_message(languages[lang]['select'], chat, main_menu_keyboard(chat, lang))
 
 
@@ -329,7 +329,7 @@ def main_menu_keyboard(chat, lang='en'):
     personal = options[0]
     food = options[1]
     activity = options[2]
-    completed = db.check_completed(chat)
+    completed = db.check_completed(md5(chat))
     if completed[0]:
         personal += '\t\t:white_heavy_check_mark:'
     if completed[1]:
@@ -359,7 +359,7 @@ def questionarie(num, chat, lang, msg=None):
     Method to start a questionnatie flow
     TODO This can be parametrized and be way more general
     '''
-    db.change_phase(newphase=num, id_user=chat)
+    db.change_phase(newphase=num, id_user=md5(chat))
     if num == 1:
         send_photo('img/' + lang + '/personal.jpg', chat)
     elif num == 2:
@@ -409,12 +409,12 @@ def wakaestado(chat, lang):
     Piece of the standard flow to calculate and send the wakaestado
     '''
     global languages
-    completed = db.check_completed(chat)
+    completed = db.check_completed(md5(chat))
     # put phase to 0
-    db.change_phase(newphase=0, id_user=chat)
+    db.change_phase(newphase=0, id_user=md5(chat))
 
     # final risk and "explanation"
-    risk, _ = obesity_risk(chat, completed)
+    risk, _ = obesity_risk(md5(chat), completed)
     risk = round(risk)
 
     # Full Wakaestado
@@ -439,14 +439,14 @@ def wakaestado_detailed(chat, lang):
     WARNING: Only allow this is all the questions are complete
     '''
     global languages
-    completed = db.check_completed(chat)
+    completed = db.check_completed(md5(chat))
     # check all answers are completed
     # Its sanity check
     if not all(completed):
         go_main(chat, lang)
         return
 
-    _, partial_scores = obesity_risk(chat, completed)
+    _, partial_scores = obesity_risk(md5(chat), completed)
     details = languages[lang]['wakaestado_detail']
     # nutrition, activity, bmi, risk, network
     three_avocados = ' :avocado: :avocado: :avocado:'
@@ -465,8 +465,8 @@ def handle_updates(updates, debug=False):
 
         if debug:
             print(update)
-        # TODO WARNING, CHECK IF WE NEED MORE TRANSFORMATIONS
-        chat = md5(get_chat(update))
+
+        chat = get_chat(update)
         text, message_id = filter_update(update)
 
         # no valid text
@@ -496,15 +496,15 @@ def handle_updates(updates, debug=False):
             send_message(emoji.emojize(languages[lang]['welcome']), chat, main_menu_keyboard(chat, lang))
 
             # insert user into the db, check collisions
-            if not db.check_start(chat):
+            if not db.check_start(md5(chat)):
                 # sanity check
                 try:
-                    db.register_user(id_user=chat, language=lang)
+                    db.register_user(id_user=md5(chat), language=lang)
                 except Exception as e:
                     print(e)
                     # log_entry("Error registering the user")
             else:
-                db.change_phase(newphase=0, id_user=chat)
+                db.change_phase(newphase=0, id_user=md5(chat))
 
             # check for the token
             aux = text.split(' ')
@@ -515,18 +515,19 @@ def handle_updates(updates, debug=False):
                 friend_token = info_[0]
                 role = info_[1]
                 try:
-                    # all ids are ints
+                    # sanity check: all ids are ints
                     int(friend_token)
-                    db.add_relationship(chat, friend_token, role)
+                    # friend token already in md5 -> after next code block
+                    db.add_relationship(md5(chat), friend_token, role)
                 except Exception as e:
                     print('Error ocurred on relationship add')
                     log_entry(e)
 
         # Check if the user have done the start command
-        elif db.check_user(chat):
+        elif db.check_user(md5(chat)):
             # if not, just register him and made him select
-            db.register_user(id_user=chat, language=lang)
-            db.change_phase(newphase=0, id_user=chat)
+            db.register_user(id_user=md5(chat), language=lang)
+            db.change_phase(newphase=0, id_user=md5(chat))
             send_message(languages[lang]['select'], chat)
 
         elif text.startswith('$'):
@@ -535,7 +536,7 @@ def handle_updates(updates, debug=False):
                 role_ = text[1:]
                 send_message(languages[lang]['share3'], chat)
                 send_photo('img/' + lang + '/' + role_ + '.jpg', chat,
-                           caption=languages[lang]['share_caption']+' '+create_shared_link(chat, role_))
+                           caption=languages[lang]['share_caption']+' '+create_shared_link(md5(chat), role_))
                 send_message(languages[lang]['share_more'], chat, social_rol_keyboard(chat, lang))
                 continue
 
@@ -553,7 +554,6 @@ def handle_updates(updates, debug=False):
         elif text.lower() == 'share':
             # Send a message with the role keyboard
             send_message(languages[lang]['share'], chat, social_rol_keyboard(chat, lang))
-            #send_message(languages[lang]['share2'], chat)
             continue
 
         # return from the share phase
@@ -580,7 +580,6 @@ def handle_updates(updates, debug=False):
             go_main(chat=chat, lang=lang)
             continue
 
-        # TODO explain wakastatus
         elif text.lower() == 'risk_full':
             wakaestado_detailed(chat=chat, lang=lang)
             go_main(chat=chat, lang=lang)
@@ -588,7 +587,7 @@ def handle_updates(updates, debug=False):
 
         else:
             # rescata a que responde
-            status = db.get_phase_question(chat)
+            status = db.get_phase_question(md5(chat))
             if status[0] == 0:
                 send_message(languages[lang]['select'], chat, main_menu_keyboard(chat, lang))
                 continue
@@ -596,7 +595,7 @@ def handle_updates(updates, debug=False):
             text, correct_ = checkanswer(text, status)
             if correct_:
                 # store the user response
-                db.add_answer(id_user=chat, phase=status[0], question=status[1], message_id=message_id, answer=text)
+                db.add_answer(id_user=md5(chat), phase=status[0], question=status[1], message_id=message_id, answer=text)
 
             else:
                 send_message(languages[lang]['numeric_response'], chat)
@@ -611,7 +610,7 @@ def handle_updates(updates, debug=False):
             # check for more questions in the same phase
             if nq_category[status[0]] > status[1]:
                 # advance status
-                db.next_question(chat)
+                db.next_question(md5(chat))
                 # pick up next question
                 q = db.get_question(status[0], status[1] + 1, lang)
                 # error on the database
@@ -622,8 +621,8 @@ def handle_updates(updates, debug=False):
                 send_message(emoji.emojize(q), chat)
             else:
                 # si lo es, actualiza estatus y "vuelve" al menu principal
-                db.completed_survey(chat, status[0])
-                db.change_phase(newphase=0, id_user=chat)
+                db.completed_survey(md5(chat), status[0])
+                db.change_phase(newphase=0, id_user=md5(chat))
 
                 # NEW V2, depending on the questionnarie displat a diferent message
                 if status[0] == 1:
@@ -648,6 +647,7 @@ def main():
     debug = False
     if len(sys.argv) == 2 and sys.argv[1] == '-d':
         debug = True
+        print('Debug mode!')
 
     # bucle infinito
     while True:

@@ -104,11 +104,11 @@ def risk_bmi(id_user, db=DBHelper()):
     # TODO REVIEW
     if bmi >= 40:
         return 0
-    elif bmi >= 35 and bmi < 40:
+    elif 35 <= bmi < 40:
         return 25
-    elif bmi >= 30 and bmi < 35:
+    elif 30 <= bmi < 35:
         return 50
-    elif bmi >= 25 and bmi < 30:
+    elif 25 <= bmi < 30:
         return 75
     elif bmi < 25:
         return 100
@@ -125,7 +125,6 @@ def risk_nutrition(id_user, comp = False, db=DBHelper()):
 
     # obtain the responses
     ans = db.get_responses_category(id_user=id_user, phase=2)
-
     # TODO review these rules
     score += table_1(group=4, n=ans[0])
     score += table_1(group=4, n=ans[1])
@@ -238,7 +237,7 @@ def obesity_risk(id_user, completed):
         'bmi': part_1/coef[0],
         'nutrition': part_2/coef[1],
         'activity': part_3/coef[2],
-        'risk': (1 - risk) * 100, # for better visualization
+        'risk': risk * 100, # for better visualization
         'network': network_correction
     }
     # close stuff
