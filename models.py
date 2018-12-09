@@ -213,6 +213,7 @@ def network_influence(id_user, actual_wakaestado,  db, comp=False):
             return last_wakaestado_
 
     if not comp:
+        print('DEBUG early return')
         return 0
     # get the WakaStatus of each of the "neighbours"
     friends = db.get_user_relationships(id_user)
