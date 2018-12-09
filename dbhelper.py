@@ -353,7 +353,7 @@ class DBHelper:
             stmt = 'update STATUS SET last_wakaestado = %s where id_user = %s'
             args = (score, id_user)
             self.cursor.execute(stmt, args)
-            self.cursor.commit()
+            self.conn.commit()
             self.cursor.close()
         except Exception as e:
             print(e)

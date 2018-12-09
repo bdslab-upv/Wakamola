@@ -207,7 +207,8 @@ def network_influence(id_user, actual_wakaestado,  db, comp=False):
         last_wakaestado_ = db.get_last_wakaestado(id_friend)
         if last_wakaestado_ is None:
             # if no last wakaestado was recorded previously
-            return obesity_risk(id_friend, None, False)
+            aux_, _ = obesity_risk(id_friend, None, False)
+            return aux_
         else:
             return last_wakaestado_
 
@@ -253,10 +254,10 @@ def obesity_risk(id_user, completed, network=True):
     part_3 = risk_activity(id_user, completed[2], db) * coef[2]
 
     network_correction = 0
-    provisional_score = min(part_1 + part_2 + part_3, 100) * risk
+    raw_wakaestado = min(part_1 + part_2 + part_3, 100) * risk
     if network:
         # TODO EDIT THIS ON NETWORK IMPLEMENTATION
-        network_correction = network_influence(id_user, provisional_score, db)
+        network_correction = network_influence(id_user, raw_wakaestado, db)
 
     # pack the different parts
     partial_scores = {
@@ -267,13 +268,13 @@ def obesity_risk(id_user, completed, network=True):
         'network': network_correction
     }
     # revert the risk, add the network correction and risk it again
-    final_wakaestado = min((provisional_score/risk) + network_correction, 100) * risk, partial_scores
+    final_wakaestado = min((raw_wakaestado/risk) + network_correction, 100) * risk
     # store the last wakaestado
     db.set_last_wakaestado(id_user, final_wakaestado)
     # close stuff
     db.close()
     del db
-    return final_wakaestado
+    return final_wakaestado, partial_scores
 
 
 

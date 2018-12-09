@@ -515,8 +515,6 @@ def handle_updates(updates, debug=False):
                 friend_token = info_[0]
                 role = info_[1]
                 try:
-                    # sanity check: all ids are ints
-                    int(friend_token)
                     # friend token already in md5 -> after next code block
                     db.add_relationship(md5(chat), friend_token, role)
                 except Exception as e:
