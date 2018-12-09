@@ -199,7 +199,7 @@ def risk_activity(id_user, comp = False, db = DBHelper()):
     return (min(METS, superior_limit)/superior_limit)*100
 
 
-def network_influence(id_user, actual_wakaestado,  db, comp=False):
+def network_influence(id_user, actual_wakaestado,  db, comp):
 
     # Internal function, first search for cache cause its lots faster
     def get_friend_wakaestado(id_friend):
@@ -259,7 +259,7 @@ def obesity_risk(id_user, completed, network=True):
     raw_wakaestado = min(part_1 + part_2 + part_3, 100) * risk
     if network:
         # TODO EDIT THIS ON NETWORK IMPLEMENTATION
-        network_correction = network_influence(id_user, raw_wakaestado, db)
+        network_correction = network_influence(id_user, raw_wakaestado, db, all(completed))
 
     # pack the different parts
     partial_scores = {
