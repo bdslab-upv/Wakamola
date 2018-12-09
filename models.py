@@ -3,6 +3,8 @@ This class is meant to have the risk models
 '''
 
 from dbhelper import DBHelper
+from statistics import mean
+from math import log
 
 
 ######################
@@ -197,25 +199,44 @@ def risk_activity(id_user, comp = False, db = DBHelper()):
     return (min(METS, superior_limit)/superior_limit)*100
 
 
-def network_influence(id_user, comp = False, db = DBHelper):
+def network_influence(id_user, actual_wakaestado,  db, comp=False):
+
+    # Internal function, first search for cache cause its lots faster
+    def get_friend_wakaestado(id_friend):
+        # try to get the last friends wakaestado
+        last_wakaestado_ = db.get_last_wakaestado(id_friend)
+        if last_wakaestado_ is None:
+            # if no last wakaestado was recorded previously
+            return obesity_risk(id_friend, None, False)
+        else:
+            return last_wakaestado_
+
     if not comp:
         return 0
     # get the WakaStatus of each of the "neighbours"
-    #friends = db.get_user_relationships(id_user)
+    friends = db.get_user_relationships(id_user)
+    if len(friends) == 0:
+        return 0
     # now obtain the wakascore for them
+    # TODO implement the db-cache friend risk
+    wakaestados = [get_friend_wakaestado(f) for f in friends]
+    # added a roof value at 20
+    return min(max(0, mean(wakaestados) - actual_wakaestado) + log(len(friends), 2), 20)
 
 
-
-
-def obesity_risk(id_user, completed):
+def obesity_risk(id_user, completed, network=True):
     '''
     Update for "explained version"
+    :param network:
     :param id_user:
     :param completed:
     :return: score, dict with the subscores
     '''
     # make connection
     db = DBHelper()
+
+    if completed is None:
+        completed = db.check_completed(id_user)
 
     # coeficient for each part
     coef = (0.33, 0.34, 0.33)
@@ -230,7 +251,12 @@ def obesity_risk(id_user, completed):
     part_1 = risk_bmi(id_user, db) * coef[0]
     part_2 = risk_nutrition(id_user, completed[1], db) * coef[1]
     part_3 = risk_activity(id_user, completed[2], db) * coef[2]
-    network_correction = network_influence(id_user) # TODO EDIT THIS ON NETWORK IMPLEMENTATION
+
+    network_correction = 0
+    provisional_score = min(part_1 + part_2 + part_3, 100) * risk
+    if network:
+        # TODO EDIT THIS ON NETWORK IMPLEMENTATION
+        network_correction = network_influence(id_user, provisional_score, db)
 
     # pack the different parts
     partial_scores = {
@@ -240,10 +266,15 @@ def obesity_risk(id_user, completed):
         'risk': risk * 100, # for better visualization
         'network': network_correction
     }
+    # revert the risk, add the network correction and risk it again
+    final_wakaestado = min((provisional_score/risk) + network_correction, 100) * risk, partial_scores
+    # store the last wakaestado
+    db.set_last_wakaestado(id_user, final_wakaestado)
     # close stuff
     db.close()
     del db
-    return min(part_1 + part_2 + part_3 + network_correction, 100) * risk, partial_scores
+    return final_wakaestado
+
 
 
 

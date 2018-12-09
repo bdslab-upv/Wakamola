@@ -289,8 +289,6 @@ class DBHelper:
             print(e)
             self.reconnect()
 
-
-
     def getBMI(self, id_user):
         self.conn.commit()
         self.cursor = self.conn.cursor()
@@ -361,8 +359,6 @@ class DBHelper:
             print(e)
             self.reconnect()
 
-
-
     def get_last_wakaestado(self, id_user):
         """
         Method called during 'crontab' time
@@ -376,11 +372,14 @@ class DBHelper:
             self.cursor.execute(stmt, args)
             rs = self.cursor.fetchall()
             self.cursor.close()
-            return rs
+            if len(rs) == 0:
+                return None
+            else:
+                return float(rs[0])
         except Exception as e:
             print(e)
             self.reconnect()
-            return -1
+            return None
 
     def get_users(self):
         """
