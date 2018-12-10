@@ -213,16 +213,17 @@ def network_influence(id_user, actual_wakaestado,  db, comp):
             return last_wakaestado_
 
     if not comp:
-        print('DEBUG early return')
+
         return 0
     # get the WakaStatus of each of the "neighbours"
     friends = db.get_user_relationships(id_user)
-    print('DEGUB Numero de amigos', len(friends))
     if len(friends) == 0:
         return 0
     # now obtain the wakascore for them
     # TODO implement the db-cache friend risk
     wakaestados = [get_friend_wakaestado(f) for f in friends]
+    print(wakaestados)
+    print(max(0, mean(wakaestados) - actual_wakaestado) + log(len(friends), 2))
     # added a roof value at 20
     return min(max(0, mean(wakaestados) - actual_wakaestado) + log(len(friends), 2), 20)
 

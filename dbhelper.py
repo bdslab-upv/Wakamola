@@ -276,8 +276,8 @@ class DBHelper:
         try:
             self.cursor = self.conn.cursor()
             # active list
-            stmt1 = "select active from RELATIONSHIPS where passive = (?)"
-            stmt2 = "select passive from RELATIONSHIPS where active = (?)"
+            stmt1 = "select active from RELATIONSHIPS where passive = %s"
+            stmt2 = "select passive from RELATIONSHIPS where active = %s"
             args = (id_user, )
             self.cursor.execute(stmt1, args)
             rs1 = self.cursor.fetchall()
@@ -375,7 +375,7 @@ class DBHelper:
             if len(rs) == 0:
                 return None
             else:
-                return float(rs[0])
+                return float(rs[0][0])
         except Exception as e:
             print(e)
             self.reconnect()
