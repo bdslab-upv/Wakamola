@@ -222,8 +222,9 @@ def network_influence(id_user, actual_wakaestado,  db, comp):
     # now obtain the wakascore for them
     # TODO implement the db-cache friend risk
     wakaestados = [get_friend_wakaestado(f) for f in friends]
-    print(wakaestados)
-    print(max(0, mean(wakaestados) - actual_wakaestado) + log(len(friends), 2))
+    print('DEBUG friends status', mean(wakaestados))
+    print('DEBUG Log N Friends', log(len(friends), 2))
+    print('DEBUG Network correction', max(0, mean(wakaestados) - actual_wakaestado) + log(len(friends), 2))
     # added a roof value at 20
     return min(max(0, mean(wakaestados) - actual_wakaestado) + log(len(friends), 2), 20)
 
@@ -258,6 +259,7 @@ def obesity_risk(id_user, completed, network=True):
 
     network_correction = 0
     raw_wakaestado = min(part_1 + part_2 + part_3, 100) * risk
+    print('DEBUG raw wakaestado', raw_wakaestado)
     if network:
         # TODO EDIT THIS ON NETWORK IMPLEMENTATION
         network_correction = network_influence(id_user, raw_wakaestado, db, all(completed))
@@ -270,6 +272,7 @@ def obesity_risk(id_user, completed, network=True):
         'risk': risk * 100, # for better visualization
         'network': network_correction
     }
+    print('DEBUG', partial_scores)
     # revert the risk, add the network correction and risk it again
     final_wakaestado = min((raw_wakaestado/risk) + network_correction, 100) * risk
     # store the last wakaestado
