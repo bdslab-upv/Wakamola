@@ -6,6 +6,7 @@ from dbhelper import DBHelper
 from statistics import mean
 from math import log
 
+MAX_NETWORK = 10
 
 ######################
 #
@@ -230,7 +231,7 @@ def network_influence(id_user, actual_wakaestado,  db, comp):
     print('DEBUG Log N Friends', log(len(friends), 2))
     print('DEBUG Network correction', max(0, mean(wakaestados) - actual_wakaestado) + log(len(friends), 2))
     # added a roof value at 20
-    return min(max(0, mean(wakaestados) - actual_wakaestado) + log(len(friends), 2), 20)
+    return min(max(0, mean(wakaestados) - actual_wakaestado) + log(len(friends), 2), MAX_NETWORK)
 
 
 def obesity_risk(id_user, completed, network=True):

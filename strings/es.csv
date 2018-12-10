@@ -12,7 +12,7 @@
 "credits","Han contribuido a que este proyecto sea posible:
 - Vicent Blanes, MSc
 - Juan M. García-Gómez, PhD
-- Sabina Asensio, PhD
+- Sabina Asensio-Cuesta, PhD
 - Shabbir Syed Abdul, MD, MSc, PhD
 - Salvador Tortajada, PhD
 - Ruth Vilar-Mateo, PhD
@@ -101,7 +101,7 @@ Wakapersonal (Calculado a partir de tus datos de salud):
 {} sobre 100
 
 Wakanetwork (Calculado a partir del Wakaestado de tus contactos):
-{} sobre 100 
+{} sobre 10 
 "
 "get_details","Detalles Wakaestado"
 "share_out","# DEPRECATED Para compartirme por Whatapp, SMS, Facebook, Instagram, etc... pulsa sobre el enlace para copiarlo"
