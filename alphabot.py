@@ -463,11 +463,11 @@ def handle_updates(updates, debug=False):
     global languages
     for update in updates["result"]:
 
-        if debug:
-            print(update)
-
         chat = get_chat(update)
         text, message_id = filter_update(update)
+
+        if debug:
+            print(chat, text)
 
         # no valid text
         if text is False:
