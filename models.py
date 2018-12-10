@@ -222,7 +222,7 @@ def network_influence(id_user, actual_wakaestado,  db, comp):
     # now obtain the wakascore for them
     # TODO implement the db-cache friend risk
     wakaestados = [get_friend_wakaestado(f) for f in friends]
-    print('DEBUG friends status', zip(friends, wakaestados))
+    [print(el) for el in zip(friends, wakaestados)]
     print('DEBUG Log N Friends', log(len(friends), 2))
     print('DEBUG Network correction', max(0, mean(wakaestados) - actual_wakaestado) + log(len(friends), 2))
     # added a roof value at 20
