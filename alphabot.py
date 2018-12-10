@@ -210,6 +210,12 @@ def checkanswer(str, status):
                 else:
                     return aux_, True
 
+            if status[0] == 3:
+                if 0 > aux_ > 900:
+                    return None, False
+                else:
+                    return aux_, True
+
             # other case REVIEW WARNING
             if aux_ < 0 or aux_ > 25:
                 return None, False
