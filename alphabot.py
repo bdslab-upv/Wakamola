@@ -423,6 +423,9 @@ def wakaestado(chat, lang):
     risk, _ = obesity_risk(md5(chat), completed)
     risk = round(risk)
 
+    # imagen wakaestado
+    send_photo('img/' + lang + '/wakaestado.jpg', chat)
+
     # Full Wakaestado
     if completed[0] and completed[1] and completed[2]:
         # append the button for the whole description
@@ -432,11 +435,6 @@ def wakaestado(chat, lang):
     else:
         # give a general advice
         send_message(emoji.emojize(languages[lang]['wakaestado_parcial'] + ' ' + str(risk) + avocados(risk)), chat)
-    # imagen wakaestado
-    send_photo('img/' + lang + '/wakaestado.jpg', chat)
-    # instrucciones social
-    #if completed[0] and completed[1] and completed[2]:
-    #    send_message(languages[lang]['social'], chat)
 
 
 def wakaestado_detailed(chat, lang):
