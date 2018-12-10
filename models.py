@@ -210,7 +210,11 @@ def network_influence(id_user, actual_wakaestado,  db, comp):
             aux_, _ = obesity_risk(id_friend, None, False)
             return aux_
         else:
-            return last_wakaestado_
+            # sanity check
+            if 0 < last_wakaestado_ <= 100:
+                return last_wakaestado_
+            else:
+                return 0
 
     if not comp:
 

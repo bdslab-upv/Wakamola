@@ -190,14 +190,14 @@ def checkanswer(str, status):
         else:
             aux_ = float(str)
             # weight
-            if status[0] == 1 and status[1] == 1:
+            if status[0] == 1 and status[1] == 0:
                 if aux_ < 35 or aux_ > 300:
                     return None, False
                 else:
                     return aux_, True
 
             # height
-            if status[0] == 1 and status[1] == 2:
+            if status[0] == 1 and status[1] == 1:
                 if aux_ < 130 or aux_ > 230:
                     return None, False
                 else:
