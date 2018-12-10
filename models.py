@@ -221,6 +221,7 @@ def network_influence(id_user, actual_wakaestado,  db, comp):
         return 0
     # get the WakaStatus of each of the "neighbours"
     friends = db.get_user_relationships(id_user)
+    print('Len friends', len(friends))
     if len(friends) == 0:
         return 0
     # now obtain the wakascore for them
