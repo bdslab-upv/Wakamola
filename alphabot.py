@@ -534,7 +534,7 @@ def handle_updates(updates, debug=False):
                 role_ = text[1:]
                 send_message(languages[lang]['share3'], chat)
                 send_photo('img/' + lang + '/' + role_ + '.jpg', chat,
-                           caption=languages[lang]['share_caption']+' '+create_shared_link(md5(chat), role_))
+                           caption=languages[lang]['share_caption'].format(role_, create_shared_link(md5(chat), role_)))
                 send_message(languages[lang]['share_more'], chat, social_rol_keyboard(chat, lang))
                 continue
 
