@@ -532,7 +532,7 @@ def handle_updates(updates, debug=False):
             # the different social roles option
             if text in roles:
                 role_ = text[1:]
-                send_message(languages[lang]['share3'], chat)
+                # send_message(languages[lang]['share3'], chat)
                 options = [el for el in languages[lang]['social_roles'].split('\n') if el]
 
                 send_photo('img/' + lang + '/' + role_ + '.jpg', chat,
