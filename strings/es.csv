@@ -79,8 +79,8 @@ Familia :woman: :man: :old_woman:
 Amigos  :busts_in_silhouette:
 Trabajo :briefcase:
 He terminado de compartir :thumbs_up:"
-"share","¡Gracias por querer compartirme! Ahora selecciona el grupo de personas con las que quieres compartirme"
-"share3","Para compartirme con contactos de casa con Telegram reenvia la siguiente imagen y sigue compartiéndome con tantos grupos como quieras como"
+"share","¡Gracias por querer compartirme! Ahora selecciona el grupo de personas con las que quieres compartirme y comparte la imagen en Telegram o mantén pulsado el enlace para pegarlo en WhatsApp, SMS, Facebook, Instagram, etc..."
+"share3","#DEPRECATED Para compartirme con contactos de casa con Telegram reenvia la siguiente imagen y sigue compartiéndome con tantos grupos como quieras como"
 "share2","Selecciona el grupo de las personas con las que quieres compartirme."
 "share_caption","Compartiendo Wakamola con {}
 ¡Hola soy Wakamola! 
@@ -104,4 +104,4 @@ Wakanetwork (Calculado a partir del Wakaestado de tus contactos):
 {} sobre 100 
 "
 "get_details","Detalles Wakaestado"
-"share_out","También puedes compartirme copiando y pegando el enlace por email, WhatsApp, sms, Facebook, Instagram, etc... "
+"share_out","# DEPRECATED Para compartirme por Whatapp, SMS, Facebook, Instagram, etc... pulsa sobre el enlace para copiarlo"

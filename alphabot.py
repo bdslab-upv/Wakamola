@@ -539,7 +539,7 @@ def handle_updates(updates, debug=False):
                            caption=(languages[lang]['share_caption'].format(
                                emoji.emojize(options[roles.index('$'+role_)]),
                                create_shared_link(md5(chat), role_))))
-                send_message(languages[lang]['share_out'], chat)
+                #send_message(languages[lang]['share_out'], chat)
                 send_message(languages[lang]['share_more'], chat, social_rol_keyboard(chat, lang))
                 continue
 
