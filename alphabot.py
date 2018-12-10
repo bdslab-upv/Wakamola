@@ -517,6 +517,7 @@ def handle_updates(updates, debug=False):
             if len(aux) == 2:
                 # it comes with the token. The separator is AAA
                 info_ = aux[1].split('AAA')
+                print('Info token', info_)
                 friend_token = info_[0]
                 role = info_[1]
                 try:

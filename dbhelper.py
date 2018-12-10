@@ -72,7 +72,7 @@ class DBHelper:
         self.cursor.execute(stmt)
         self.conn.commit()
         # Relationship tables
-        stmt = 'CREATE TABLE IF NOT EXISTS RELATIONSHIPS (active varchar(32), passive varchar(32), type varchar(6), Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, UNIQUE(active, passive), FOREIGN KEY (active) references STATUS (id_user));'
+        stmt = 'CREATE TABLE IF NOT EXISTS RELATIONSHIPS (active varchar(32), passive varchar(32), type varchar(20), Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, UNIQUE(active, passive), FOREIGN KEY (active) references STATUS (id_user));'
         self.cursor.execute(stmt)
         self.conn.commit()
         #
@@ -245,15 +245,16 @@ class DBHelper:
         self.cursor.close()
         return aux
 
-    def add_relationship(self, id_user, contact, type):
+    def add_relationship(self, id_user, contact, typ):
         try:
             self.cursor = self.conn.cursor()
             stmt = 'Insert into RELATIONSHIPS (active, passive, type) values (%s, %s, %s)'
-            args = (id_user, contact, type)
+            args = (id_user, contact, typ)
             self.cursor.execute(stmt, args)
             self.conn.commit()
             self.cursor.close()
         except Exception as e:
+            print(e)
             self.reconnect()
 
     def get_relationships(self):
