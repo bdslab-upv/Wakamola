@@ -106,15 +106,15 @@ def risk_bmi(id_user, db=DBHelper()):
 
     # TODO REVIEW
     if bmi >= 40:
-        return 0
+        return 0, bmi
     elif 35 <= bmi < 40:
-        return 25
+        return 25, bmi
     elif 30 <= bmi < 35:
-        return 50
+        return 50, bmi
     elif 25 <= bmi < 30:
-        return 75
+        return 75, bmi
     elif bmi < 25:
-        return 100
+        return 100, bmi
 
 
 def risk_nutrition(id_user, comp = False, db=DBHelper()):
@@ -258,7 +258,8 @@ def obesity_risk(id_user, completed, network=True):
     else:
         risk = 1
 
-    part_1 = risk_bmi(id_user, db) * coef[0]
+    bmi_score, bmi = risk_bmi(id_user, db)
+    part_1 = bmi_score * coef[0]
     part_2 = risk_nutrition(id_user, completed[1], db) * coef[1]
     part_3 = risk_activity(id_user, completed[2], db) * coef[2]
 
@@ -270,11 +271,12 @@ def obesity_risk(id_user, completed, network=True):
 
     # pack the different parts
     partial_scores = {
-        'bmi': part_1/coef[0],
+        'bmi_score': bmi_score,
         'nutrition': part_2/coef[1],
         'activity': part_3/coef[2],
         'risk': risk * 100, # for better visualization
-        'network': network_correction
+        'network': network_correction,
+        'bmi': bmi
     }
     # revert the risk, add the network correction and risk it again
     final_wakaestado = min((raw_wakaestado/risk) + network_correction, 100) * risk

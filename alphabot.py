@@ -456,7 +456,8 @@ def wakaestado_detailed(chat, lang):
     three_avocados = ' :avocado: :avocado: :avocado:'
     details = details.format(str(round(partial_scores['nutrition'])) + three_avocados,
                              str(round(partial_scores['activity'])) + three_avocados,
-                             str(round(partial_scores['bmi'])) + three_avocados,
+                             str(round(partial_scores['bmi'])),
+                             str(round(partial_scores['bmi_score'])) + three_avocados,
                              str(round(partial_scores['risk'])) + three_avocados,
                              str(round(partial_scores['network'])) + three_avocados)
 
