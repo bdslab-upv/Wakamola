@@ -224,7 +224,6 @@ def network_influence(id_user, actual_wakaestado,  db, comp):
     if len(friends) == 0:
         return 0
     # now obtain the wakascore for them
-    # TODO implement the db-cache friend risk
     wakaestados = [get_friend_wakaestado(f) for f in friends]
     [print(el) for el in zip(friends, wakaestados)]
     print('DEBUG Log N Friends', log(len(friends), 2))
@@ -253,7 +252,7 @@ def obesity_risk(id_user, completed, network=True):
     if completed[0]:
         ans = db.get_responses_category(id_user=id_user, phase=1)
         # if people is healthy risk = 1, if people have all conditions risk = 0.25
-        risk = 1 - sum([float(el) * 0.25 for el in ans[-3:]])
+        risk = 1 - sum([int(el == 1) * 0.25 for el in ans[-3:]])
     else:
         risk = 1
 

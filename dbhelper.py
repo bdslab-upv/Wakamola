@@ -9,7 +9,7 @@ Refactored: ALL id_user is now the hashed version
 class DBHelper:
     def __init__(self, dbname="alphahealth.sqlite"):
         self.conn = mariadb.connect(user='bothandler',
-                                    password=open('passwd', 'r').read().split('\n')[0].strip(), database='bot',
+                                    password=open('passwd', 'r').read().split('\n')[0].strip(), database='bot_preprod',
                                     buffered=True)
         self.cursor = self.conn.cursor()
 
