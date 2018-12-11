@@ -240,11 +240,14 @@ def checkanswer(str, status):
 
 def process_lang(language):
     # TODO include other language support
+    '''
     aux = language.split('-')[0]
     if aux == 'en':
         return 'en'
     else:
         return 'es'
+    '''
+    return 'es'
 
 
 def load_pictures():
