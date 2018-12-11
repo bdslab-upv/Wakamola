@@ -102,7 +102,7 @@ def risk_bmi(id_user, db=DBHelper()):
 
     bmi = db.getBMI(id_user)
     if bmi == 0: # sanity check
-        return 0
+        return 0, 0
 
     # TODO REVIEW
     if bmi >= 40:
