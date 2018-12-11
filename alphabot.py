@@ -188,7 +188,7 @@ def checkanswer(str, status):
             else:
                 return None, False
         else:
-            aux_ = float(str)
+            aux_ = float(str.replace(',', '.'))
             # weight
             if status[0] == 1 and status[1] == 1:
                 if aux_ < 35 or aux_ > 300:
