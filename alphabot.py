@@ -28,6 +28,7 @@ db.setup()
 # caching the number of questions
 nq_category = db.n_questions()
 global languages
+global images
 # yes / no answers
 negations = [el for el in open('strings/negations.txt', 'r').read().split('\n') if el]
 afirmations = [el for el in open('strings/afirmations.txt', 'r').read().split('\n') if el]
@@ -122,11 +123,11 @@ def send_message(text, chat_id, reply_markup=None):
     get_url(url)
 
 
-def send_photo(localpath, chat_id, caption=None, reply_markup=None):
+def send_photo(img, chat_id, caption=None):
     # give the name of a file in 'img' folder
     # send that image to the user
     url = URL + "sendPhoto"
-    files = {'photo': open(localpath, 'rb')}
+    files = {'photo': img}
     data = {'chat_id': chat_id}
     if caption:
         data['caption'] = caption
@@ -179,6 +180,10 @@ def checkanswer(str, status):
     '''
     Accepts numbers and yes/no questions
     '''
+    # TODO REVIEW THIS
+    if len(str) > 7:
+        return None, False
+
     try:
         if status[0] == 1 and status[1] > 5:
             if str.lower() in afirmations:
@@ -209,15 +214,15 @@ def checkanswer(str, status):
                     return None, False
                 else:
                     return aux_, True
-
+            # is 3rd phase
             if status[0] == 3:
-                if 0 > aux_ > 900:
+                if aux_ < 0 or aux_ > 900:
                     return None, False
                 else:
                     return aux_, True
 
-            # other case REVIEW WARNING
-            if aux_ < 0 or aux_ > 25:
+            # other case TODO REVIEW WARNING
+            if aux_ < 0 or aux_ > 50:
                 return None, False
             else:
                 return aux_, True
@@ -240,6 +245,21 @@ def process_lang(language):
         return 'en'
     else:
         return 'es'
+
+
+def load_pictures():
+    # since there is only few pictures
+    # load the in advance
+    images_ = {}
+    for lang in listdir('img'):
+        dict_ = {}
+        if lang.startswith('.'):
+            continue
+        for f in listdir('img/'+lang):
+            with open('img/'+lang+'/'+f, 'rb') as img:
+                dict_[f] = img.read()
+        images_[lang] = dict_
+    return images_
 
 
 def load_languages():
@@ -367,11 +387,11 @@ def questionarie(num, chat, lang, msg=None):
     '''
     db.change_phase(newphase=num, id_user=md5(chat))
     if num == 1:
-        send_photo('img/' + lang + '/personal.jpg', chat)
+        send_photo(images[lang]['persona.jpg'], chat)
     elif num == 2:
-        send_photo('img/' + lang + '/food.jpg', chat)
+        send_photo(images[lang]['food.jpg'], chat)
     elif num == 3:
-        send_photo('img/' + lang + '/activity.jpg', chat)
+        send_photo(images[lang]['activity.jpg'], chat)
 
     if msg:
         send_message(msg, chat)
@@ -415,6 +435,7 @@ def wakaestado(chat, lang):
     Piece of the standard flow to calculate and send the wakaestado
     '''
     global languages
+    global images
     completed = db.check_completed(md5(chat))
     # put phase to 0
     db.change_phase(newphase=0, id_user=md5(chat))
@@ -424,7 +445,7 @@ def wakaestado(chat, lang):
     risk = round(risk)
 
     # imagen wakaestado
-    send_photo('img/' + lang + '/wakaestado.jpg', chat)
+    send_photo(images[lang]['wakaestado.jpg'], chat)
 
     # Full Wakaestado
     if completed[0] and completed[1] and completed[2]:
@@ -497,7 +518,7 @@ def handle_updates(updates, debug=False):
         # start command / second condition it's for the shared link
         if text.lower() == 'start' or '/start' in text.lower():
             # wellcome message
-            send_photo('img/' + lang + '/welcome.jpg', chat)
+            send_photo(images[lang]['welcome.jpg'], chat)
             send_message(emoji.emojize(languages[lang]['welcome']), chat, main_menu_keyboard(chat, lang))
 
             # insert user into the db, check collisions
@@ -512,20 +533,21 @@ def handle_updates(updates, debug=False):
                 db.change_phase(newphase=0, id_user=md5(chat))
 
             # check for the token
-            aux = text.split(' ')
-            # TOKEN CHECK -> AFTER REGISTRATION
-            if len(aux) == 2:
-                # it comes with the token. The separator is AAA
-                info_ = aux[1].split('AAA')
-                print('Info token', info_)
-                friend_token = info_[0]
-                role = info_[1]
-                try:
-                    # friend token already in md5 -> after next code block
-                    db.add_relationship(md5(chat), friend_token, role)
-                except Exception as e:
-                    print('Error ocurred on relationship add')
-                    log_entry(e)
+            if ' ' in text:
+                aux = text.split(' ')
+                # TOKEN CHECK -> AFTER REGISTRATION
+                if len(aux) == 2:
+                    # it comes with the token. The separator is AAA
+                    info_ = aux[1].split('AAA')
+                    print('Info token', info_)
+                    friend_token = info_[0]
+                    role = info_[1]
+                    try:
+                        # friend token already in md5 -> after next code block
+                        db.add_relationship(md5(chat), friend_token, role)
+                    except Exception as e:
+                        print('Error ocurred on relationship add')
+                        log_entry(e)
 
         # Check if the user have done the start command
         elif db.check_user(md5(chat)):
@@ -541,11 +563,10 @@ def handle_updates(updates, debug=False):
                 # send_message(languages[lang]['share3'], chat)
                 options = [el for el in languages[lang]['social_roles'].split('\n') if el]
 
-                send_photo('img/' + lang + '/' + role_ + '.jpg', chat,
+                send_photo(images[lang][role_ + '.jpg'], chat,
                            caption=(languages[lang]['share_caption'].format(
                                emoji.emojize(options[roles.index('$'+role_)]),
                                create_shared_link(md5(chat), role_))))
-                #send_message(languages[lang]['share_out'], chat)
                 send_message(languages[lang]['share_more'], chat, social_rol_keyboard(chat, lang))
                 continue
 
@@ -647,6 +668,8 @@ def main():
     # CHECK API
     getMe()
 
+    global images
+    images = load_pictures()
     global languages
     languages = load_languages()
     # variable para controlar el numero de mensajes
@@ -683,4 +706,6 @@ def main():
 
 
 if __name__ == '__main__':
+    # TODO QUESTIONS ON CACHE FOR NEXT VERSION
+    # TODO FOR NEXT VERSION -> ONE RANGE PER QUESTION
     main()
