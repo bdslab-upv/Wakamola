@@ -390,7 +390,7 @@ def questionarie(num, chat, lang, msg=None):
     '''
     db.change_phase(newphase=num, id_user=md5(chat))
     if num == 1:
-        send_photo(images[lang]['persona.jpg'], chat)
+        send_photo(images[lang]['personal.jpg'], chat)
     elif num == 2:
         send_photo(images[lang]['food.jpg'], chat)
     elif num == 3:
