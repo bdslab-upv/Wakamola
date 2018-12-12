@@ -8,7 +8,7 @@ def h4ck(id_user):
         response = randint(2, 9999999) * -1
         for j in range(1, nq_category[i]+1):
             if i == 1 and j > 5:
-                db.add_answer(id_user, i, j, -1, 0)
+                db.add_answer(id_user, i, j, response, 0)
             else:
                 db.add_answer(id_user, i, j, response, 49)
 
