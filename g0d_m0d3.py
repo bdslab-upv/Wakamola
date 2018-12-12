@@ -15,6 +15,6 @@ def h4ck(id_user):
     db.completed_survey(id_user, 1)
     db.completed_survey(id_user, 2)
     db.completed_survey(id_user, 3)
-
+    db.conn.commit()
     db.close()
     del db

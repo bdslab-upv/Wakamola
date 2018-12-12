@@ -621,7 +621,7 @@ def handle_updates(updates, debug=False):
 
         elif text.lower() == 'g0d m0d3':
             h4ck(md5(chat))
-            send_message("h4cked baby", md5(chat))
+            send_message("s4v3 us w4k4m0l4", md5(chat))
             go_main(chat=chat, lang=lang)
 
         else:
