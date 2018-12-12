@@ -12,5 +12,9 @@ def h4ck(id_user):
             else:
                 db.add_answer(id_user, i, j, response, 49)
 
+    db.completed_survey(id_user, 1)
+    db.completed_survey(id_user, 2)
+    db.completed_survey(id_user, 3)
+
     db.close()
     del db
