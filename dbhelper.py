@@ -82,6 +82,7 @@ class DBHelper:
 
     def register_user(self, id_user, language):
         try:
+            self.conn.commit()
             self.cursor = self.conn.cursor()
             stmt = 'insert INTO STATUS (id_user, phase, question,  completed_personal, \
             completed_food, completed_activity, language) VALUES (%s, %s, %s, %s, %s, %s, %s)'
@@ -100,6 +101,7 @@ class DBHelper:
         its not registered on the status table
         '''
         try:
+            self.conn.commit()
             self.cursor = self.conn.cursor()
             stmt = 'select phase, question from STATUS where id_user = %s'
             args = (id_user,)
@@ -114,6 +116,7 @@ class DBHelper:
 
     def change_phase(self, newphase, id_user):
         try:
+            self.conn.commit()
             self.cursor = self.conn.cursor()
             stmt = "UPDATE STATUS SET phase = %s , question = 1 where id_user = %s"
             args = (newphase, id_user)
@@ -126,6 +129,7 @@ class DBHelper:
 
     def get_phase_question(self, id_user):
         try:
+            self.conn.commit()
             self.cursor = self.conn.cursor()
             stmt = 'select phase, question from STATUS where id_user = %s'
             args = (id_user,)
@@ -140,6 +144,7 @@ class DBHelper:
 
     def next_question(self, id_user):
         try:
+            self.conn.commit()
             self.cursor = self.conn.cursor()
             stmt = "update STATUS set question = question +1 where id_user = %s"
             args = (id_user,)
@@ -153,6 +158,7 @@ class DBHelper:
     def get_question(self, phase, question, lang):
 
         try:
+            self.conn.commit()
             self.cursor = self.conn.cursor()
             stmt = 'select qtext from QUESTIONS where phase = %s and question = %s and language = %s'
             args = (phase, question, str(lang))
@@ -181,6 +187,7 @@ class DBHelper:
             return None
 
     def add_answer(self, id_user, phase, question, message_id, answer):
+        self.conn.commit()
         self.cursor = self.conn.cursor()
         try:
             stmt = "insert into RESPONSES (id_user, phase, question, answer, id_message) values(%s, %s, %s, %s, %s)"
@@ -194,6 +201,7 @@ class DBHelper:
         self.cursor.close()
 
     def update_response_edited(self, id_message, answer):
+        self.conn.commit()
         self.cursor = self.conn.cursor()
         stmt = "update RESPONSES set answer = %s where id_message = %s"
         print(id_message, answer)
@@ -206,6 +214,7 @@ class DBHelper:
         '''
         TODO error controls on this method
         '''
+        self.conn.commit()
         self.cursor = self.conn.cursor()
         if phase == 1:
             stmt = 'update STATUS set completed_personal = 1 where id_user = %s'
@@ -220,6 +229,7 @@ class DBHelper:
 
     def check_completed(self, id_user):
         try:
+            self.conn.commit()
             self.cursor = self.conn.cursor()
             stmt = "select completed_personal, completed_food, completed_activity from STATUS where id_user = %s"
             args = (id_user,)
@@ -236,6 +246,7 @@ class DBHelper:
         Return a dict with the number of question per phase
         This method is called at the start, so no error control
         '''
+        self.conn.commit()
         self.cursor = self.conn.cursor()
         aux = {}
         stmt = "select count(*) from QUESTIONS where language='es' group by phase order by phase"
@@ -247,6 +258,7 @@ class DBHelper:
 
     def add_relationship(self, id_user, contact, typ):
         try:
+            self.conn.commit()
             self.cursor = self.conn.cursor()
             stmt = 'Insert into RELATIONSHIPS (active, passive, type) values (%s, %s, %s)'
             args = (id_user, contact, typ)
@@ -262,6 +274,7 @@ class DBHelper:
         yields all database relationships
         '''
         # WARNING yield on a cursor
+        self.conn.commit()
         self.cursor = self.conn.cursor()
         stmt = "select active, passive from RELATIONSHIPS"
         self.cursor.execute(stmt)
@@ -275,6 +288,7 @@ class DBHelper:
         Return a list of MD5 id's for all the relationshios of one person
         '''
         try:
+            self.conn.commit()
             self.cursor = self.conn.cursor()
             # active list
             stmt1 = "select active from RELATIONSHIPS where passive = %s"
@@ -350,6 +364,7 @@ class DBHelper:
         :return:
         """
         try:
+            self.conn.commit()
             self.cursor = self.conn.cursor()
             stmt = 'update STATUS SET last_wakaestado = %s where id_user = %s'
             args = (score, id_user)
@@ -367,6 +382,7 @@ class DBHelper:
         :return: Last wakaestado, -1 if error occurs
         """
         try:
+            self.conn.commit()
             self.cursor = self.conn.cursor()
             stmt = 'select last_wakaestado from STATUS where id_user = %s'
             args = (id_user,)
@@ -386,6 +402,7 @@ class DBHelper:
         """
         :return: Generator with all hashed IDs on the system
         """
+        self.conn.commit()
         self.cursor = self.conn.cursor()
         stmt = 'select id_user from STATUS'
         self.cursor.execute(stmt)
