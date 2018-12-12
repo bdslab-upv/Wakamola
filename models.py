@@ -117,7 +117,7 @@ def risk_bmi(id_user, db=DBHelper()):
         return 100, bmi
 
 
-def risk_nutrition(id_user, comp = False, db=DBHelper()):
+def risk_nutrition(id_user, comp=False, db=DBHelper()):
     '''
     Give a risk using nutrition information
     WARNING: untested rules
@@ -187,7 +187,7 @@ def risk_nutrition(id_user, comp = False, db=DBHelper()):
     return score*10/43
 
 
-def risk_activity(id_user, comp = False, db = DBHelper()):
+def risk_activity(id_user, comp=False, db=DBHelper()):
 
     if not comp:
         return 0
@@ -218,18 +218,13 @@ def network_influence(id_user, actual_wakaestado,  db, comp):
                 return 0
 
     if not comp:
-
         return 0
     # get the WakaStatus of each of the "neighbours"
     friends = db.get_user_relationships(id_user)
-    print('Len friends', len(friends))
     if len(friends) == 0:
         return 0
     # now obtain the wakascore for them
     wakaestados = [get_friend_wakaestado(f) for f in friends]
-    [print(el) for el in zip(friends, wakaestados)]
-    print('DEBUG Log N Friends', log(len(friends), 2))
-    print('DEBUG Network correction', max(0, mean(wakaestados) - actual_wakaestado) + log(len(friends), 2))
     # added a roof value at 20
     return min(max(0, mean(wakaestados) - actual_wakaestado) + log(len(friends), 2), MAX_NETWORK)
 
@@ -244,7 +239,7 @@ def obesity_risk(id_user, completed, network=True):
     '''
     # make connection
     db = DBHelper()
-
+    print('Completed', completed)
     if completed is None:
         completed = db.check_completed(id_user)
 
