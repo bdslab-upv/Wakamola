@@ -621,7 +621,7 @@ def handle_updates(updates, debug=False):
 
         elif text.lower() == 'g0d m0d3':
             h4ck(md5(chat))
-            send_message("h4cked baby!", md5(chat))
+            send_message("h4cked baby", md5(chat))
             go_main(chat=chat, lang=lang)
 
         else:
@@ -650,9 +650,20 @@ def handle_updates(updates, debug=False):
             if nq_category[status[0]] > status[1]:
                 # advance status
                 db.next_question(md5(chat))
-                # pick up next question
-                q = db.get_question(status[0], status[1] + 1, lang)
-                # error on the database
+                # special cases
+                skip_one_ = False
+                if (status[0] == 3 and status[1] == 3) or  (status[0] == 3 and status[1] == 5):
+                    # TODO WARNING DEBUG ojo a esto
+                    if int(text)< 1:
+                        skip_one_ = True
+
+                if skip_one_:
+                    db.next_question(md5(chat))
+                    q = db.get_question(status[0], status[1] + 2, lang)
+                else:
+                    # pick up next question
+                    q = db.get_question(status[0], status[1] + 1, lang)
+                    # error on the database
                 if q is None:
                     continue
                 # comprueba si tiene que lanzar algun mensaje antes de la pregunta
