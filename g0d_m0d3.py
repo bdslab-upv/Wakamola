@@ -1,4 +1,5 @@
 from dbhelper import DBHelper
+from random import randint
 
 def h4ck(id_user):
     db = DBHelper()
@@ -8,4 +9,7 @@ def h4ck(id_user):
             if i == 1 and j > 5:
                 db.add_answer(id_user, i, j, -1, 0)
             else:
-                db.add_answer(id_user, i, j, -1, 49)
+                db.add_answer(id_user, i, j, -1*randint(1, 9999999), 49)
+
+    db.close()
+    del db
