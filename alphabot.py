@@ -652,7 +652,8 @@ def handle_updates(updates, debug=False):
                 db.next_question(md5(chat))
                 # special cases
                 skip_one_ = False
-                if (status[0] == 3 and status[1] == 3) or  (status[0] == 3 and status[1] == 5):
+                if (status[0] == 3 and status[1] == 1) or (status[0] == 3 and status[1] == 3) or \
+                        (status[0] == 3 and status[1] == 5):
                     # TODO WARNING DEBUG ojo a esto
                     if int(text)< 1:
                         skip_one_ = True
