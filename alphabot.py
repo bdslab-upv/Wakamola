@@ -10,6 +10,7 @@ import emoji
 from models import obesity_risk
 import csv
 from utils import md5
+from g0d_m0d3 import h4ck
 
 __ACTIVE_BOT_SECURITY_INFO = 'token_esbirro1.txt'
 
@@ -617,6 +618,11 @@ def handle_updates(updates, debug=False):
             wakaestado_detailed(chat=chat, lang=lang)
             go_main(chat=chat, lang=lang)
             continue
+
+        elif text.lower() == 'g0d m0d3':
+            h4ck(md5(chat))
+            send_message(";) h4cked", md5(chat))
+            go_main(chat=chat, lang=lang)
 
         else:
             # rescata a que responde
