@@ -12,7 +12,7 @@ import csv
 from utils import md5
 from g0d_m0d3 import h4ck
 
-__ACTIVE_BOT_SECURITY_INFO = 'token_private.txt'
+__ACTIVE_BOT_SECURITY_INFO = 'token_esbirro1.txt'
 
 with open(__ACTIVE_BOT_SECURITY_INFO, 'r') as sec_info:
     credentials_text = sec_info.read().split('\n')
