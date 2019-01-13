@@ -5,17 +5,18 @@ import mysql.connector as mariadb
 Refactored: ALL id_user is now the hashed version
 '''
 
+DATABASE = 'bot_preprod'
 
 class DBHelper:
     def __init__(self, dbname="alphahealth.sqlite"):
         self.conn = mariadb.connect(user='bothandler',
-                                    password=open('passwd', 'r').read().split('\n')[0].strip(), database='bot_preprod',
+                                    password=open('passwd', 'r').read().split('\n')[0].strip(), database=DATABASE,
                                     buffered=True)
         self.cursor = self.conn.cursor()
 
-
     def load_questions(self):
-        blanks = 0
+        self.conn.commit()
+        self.cursor = self.conn.cursor()
         try:
             for lang in listdir('questions'):
                 # iterate over the phases
@@ -31,8 +32,10 @@ class DBHelper:
                                 self.conn.commit()
                             else:
                                 blanks += 1
+            self.cursor.close()
         except Exception as e:
             print(e)
+            self.cursor.close()
 
     def reconnect(self, dbname="alphahealth.sqlite"):
         '''
@@ -40,45 +43,22 @@ class DBHelper:
         also a new cursor
         '''
         self.conn = mariadb.connect(user='bothandler',
-                                    password=open('passwd', 'r').read().split('\n')[0].strip(), database='bot',
+                                    password=open('passwd', 'r').read().split('\n')[0].strip(), database=DATABASE,
                                     buffered=True)
         self.cursor = self.conn.cursor()
 
-
     def close(self):
-        '''
-        Close the cursor and the connection
-        :return:
-        '''
-
         self.cursor.close()
         self.conn.close()
 
     def setup(self):
-        print("Checking database")
-        stmt = "CREATE TABLE IF NOT EXISTS STATUS (id_user varchar(32) PRIMARY KEY, phase int NOT NULL, question int NOT NULL, completed_personal int, completed_food int, completed_activity int, language text, last_wakaestado float);"
-        self.cursor.execute(stmt)
+        self.cursor = self.conn.cursor()
+        with open('init_db_queries.sql', 'r') as sql_init:
+            self.cursor.executemany(operation=sql_init.read(), seq_params=None)
+
         self.conn.commit()
-        # Questions table
-        stmt = "CREATE TABLE IF NOT EXISTS QUESTIONS (question int, phase int, qtext text, language varchar(2), PRIMARY KEY (question, phase, language), UNIQUE(question, phase, language));"
-        self.cursor.execute(stmt)
-        self.conn.commit()
-        # Responses table
-        stmt = "CREATE TABLE IF NOT EXISTS RESPONSES (id_user varchar(32), id_message int, question int, phase int, answer float, Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (id_user, id_message, question, phase));"
-        self.cursor.execute(stmt)
-        self.conn.commit()
-        # Tips table
-        stmt = 'CREATE TABLE IF NOT EXISTS TIPS (tip text, language text, category int);'
-        self.cursor.execute(stmt)
-        self.conn.commit()
-        # Relationship tables
-        stmt = 'CREATE TABLE IF NOT EXISTS RELATIONSHIPS (active varchar(32), passive varchar(32), type varchar(20), Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, UNIQUE(active, passive), FOREIGN KEY (active) references STATUS (id_user));'
-        self.cursor.execute(stmt)
-        self.conn.commit()
-        #
-        self.load_questions()
         self.cursor.close()
-        print('Database ready!')
+        self.load_questions()
 
     def register_user(self, id_user, language):
         try:
@@ -140,7 +120,7 @@ class DBHelper:
         except Exception as e:
             print(e)
             self.reconnect()
-            return (0, 0)
+            return 0, 0
 
     def next_question(self, id_user):
         try:

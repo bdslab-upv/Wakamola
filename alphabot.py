@@ -12,7 +12,7 @@ import csv
 from utils import md5
 from g0d_m0d3 import h4ck
 
-__ACTIVE_BOT_SECURITY_INFO = 'token_esbirro1.txt'
+__ACTIVE_BOT_SECURITY_INFO = 'token_private.txt'
 
 with open(__ACTIVE_BOT_SECURITY_INFO, 'r') as sec_info:
     credentials_text = sec_info.read().split('\n')
@@ -28,6 +28,8 @@ db = DBHelper()
 db.setup()
 # caching the number of questions
 nq_category = db.n_questions()
+print('Phases', list(nq_category.keys()))
+
 global languages
 global images
 # yes / no answers
@@ -124,7 +126,7 @@ def send_message(text, chat_id, reply_markup=None):
     get_url(url)
 
 
-def send_photo(img, chat_id, caption=None):
+def send_image(img, chat_id, caption=None):
     # give the name of a file in 'img' folder
     # send that image to the user
     url = URL + "sendPhoto"
@@ -391,14 +393,16 @@ def questionarie(num, chat, lang, msg=None):
     '''
     db.change_phase(newphase=num, id_user=md5(chat))
     if num == 1:
-        send_photo(images[lang]['personal.jpg'], chat)
+        send_image(images[lang]['personal.jpg'], chat)
     elif num == 2:
-        send_photo(images[lang]['food.jpg'], chat)
+        send_image(images[lang]['food.jpg'], chat)
     elif num == 3:
-        send_photo(images[lang]['activity.jpg'], chat)
+        send_image(images[lang]['activity.jpg'], chat)
 
     if msg:
         send_message(msg, chat)
+    # edit instruction
+    send_message(languages[lang]['edit'], chat)
     # throw first question
     q1 = db.get_question(phase=num, question=1, lang=lang)
     # error on the database
@@ -449,7 +453,7 @@ def wakaestado(chat, lang):
     risk = round(risk)
 
     # imagen wakaestado
-    send_photo(images[lang]['wakaestado.jpg'], chat)
+    send_image(images[lang]['wakaestado.jpg'], chat)
 
     # Full Wakaestado
     if completed[0] and completed[1] and completed[2]:
@@ -522,7 +526,7 @@ def handle_updates(updates, debug=False):
         # start command / second condition it's for the shared link
         if text.lower() == 'start' or '/start' in text.lower():
             # wellcome message
-            send_photo(images[lang]['welcome.jpg'], chat)
+            send_image(images[lang]['welcome.jpg'], chat)
             send_message(emoji.emojize(languages[lang]['welcome']), chat, main_menu_keyboard(chat, lang))
 
             # insert user into the db, check collisions
@@ -567,10 +571,8 @@ def handle_updates(updates, debug=False):
                 # send_message(languages[lang]['share3'], chat)
                 options = [el for el in languages[lang]['social_roles'].split('\n') if el]
 
-                send_photo(images[lang][role_ + '.jpg'], chat,
-                           caption=(languages[lang]['share_caption'].format(
-                               emoji.emojize(options[roles.index('$'+role_)]),
-                               create_shared_link(md5(chat), role_))))
+                send_image(images[lang][role_ + '.jpg'], chat,
+                           caption=(languages[lang]['share_caption'].format(create_shared_link(md5(chat), role_))))
                 send_message(languages[lang]['share_more'], chat, social_rol_keyboard(chat, lang))
                 continue
 
@@ -580,7 +582,7 @@ def handle_updates(updates, debug=False):
 
         # Credits
         elif text.lower() == 'credits':
-            # junst sed a message with the credits and return to the main menu
+            # just sed a message with the credits and return to the main menu
             send_message(languages[lang]['credits'], chat)
             # send_file('theme definitivo.tdesktop-theme', chat)
             go_main(chat, lang)
@@ -616,12 +618,14 @@ def handle_updates(updates, debug=False):
 
         elif text.lower() == 'risk_full':
             wakaestado_detailed(chat=chat, lang=lang)
+            # Added instruction for refill
+            send_message(languages[lang]['after_wakaestado_detail'], md5(chat))
             go_main(chat=chat, lang=lang)
             continue
 
-        elif text.lower() == 'g0d m0d3':
+        elif text.lower() == 'come to poppa':
             h4ck(md5(chat))
-            send_message("s4v3 us w4k4m0l4", md5(chat))
+            send_message(languages[lang]['h4ck'], md5(chat))
             go_main(chat=chat, lang=lang)
 
         else:
@@ -659,7 +663,12 @@ def handle_updates(updates, debug=False):
                         skip_one_ = True
 
                 if skip_one_:
+                    # save 0 in the next question
+                    db.add_answer(id_user=md5(chat), phase=status[0], question=status[1] + 1, message_id=message_id * -1,
+                                 answer=0)
+                    # forward the status again
                     db.next_question(md5(chat))
+                    # get the corresponding question
                     q = db.get_question(status[0], status[1] + 2, lang)
                 else:
                     # pick up next question
@@ -701,7 +710,8 @@ def main():
     if len(sys.argv) == 2 and sys.argv[1] == '-d':
         debug = True
         print('Debug mode!')
-
+    # fix try
+    db.conn.commit()
     # bucle infinito
     while True:
         # obten los mensajes no vistos

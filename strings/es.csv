@@ -1,5 +1,5 @@
 "action","text"
-"1_activity","Piensa en todas las actividades **intensas** que has realizado en los **últimos 7 días**. Las actividades físicas **intensas** se refieren a aquellas que implican un esfuerzo físico intenso y que lo hacen respirar mucho más intensamente que lo normal. Piensa solo en aquellas actividades físicas que realizaste durante **por lo menos 10 minutos seguidos**. 
+"1_activity","Piensa en todas las actividades **intensas** que has realizado en los **últimos 7 días**. Las actividades físicas **intensas** se refieren a aquellas que implican un esfuerzo físico intenso y que lo hacen respirar mucho más intensamente que lo normal. Piensa solo en aquellas actividades físicas que realizaste durante **por lo menos 10 minutos seguidos**.
 "
 "2_activity","Piense en todas las actividades **moderadas** que has realizado en los **últimos 7 días**. Las actividades **moderadas** son aquellas que requieren un esfuerzo físico moderado que lo hace respirar algo más intensamente que lo normal. Piensa solo en aquellas actividades físicas que realizaste durante **por lo menos 10 minutos seguidos**.
 "
@@ -9,20 +9,25 @@
 "
 "be_number","¡Lo siento, pero la respuesta a esta pregunta debe ser un número!
 "
-"credits","Han contribuido a que este proyecto sea posible:
+"credits","El proyecto Wakamola ha sido desarrollando por el grupo de investigación BDSLab de la Universitat Politènica de València en colaboración con Taipei Medical University, bajo el asesoramiento médico y experto del hospital La Fe, y el asesoramiento en nutrición de expertos de la Facultad de Farmacia de la Universitat de València.
+
+Han contribuido a que este proyecto sea posible:
+
 - Vicent Blanes, MSc
 - Juan M. García-Gómez, PhD
 - Sabina Asensio-Cuesta, PhD
+- Alberto Conejero, PhD
 - Shabbir Syed Abdul, MD, MSc, PhD
 - Salvador Tortajada, PhD
 - Ruth Vilar-Mateo, PhD
 - Juan Francisco Merino-Torres, MD, PhD
+- Matilde Rubio Almanza, MD
+- Ana Frigola, PhD
 
-Diseñadores gráficos:
--Cristina Alegre Rexachs 
--José Ros Diego 
--Mario Vilar Hernández
-"
+Diseñadores gráficos (ETSID, UPV):
+-Cristina Alegre Rexachs
+-José Ros Diego
+-Mario Vilar Hernández"
 "end_activity","Gracias por hablarme también de tu actividad física. Con todo lo que hemos hablado he calculado tu Wakaestado, haz click en el botón :green_heart: Wakaetado para conocerlo.
 "
 "end_food","Ya sé muchas cosas sobre tu alimentación, ahora hablemos de tu actividad física semanal.
@@ -33,9 +38,9 @@ Pulsa :person_running: Actividad para empezar.
 
 ¿Podemos hablar ahora de tu alimentación? Haz click en el botón :green_apple: Dieta
 "
-"food_intro","En el cuestionario de alimentación tendrás que indicar cuantas veces de *media* consumes los siguientes alimentos *POR DIA*.  
+"food_intro","En el cuestionario de alimentación tendrás que indicar cuantas veces de *media* consumes los siguientes alimentos *POR DIA*.
 "
-"food_weekly","¡Perfecto! Ahora me gustaría saber cuantas veces tomas los siguientes alimentos POR SEMANA
+"food_weekly","¡Perfecto! Ahora me gustaría saber cuantas veces tomas los siguientes alimentos *POR SEMANA*
 "
 "generic_tip","No has respondido todavía a todas las preguntas, un consejo genérico será enviado en las siguentes fases del desarrollo
 "
@@ -60,14 +65,14 @@ Otro
 "
 "select","¡Elige una opción!
 "
-"social","Me gustaría poder ayudar también a tus amigos y familiares. 
+"social","Me gustaría poder ayudar también a tus amigos y familiares.
 Cuanto mejor sea el wakaestado de tu entorno mejor será el tuyo e iré actualizandolo para ti periódicamente.
 Para compartirme únicamente tienes que reenviar la siguiente imagen.
 ¡Gracias por compartirme!
 "
-"wakaestado","La puntuación de tu Wakaestado es: 
+"wakaestado","La puntuación de tu Wakaestado es:
 "
-"wakaestado_parcial","Por ahora con la información que tengo sobre ti este es tu Wakaestado: 
+"wakaestado_parcial","Por ahora con la información que tengo sobre ti este es tu Wakaestado:
 "
 "welcome","¡Hola encantado de hablar contigo!
 Voy a hacerte algunas preguntas para conocerte y poder darte un Wakaestado.
@@ -82,26 +87,30 @@ He terminado de compartir :thumbs_up:"
 "share","¡Gracias por querer compartirme! Ahora selecciona el grupo de personas con las que quieres compartirme y comparte la imagen en Telegram o mantén pulsado el enlace para copiar y pegar en Whatsapp, sms, Facebook, Instagram, etc."
 "share3","#DEPRECATED Para compartirme con contactos de casa con Telegram reenvia la siguiente imagen y sigue compartiéndome con tantos grupos como quieras como"
 "share2","Selecciona el grupo de las personas con las que quieres compartirme."
-"share_caption","Compartiendo Wakamola con {}
-¡Hola soy Wakamola! 
+"share_caption","¡Hola soy Wakamola! 
+Soy un bot que te ayuda a conocer mejor tus hábitos nutricionales y de actividad física. He sido creado por el grupo de investigación BDSLab de la Universidad Politècnica de València en colaboración con Taipei Medical University, bajo el asesoramiento médico y experto del hospital La Fe, y el asesoramiento de expertos en nutrición de la Facultad de Farmacia de la Universitat de València.
+
 Con este enlace podrás conocerme y hablar conmigo sobre hábitos saludables: {}"
 "share_more","¡Comparte con más gente!"
 "wakaestado_detail","Este es el desglose de tu Wakaestado que se calcula a partir de las siguientes puntuaciones parciales:
 
-Wakaalimentacion: 
-{} sobre 100 
+Wakaalimentacion:
+{} sobre 100
 
 Wakaactvidad:
-{} sobre 100 
+{} sobre 100
 
 WakaIMC  (Índice de Masa Corporal = {}):
-{} sobre 100 
+{} sobre 100
 
 Wakapersonal (Calculado a partir de tus datos de salud):
 {} sobre 100
 
 Wakanetwork (Calculado a partir del Wakaestado de tus contactos):
-{} sobre 10 
+{} sobre 10
 "
 "get_details","Detalles Wakaestado"
 "share_out","# DEPRECATED Para compartirme por Whatapp, SMS, Facebook, Instagram, etc... pulsa sobre el enlace para copiarlo"
+"after_wakaestado_detail","Recuérda que puedes actualizar tu wakaestado tantas veces como quieras volviendo a responder a mis preguntas y compartiéndome."
+"h4ck","s4v3 Us, W4k4m0L4"
+"edit","Recuerda que puedes cambiar tu respuesta manteniendo pulsado sobre ella y editando el mensaje."

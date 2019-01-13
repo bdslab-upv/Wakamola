@@ -183,6 +183,7 @@ def risk_nutrition(id_user, comp=False, db=DBHelper()):
     # last quesions have not asociated score
 
     # WARNING -> now we have 43 items!!
+    # WARNING -> changed: 49 -> 48 ;  46 -> 45
     # get an score between 0-100 for this part
     return score*10/43
 
