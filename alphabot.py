@@ -12,7 +12,7 @@ import csv
 from utils import md5
 from g0d_m0d3 import h4ck
 
-__ACTIVE_BOT_SECURITY_INFO = 'token_esbirro1.txt'
+__ACTIVE_BOT_SECURITY_INFO = 'token_wakamolabot.txt'
 
 with open(__ACTIVE_BOT_SECURITY_INFO, 'r') as sec_info:
     credentials_text = sec_info.read().split('\n')
@@ -623,7 +623,7 @@ def handle_updates(updates, debug=False):
             go_main(chat=chat, lang=lang)
             continue
 
-        elif text.lower() == 'come to poppa':
+        elif text.lower() == 'wakafill':
             h4ck(md5(chat))
             send_message(languages[lang]['h4ck'], md5(chat))
             go_main(chat=chat, lang=lang)
