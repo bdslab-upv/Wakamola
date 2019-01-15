@@ -85,7 +85,6 @@ Amigos  :busts_in_silhouette:
 Trabajo :briefcase:
 He terminado de compartir :thumbs_up:"
 "share","¡Gracias por querer compartirme! Ahora selecciona el grupo de personas con las que quieres compartirme y comparte la imagen en Telegram o mantén pulsado el enlace para copiar y pegar en Whatsapp, sms, Facebook, Instagram, etc."
-"share3","#DEPRECATED Para compartirme con contactos de casa con Telegram reenvia la siguiente imagen y sigue compartiéndome con tantos grupos como quieras como"
 "share2","Selecciona el grupo de las personas con las que quieres compartirme."
 "share_caption","¡Hola soy Wakamola! 
 Soy un bot que te ayuda a conocer mejor tus hábitos nutricionales y de actividad física. He sido creado por el grupo de investigación BDSLab de la Universidad Politècnica de València en colaboración con Taipei Medical University, bajo el asesoramiento médico y experto del hospital La Fe, y el asesoramiento de expertos en nutrición de la Facultad de Farmacia de la Universitat de València.
@@ -100,7 +99,7 @@ Wakaalimentacion:
 Wakaactvidad:
 {} sobre 100
 
-WakaIMC  (Índice de Masa Corporal = {}):
+WakaIMC  (Índice de Masa Corporal = {} que corresponde a {}):
 {} sobre 100
 
 Wakapersonal (Calculado a partir de tus datos de salud):
@@ -110,7 +109,12 @@ Wakanetwork (Calculado a partir del Wakaestado de tus contactos):
 {} sobre 10
 "
 "get_details","Detalles Wakaestado"
-"share_out","# DEPRECATED Para compartirme por Whatapp, SMS, Facebook, Instagram, etc... pulsa sobre el enlace para copiarlo"
 "after_wakaestado_detail","Recuérda que puedes actualizar tu wakaestado tantas veces como quieras volviendo a responder a mis preguntas y compartiéndome."
 "h4ck","s4v3 Us, W4k4m0L4"
 "edit","Recuerda que puedes cambiar tu respuesta manteniendo pulsado sobre ella y editando el mensaje."
+"pesos","Peso bajo
+Peso normal
+Sobrepeso
+Obesidad tipo 1
+Obesidad tipo 2
+Obesidad tipo 3"

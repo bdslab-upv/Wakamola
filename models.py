@@ -271,7 +271,7 @@ def obesity_risk(id_user, completed, network=True):
         'nutrition': part_2/coef[1],
         'activity': part_3/coef[2],
         'risk': risk * 100, # for better visualization
-        'network': network_correction,
+        'network': network_correction * 10, # same thing
         'bmi': bmi
     }
     # revert the risk, add the network correction and risk it again
