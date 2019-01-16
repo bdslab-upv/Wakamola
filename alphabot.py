@@ -362,12 +362,15 @@ def main_menu_keyboard(chat, lang='en'):
     food = options[1]
     activity = options[2]
     completed = db.check_completed(md5(chat))
+    # TODO REMOVE COMMENT
+    '''
     if completed[0]:
         personal += '\t\t:white_heavy_check_mark:'
     if completed[1]:
         food += '\t\t:white_heavy_check_mark:'
     if completed[2]:
         activity += '\t\t:white_heavy_check_mark:'
+    '''
     keyboard = {'inline_keyboard': [[{'text': emoji.emojize(personal), 'callback_data': 'personal'},
                                      {'text': emoji.emojize(food), 'callback_data': 'food'}],
                                     [{'text': emoji.emojize(activity), 'callback_data': 'activity'},
