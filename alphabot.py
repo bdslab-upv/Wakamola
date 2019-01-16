@@ -250,7 +250,7 @@ def process_lang(language):
     else:
         return 'es'
     '''
-    return 'es'
+    return 'val'
 
 
 def load_pictures():
@@ -702,6 +702,7 @@ def main():
     images = load_pictures()
     global languages
     languages = load_languages()
+    print(languages.keys())
     # variable para controlar el numero de mensajes
     last_update_id = None
 
