@@ -28,7 +28,6 @@ db = DBHelper()
 db.setup()
 # caching the number of questions
 nq_category = db.n_questions()
-print('Phases', list(nq_category.keys()))
 
 global languages
 global images
@@ -39,7 +38,7 @@ afirmations = [el for el in open('strings/afirmations.txt', 'r').read().split('\
 roles = ['$home', '$family', '$friend', '$coworker']
 
 #default language
-def_lang_ = 'val'
+def_lang_ = 'es'
 
 
 ###############
@@ -250,7 +249,7 @@ def process_lang(language):
     else:
         return 'es'
     '''
-    return 'val'
+    return def_lang_
 
 
 def load_pictures():
@@ -362,15 +361,14 @@ def main_menu_keyboard(chat, lang='en'):
     food = options[1]
     activity = options[2]
     completed = db.check_completed(md5(chat))
-    # TODO REMOVE COMMENT
-    '''
+
     if completed[0]:
         personal += '\t\t:white_heavy_check_mark:'
     if completed[1]:
         food += '\t\t:white_heavy_check_mark:'
     if completed[2]:
         activity += '\t\t:white_heavy_check_mark:'
-    '''
+
     keyboard = {'inline_keyboard': [[{'text': emoji.emojize(personal), 'callback_data': 'personal'},
                                      {'text': emoji.emojize(food), 'callback_data': 'food'}],
                                     [{'text': emoji.emojize(activity), 'callback_data': 'activity'},
@@ -486,9 +484,24 @@ def wakaestado_detailed(chat, lang):
     details = languages[lang]['wakaestado_detail']
     # nutrition, activity, bmi, risk, network
     three_avocados = ' :avocado: :avocado: :avocado:'
+    weight_category = None
+    aux = partial_scores['bmi']
+    categories = languages[lang]['pesos'].split('\n')
+    if aux < 18.5:
+        weight_category = categories[0]
+    elif aux < 25:
+        weight_category = categories[1]
+    elif aux < 30:
+        weight_category = categories[2]
+    elif aux <35:
+        weight_category = categories[3]
+    else:
+        weight_category = categories[4]
+
     details = details.format(str(round(partial_scores['nutrition'])) + three_avocados,
                              str(round(partial_scores['activity'])) + three_avocados,
                              str(round(partial_scores['bmi'])),
+                             weight_category,
                              str(round(partial_scores['bmi_score'])) + three_avocados,
                              str(round(partial_scores['risk'])) + three_avocados,
                              str(round(partial_scores['network'])) + three_avocados)
@@ -538,8 +551,7 @@ def handle_updates(updates, debug=False):
                 try:
                     db.register_user(id_user=md5(chat), language=lang)
                 except Exception as e:
-                    print(e)
-                    # log_entry("Error registering the user")
+                    log_entry("Error registering the user")
             else:
                 db.change_phase(newphase=0, id_user=md5(chat))
 
@@ -550,7 +562,8 @@ def handle_updates(updates, debug=False):
                 if len(aux) == 2:
                     # it comes with the token. The separator is AAA
                     info_ = aux[1].split('AAA')
-                    print('Info token', info_)
+                    if debug:
+                        print('Info token', info_)
                     friend_token = info_[0]
                     role = info_[1]
                     try:
@@ -622,13 +635,13 @@ def handle_updates(updates, debug=False):
         elif text.lower() == 'risk_full':
             wakaestado_detailed(chat=chat, lang=lang)
             # Added instruction for refill
-            send_message(languages[lang]['after_wakaestado_detail'], md5(chat))
+            send_message(languages[lang]['after_wakaestado_detail'], chat)
             go_main(chat=chat, lang=lang)
             continue
 
         elif text.lower() == 'wakafill':
             h4ck(md5(chat))
-            send_message(languages[lang]['h4ck'], md5(chat))
+            send_message('lokoooo', chat)
             go_main(chat=chat, lang=lang)
 
         else:
@@ -705,7 +718,6 @@ def main():
     images = load_pictures()
     global languages
     languages = load_languages()
-    print(languages.keys())
     # variable para controlar el numero de mensajes
     last_update_id = None
 
@@ -721,23 +733,23 @@ def main():
         # obten los mensajes no vistos
         updates = get_updates(last_update_id)
         # si hay algun mensaje do work
-        #try:
-        if 'result' in updates and len(updates['result']) > 0:  # REVIEW provisional patch for result error
-            last_update_id = get_last_update_id(updates) + 1
-            handle_updates(updates, debug)
-            # have to be gentle with the telegram server
-            time.sleep(0.5)
-        else:
-            # if no messages lets be *more* gentle with telegram servers
-            time.sleep(1)
-    '''
+        try:
+            if 'result' in updates and len(updates['result']) > 0:  # REVIEW provisional patch for result error
+                last_update_id = get_last_update_id(updates) + 1
+                handle_updates(updates, debug)
+                # have to be gentle with the telegram server
+                time.sleep(0.5)
+            else:
+                # if no messages lets be *more* gentle with telegram servers
+                time.sleep(1)
+
         except Exception as e:
             print('Error ocurred, watch log!')
             log_entry(str(e))
             print(e)
             # sleep 20 seconds so the problem may solve
             time.sleep(20)
-    '''
+
 
 
 

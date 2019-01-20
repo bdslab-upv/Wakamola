@@ -17,8 +17,9 @@ class DBHelper:
     def load_questions(self):
         self.conn.commit()
         self.cursor = self.conn.cursor()
-        try:
-            for lang in listdir('questions'):
+
+        for lang in listdir('questions'):
+            try:
                 # iterate over the phases
                 for i, phase in enumerate(sorted(listdir('questions/' + lang))):
                     with open('questions/' + lang + '/' + phase, 'r', encoding='utf-8') as fich:
@@ -32,10 +33,11 @@ class DBHelper:
                                 self.conn.commit()
                             else:
                                 blanks += 1
-            self.cursor.close()
-        except Exception as e:
-            print(e)
-            self.cursor.close()
+            except Exception as e:
+                print(e)
+        self.cursor.close()
+
+
 
     def reconnect(self, dbname="alphahealth.sqlite"):
         '''
