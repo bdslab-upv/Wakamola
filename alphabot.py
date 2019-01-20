@@ -641,7 +641,6 @@ def handle_updates(updates, debug=False):
 
         elif text.lower() == 'wakafill':
             h4ck(md5(chat))
-            send_message('lokoooo', chat)
             go_main(chat=chat, lang=lang)
 
         else:
