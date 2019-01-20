@@ -38,7 +38,7 @@ afirmations = [el for el in open('strings/afirmations.txt', 'r').read().split('\
 roles = ['$home', '$family', '$friend', '$coworker']
 
 #default language
-def_lang_ = 'va'
+def_lang_ = 'es'
 
 
 ###############
@@ -732,22 +732,23 @@ def main():
         # obten los mensajes no vistos
         updates = get_updates(last_update_id)
         # si hay algun mensaje do work
-        try:
-            if 'result' in updates and len(updates['result']) > 0:  # REVIEW provisional patch for result error
-                last_update_id = get_last_update_id(updates) + 1
-                handle_updates(updates, debug)
-                # have to be gentle with the telegram server
-                time.sleep(0.5)
-            else:
-                # if no messages lets be *more* gentle with telegram servers
-                time.sleep(1)
 
+        if 'result' in updates and len(updates['result']) > 0:  # REVIEW provisional patch for result error
+            last_update_id = get_last_update_id(updates) + 1
+            handle_updates(updates, debug)
+            # have to be gentle with the telegram server
+            time.sleep(0.5)
+        else:
+            # if no messages lets be *more* gentle with telegram servers
+            time.sleep(1)
+        '''
         except Exception as e:
             print('Error ocurred, watch log!')
             log_entry(str(e))
             print(e)
             # sleep 20 seconds so the problem may solve
             time.sleep(20)
+        '''
 
 
 
