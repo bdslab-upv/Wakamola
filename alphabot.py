@@ -38,7 +38,7 @@ afirmations = [el for el in open('strings/afirmations.txt', 'r').read().split('\
 roles = ['$home', '$family', '$friend', '$coworker']
 
 #default language
-def_lang_ = 'es'
+def_lang_ = 'va'
 
 
 ###############
