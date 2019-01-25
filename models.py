@@ -141,7 +141,7 @@ def risk_nutrition(id_user, comp=False, db=DBHelper()):
             score += table_3(ans[row['Item']])
 
 
-    return score*10 / 
+    return score * 10 / table.shape[0]
 
 
 def risk_activity(id_user, comp=False, db=DBHelper()):
