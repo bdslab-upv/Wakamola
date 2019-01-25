@@ -12,8 +12,25 @@ def h4ck(id_user):
                 db.add_answer(id_user, i, j, response, 80)
             if i == 1 and j == 2:
                 db.add_answer(id_user, i, j, response, 175)
-            if i == 1 and j > 5:
+            if i == 1 and 5 <= j <= 8:
                 db.add_answer(id_user, i, j, response, 0)
+            if i == 1 and j == 9:
+                db.add_answer(id_user, i, j, response, 'Hombre')
+            if i == 1 and j == 10:
+                db.add_answer(id_user, i, j, response, 30)
+            if i == 1 and j == 11:
+                db.add_answer(id_user, i, j, response, 'Sin estudios')
+            if i == 1 and j == 12:
+                db.add_answer(id_user, i, j, response, 'Soltero')
+            if i == 1 and j == 13:
+                db.add_answer(id_user, i, j, response, 5)
+            if i == 1 and j == 14:
+                db.add_answer(id_user, i, j, response, 0)
+            if i == 1 and j == 15:
+                db.add_answer(id_user, i, j, response, 0)
+            if i == 1 and j == 16:
+                db.add_answer(id_user, i, j, response, 46400)
+
             else:
                 db.add_answer(id_user, i, j, response, 49)
 

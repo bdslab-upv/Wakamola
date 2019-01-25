@@ -72,9 +72,9 @@ Cuanto mejor sea el wakaestado de tu entorno mejor será el tuyo e iré actualiz
 Para compartirme únicamente tienes que reenviar la siguiente imagen.
 ¡Gracias por compartirme!
 "
-wakaestado,"La puntuación de tu Wakaestado (sobre 100) es:
+wakaestado,"La puntuación de tu Wakaestado es: {} sobre 100
 "
-wakaestado_parcial,"Por ahora con la información que tengo sobre ti este es tu Wakaestado:
+wakaestado_parcial,"Por ahora con la información que tengo sobre ti este es tu Wakaestado: {} sobre 100
 "
 welcome,"¡Hola encantado de hablar contigo!
 Voy a hacerte algunas preguntas para conocerte y poder darte un Wakaestado.

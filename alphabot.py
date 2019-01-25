@@ -447,12 +447,12 @@ def wakaestado(chat, lang):
     # Full Wakaestado
     if completed[0] and completed[1] and completed[2]:
         # append the button for the whole description
-        send_message(emoji.emojize(languages[lang]['wakaestado'] + ' ' + str(risk) + avocados(risk)), chat,
+        send_message(emoji.emojize(languages[lang]['wakaestado'].format(str(risk) + avocados(risk))), chat,
                      detailed_wakamola_keyboard(chat, lang))
     # WakaEstado partial
     else:
         # give a general advice
-        send_message(emoji.emojize(languages[lang]['wakaestado_parcial'] + ' ' + str(risk) + avocados(risk)), chat)
+        send_message(emoji.emojize(languages[lang]['wakaestado_parcial'].format(str(risk) + avocados(risk))), chat)
 
 
 def wakaestado_detailed(chat, lang):
@@ -685,14 +685,14 @@ def handle_updates(updates):
                 extra_messages(status[0], status[1] + 1, chat, lang)
                 # TODO OPCIONES DE RESPUESTA DINAMICAS
 
-                if status[0] == 1 and status[1]+1 == 8: # genero
+                if status[0] == 1 and status[1] == 8: # genero
 
                     print(send_message(emoji.emojize(q), chat, dynamic_keyboard(chat, 'generos', lang)))
 
-                elif status[0] == 1 and status[1]+1 == 10: # nivel estudios
+                elif status[0] == 1 and status[1] == 10: # nivel estudios
                     print(send_message(emoji.emojize(q), chat, dynamic_keyboard(chat, 'estudios', lang)))
 
-                elif status[0] == 1 and status[1]+1 == 11:  # estado civil
+                elif status[0] == 1 and status[1] == 11:  # estado civil
                     print(send_message(emoji.emojize(q), chat, dynamic_keyboard(chat, 'estado_civil', lang)))
 
                 else:
