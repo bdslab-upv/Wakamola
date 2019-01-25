@@ -18,6 +18,7 @@ credits,"El projecte Wakamola l'ha desenvolupat el grup d'investigació BDSLab d
  - Sabina Asensio-Cuesta, PhD
  - Alberto Conejero, PhD
  - Shabbir Syed Abdul, MD, MSc, PhD
+ - Yu-Chuan (Jack) Li, MD, PhD
  - Salvador Tortajada, PhD
  - Ruth Vilar-Mateo, PhD
  - Juan Francisco Merino-Torres, MD, PhD
@@ -25,9 +26,10 @@ credits,"El projecte Wakamola l'ha desenvolupat el grup d'investigació BDSLab d
  - Ana Frigola, PhD
  
  Dissenyadors gràfics (ETSED, UPV):
- -Cristina Alegre Rexachs
- -José Ros Diego
- -Mario Vilar Hernández"
+-Mª Dolores Blanco
+-Ángel Esteban
+-Marta Lavall
+"
 end_activity,"Gràcies per parlar-me també de la teua activitat física. Amb tot el que hem parlat he calculat el teu wakaestat. Fes clic al botó :green_heart: 'wakaestat' per a conèixer-lo.
  "
 end_food,"Ja sé moltes coses sobre la teua alimentació. Ara parlem de la teua activitat física setmanal.
@@ -69,7 +71,7 @@ social,"M'agradaria poder ajudar també els teus amics i familiars.
  Per a compartir-me només cal que reenvies la imatge següent.
  Gràcies per compartir-me!
  "
-wakaestado,"La puntuació del teu wakaestat és:
+wakaestado,"La puntuació del teu wakaestat (sobre 100) és:
  "
 wakaestado_parcial,"Ara com ara, amb la informació que tinc sobre tu, aquest és el teu wakaestat:
  "
@@ -118,3 +120,15 @@ pesos," Pes baix
  Obesitat tipus 1
  Obesitat tipus 2
  Obesitat tipus 3"
+,"Home
+Dona
+Altre
+No contestar"
+estudios,"Sense estudis
+Primària
+Secundària
+Superior"
+estado_civil,"Solter
+Casat/Parella
+Viudo
+Altre"

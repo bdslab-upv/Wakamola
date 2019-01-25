@@ -5,40 +5,28 @@ import datetime
 from dbhelper import DBHelper
 import urllib
 from os import listdir
-import sys
 import emoji
 from models import obesity_risk
 import csv
 from utils import md5
 from g0d_m0d3 import h4ck
+import argparse
+from pandas import read_csv
 
-__ACTIVE_BOT_SECURITY_INFO = 'token_tavernes.txt'
-
-with open(__ACTIVE_BOT_SECURITY_INFO, 'r') as sec_info:
-    credentials_text = sec_info.read().split('\n')
-    TOKEN = credentials_text[0]
-    BOT_USERNAME = credentials_text[1]
-
-# URL to interact with the API
-URL = "https://api.telegram.org/bot{}/".format(TOKEN)
-
-# handler to the database
-db = DBHelper()
-# set up
-db.setup()
-# caching the number of questions
-nq_category = db.n_questions()
-
+# global variables to use
+# througth different functions
+global URL
+global debug
 global languages
 global images
-# yes / no answers
-negations = [el for el in open('strings/negations.txt', 'r').read().split('\n') if el]
-afirmations = [el for el in open('strings/afirmations.txt', 'r').read().split('\n') if el]
-# role calls -> avoid hardcodding them in different places
-roles = ['$home', '$family', '$friend', '$coworker']
-
-#default language
-def_lang_ = 'es'
+global def_lang_
+global negations
+global affirmations
+global roles
+global db
+global nq_category
+global rules
+global god_mode
 
 
 ###############
@@ -176,60 +164,50 @@ def send_file(localpath, chat_id):
 #   BOT SPECIFIC METHODS
 #
 ###############################
+def load_rules():
+    '''
+    Loads the especific range rules for each question
+    returns dict
+    '''
+    rules = {}
+    df_ = read_csv('ranges.csv', sep=',')
+    for _, row in df_.iterrows():
+        question = (row['phase'], row['question'])
+        aux_ = {'type': row['type'], 'low': row['low'], 'high': row['high']}
+        rules[question] = aux_
+    return rules
 
 
 def checkanswer(str, status):
     '''
-    Accepts numbers and yes/no questions
+    Determine if an answer is valid
     '''
-    # TODO REVIEW THIS
-    if len(str) > 7:
+    # maximum string length accepted
+    if len(str) > 20:
         return None, False
 
     try:
-        if status[0] == 1 and status[1] > 5:
-            if str.lower() in afirmations:
+        ranges = rules[status]
+        # numeric values
+        if ranges['type'] == 'int' or ranges['type'] == 'float':
+            val = float(str.replace(',', '.'))
+            assert ranges['low'] <= val <= ranges['high']
+            return val, True
+
+        # yes/no questions
+        elif ranges['type'] == 'affirmation':
+            if str.lower() in affirmations:
                 return 1, True
             elif str.lower() in negations:
                 return 0, True
             else:
                 return None, False
-        else:
-            aux_ = float(str.replace(',', '.'))
-            # weight
-            if status[0] == 1 and status[1] == 1:
-                if aux_ < 35 or aux_ > 300:
-                    return None, False
-                else:
-                    return aux_, True
 
-            # height
-            if status[0] == 1 and status[1] == 2:
-                if aux_ < 130 or aux_ > 230:
-                    return None, False
-                else:
-                    return aux_, True
+        # no text restrictions
+        elif ranges['type'] == 'text':
+            return str, True
 
-            # age
-            if status[0] == 1 and status[1] == 3:
-                if aux_ < 5 or aux_ > 115:
-                    return None, False
-                else:
-                    return aux_, True
-            # is 3rd phase
-            if status[0] == 3:
-                if aux_ < 0 or aux_ > 900:
-                    return None, False
-                else:
-                    return aux_, True
-
-            # other case TODO REVIEW WARNING
-            if aux_ < 0 or aux_ > 50:
-                return None, False
-            else:
-                return aux_, True
-
-    except ValueError:
+    except:
         return None, False
 
 
@@ -241,18 +219,14 @@ def checkanswer(str, status):
 
 
 def process_lang(language):
-    # TODO include other language support
     '''
-    aux = language.split('-')[0]
-    if aux == 'en':
-        return 'en'
-    else:
-        return 'es'
+    By the moment this method only allows
+    one language. TODO -> Implement multilanguage as files become ready
     '''
     return def_lang_
 
 
-def load_pictures():
+def load_images():
     # since there is only few pictures
     # load the in advance
     images_ = {}
@@ -260,8 +234,8 @@ def load_pictures():
         dict_ = {}
         if lang.startswith('.'):
             continue
-        for f in listdir('img/'+lang):
-            with open('img/'+lang+'/'+f, 'rb') as img:
+        for f in listdir('img/' + lang):
+            with open('img/' + lang + '/' + f, 'rb') as img:
                 dict_[f] = img.read()
         images_[lang] = dict_
     return images_
@@ -287,7 +261,7 @@ def load_languages():
 
 
 def get_chat(update):
-    if 'edited_message' in update and'text' in update['edited_message']:
+    if 'edited_message' in update and 'text' in update['edited_message']:
         return update['edited_message']['chat']['id']
 
     elif 'callback_query' in update:
@@ -304,7 +278,7 @@ def filter_update(update):
             return False, update['edited_message']['message_id']
         else:
             # returning none if it's an update without text -> i.e and image
-            return None,  None
+            return None, None
 
     elif 'callback_query' in update:
         # data is the text sent by the callback as a msg
@@ -328,7 +302,8 @@ def process_edit(update):
     # get the status of that message_id
     status = db.get_status_by_id_message(message_id)
     try:
-        if checkanswer(text, status):
+        text, flag = checkanswer(text, status)
+        if flag:
             db.update_response_edited(message_id, text)
     except Exception as e:
         log_entry('Captured error at editing message.')
@@ -342,16 +317,28 @@ def go_main(chat, lang):
     send_message(languages[lang]['select'], chat, main_menu_keyboard(chat, lang))
 
 
-def social_rol_keyboard(chat, lang='en'):
+def dynamic_keyboard(chat, string, lang='en'):
     '''
     This is a keyboard created for selecting the type of person to share
     '''
-    options = [el for el in languages[lang]['social_roles'].split('\n') if el]
+    options = [el for el in languages[lang][string].split('\n') if el]
+    key_ = []
+    aux_ = []
+    for i in range(len(options)):
+        aux_.append({'text': options[i], 'callback_data': options[i]})
+        if i % 2 == 1:
+            key_.append(aux_)
+            aux_ = []
+    print(key_)
+    keyboard = {'inline_keyboard': key_}
+    '''
     keyboard = {'inline_keyboard': [[{'text': emoji.emojize(options[0]), 'callback_data': roles[0]},
                                      {'text': emoji.emojize(options[1]), 'callback_data': roles[1]}],
                                     [{'text': emoji.emojize(options[2]), 'callback_data': roles[2]},
                                      {'text': emoji.emojize(options[3]), 'callback_data': roles[3]}],
                                     [{'text': emoji.emojize(options[4]), 'callback_data': '_back_main'}]]}
+                                    
+    '''
     return json.dumps(keyboard)
 
 
@@ -409,6 +396,7 @@ def questionarie(num, chat, lang, msg=None):
     # error on the database
     if q1 is None:
         return
+    # check for "extra" (out of the normal q-a flow) messages
     extra_messages(num, 1, chat, lang)
     send_message(emoji.emojize(q1), chat)
 
@@ -493,7 +481,7 @@ def wakaestado_detailed(chat, lang):
         weight_category = categories[1]
     elif aux < 30:
         weight_category = categories[2]
-    elif aux <35:
+    elif aux < 35:
         weight_category = categories[3]
     else:
         weight_category = categories[4]
@@ -509,8 +497,7 @@ def wakaestado_detailed(chat, lang):
     send_message(emoji.emojize(details), chat)
 
 
-def handle_updates(updates, debug=False):
-    global languages
+def handle_updates(updates):
     for update in updates["result"]:
 
         chat = get_chat(update)
@@ -589,7 +576,7 @@ def handle_updates(updates, debug=False):
 
                 send_image(images[lang][role_ + '.jpg'], chat,
                            caption=(languages[lang]['share_caption'].format(create_shared_link(md5(chat), role_))))
-                send_message(languages[lang]['share_more'], chat, social_rol_keyboard(chat, lang))
+                send_message(languages[lang]['share_more'], chat, dynamic_keyboard(chat, 'social_roles',lang))
                 continue
 
             # if its not a correct callback
@@ -605,7 +592,7 @@ def handle_updates(updates, debug=False):
 
         elif text.lower() == 'share':
             # Send a message with the role keyboard
-            send_message(languages[lang]['share'], chat, social_rol_keyboard(chat, lang))
+            send_message(languages[lang]['share'], chat, dynamic_keyboard(chat, 'social_roles', lang))
             continue
 
         # return from the share phase
@@ -639,7 +626,7 @@ def handle_updates(updates, debug=False):
             go_main(chat=chat, lang=lang)
             continue
 
-        elif text.lower() == 'wakafill':
+        elif text.lower() == god_mode:
             h4ck(md5(chat))
             go_main(chat=chat, lang=lang)
 
@@ -653,7 +640,8 @@ def handle_updates(updates, debug=False):
             text, correct_ = checkanswer(text, status)
             if correct_:
                 # store the user response
-                db.add_answer(id_user=md5(chat), phase=status[0], question=status[1], message_id=message_id, answer=text)
+                db.add_answer(id_user=md5(chat), phase=status[0], question=status[1], message_id=message_id,
+                              answer=text)
 
             else:
                 send_message(languages[lang]['numeric_response'], chat)
@@ -671,16 +659,18 @@ def handle_updates(updates, debug=False):
                 db.next_question(md5(chat))
                 # special cases
                 skip_one_ = False
+                # if the users answers 0 in certain question
+                # we have to omit the folowing questions
                 if (status[0] == 3 and status[1] == 1) or (status[0] == 3 and status[1] == 3) or \
                         (status[0] == 3 and status[1] == 5):
-                    # TODO WARNING DEBUG ojo a esto
-                    if int(text)< 1:
+                    if int(text) < 1:
                         skip_one_ = True
 
                 if skip_one_:
                     # save 0 in the next question
-                    db.add_answer(id_user=md5(chat), phase=status[0], question=status[1] + 1, message_id=message_id * -1,
-                                 answer=0)
+                    db.add_answer(id_user=md5(chat), phase=status[0], question=status[1] + 1,
+                                  message_id=message_id * -1,
+                                  answer=0)
                     # forward the status again
                     db.next_question(md5(chat))
                     # get the corresponding question
@@ -693,7 +683,20 @@ def handle_updates(updates, debug=False):
                     continue
                 # comprueba si tiene que lanzar algun mensaje antes de la pregunta
                 extra_messages(status[0], status[1] + 1, chat, lang)
-                send_message(emoji.emojize(q), chat)
+                # TODO OPCIONES DE RESPUESTA DINAMICAS
+
+                if status[0] == 1 and status[1]+1 == 8: # genero
+
+                    print(send_message(emoji.emojize(q), chat, dynamic_keyboard(chat, 'generos', lang)))
+
+                elif status[0] == 1 and status[1]+1 == 10: # nivel estudios
+                    print(send_message(emoji.emojize(q), chat, dynamic_keyboard(chat, 'estudios', lang)))
+
+                elif status[0] == 1 and status[1]+1 == 11:  # estado civil
+                    print(send_message(emoji.emojize(q), chat, dynamic_keyboard(chat, 'estado_civil', lang)))
+
+                else:
+                    send_message(emoji.emojize(q), chat)
             else:
                 # si lo es, actualiza estatus y "vuelve" al menu principal
                 db.completed_survey(md5(chat), status[0])
@@ -710,21 +713,10 @@ def handle_updates(updates, debug=False):
 
 
 def main():
-    # CHECK API
-    getMe()
-
-    global images
-    images = load_pictures()
-    global languages
-    languages = load_languages()
     # variable para controlar el numero de mensajes
     last_update_id = None
+    getMe()
 
-    # check for debug
-    debug = False
-    if len(sys.argv) == 2 and sys.argv[1] == '-d':
-        debug = True
-        print('Debug mode!')
     # fix try
     db.conn.commit()
     # bucle infinito
@@ -733,9 +725,9 @@ def main():
         updates = get_updates(last_update_id)
         # si hay algun mensaje do work
 
-        if 'result' in updates and len(updates['result']) > 0:  # REVIEW provisional patch for result error
+        if 'result' in updates and len(updates['result']) > 0:
             last_update_id = get_last_update_id(updates) + 1
-            handle_updates(updates, debug)
+            handle_updates(updates)
             # have to be gentle with the telegram server
             time.sleep(0.5)
         else:
@@ -751,10 +743,48 @@ def main():
         '''
 
 
-
-
 if __name__ == '__main__':
     # TODO QUESTIONS ON CACHE FOR NEXT VERSION
-    # TODO DYNAMIC HACK WORD
-    # TODO FOR NEXT VERSION -> ONE RANGE PER QUESTION
+    # argument parser
+    parser = argparse.ArgumentParser(description="Telegram BOT")
+    parser.add_argument('-d', action="store_true", default=True, help="Debug mode: Print the messages on console")
+    parser.add_argument('-t', action="store", help="Token to use", required=True)
+    parser.add_argument('-l', action="store", default='es', help="Default languages")
+    parser.add_argument('--godmode', action="store", default="wakafill", help="god mode password")
+    spacename = parser.parse_args()
+
+    # handler to the database
+    db = DBHelper()
+    # set up
+    db.setup()
+    # caching the number of questions
+    nq_category = db.n_questions()
+
+    # default language
+    def_lang_ = spacename.l
+    # debug
+    debug = spacename.d
+    # god mode
+    god_mode = spacename.godmode.lower()
+    # languages
+    languages = load_languages()
+    # images
+    images = load_images()
+    # rules
+    rules = load_rules()
+
+    # yes / no answers
+    negations = [el for el in open('strings/negations.txt', 'r').read().split('\n') if el]
+    affirmations = [el for el in open('strings/affirmations.txt', 'r').read().split('\n') if el]
+    # role calls -> avoid hardcodding them in different places
+    roles = ['$home', '$family', '$friend', '$coworker']
+
+    with open(spacename.t, 'r') as sec_info:
+        credentials_text = sec_info.read().split('\n')
+        TOKEN = credentials_text[0]
+        BOT_USERNAME = credentials_text[1]
+
+    # URL to interact with the API
+    URL = "https://api.telegram.org/bot{}/".format(TOKEN)
+
     main()

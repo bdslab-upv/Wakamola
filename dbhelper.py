@@ -55,9 +55,10 @@ class DBHelper:
 
     def setup(self):
         self.cursor = self.conn.cursor()
-        with open('init_db_queries.sql', 'r') as sql_init:
-            self.cursor.executemany(operation=sql_init.read(), seq_params=None)
-
+        queries = [query.strip() for query in open('init_db_queries.sql', 'r').read().split(';') if query]
+        for query in queries:
+            if query:
+                self.cursor.execute(query)
         self.conn.commit()
         self.cursor.close()
         self.load_questions()

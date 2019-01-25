@@ -129,11 +129,11 @@ def risk_nutrition(id_user, comp=False, db=DBHelper()):
     # obtain the responses
     ans = db.get_responses_category(id_user=id_user, phase=2)
     # TODO review these rules
-    score += table_1(group=4, n=ans[0])
-    score += table_1(group=4, n=ans[1])
-    score += table_1(group=1, n=ans[2])
-    score += table_1(group=8, n=ans[3])
-    score += table_1(group=1, n=ans[4])
+    score += table_1(group=4, n=ans[0]) # leche
+    score += table_1(group=4, n=ans[1]) # yogur
+    score += table_1(group=1, n=ans[2]) # cereales
+    score += table_1(group=8, n=ans[3]) # galletas
+    score += table_1(group=1, n=ans[4]) # pan
     score += table_1(group=1, n=ans[5]) # pan integral
     # secon block
     score += table_2(ans[6])
@@ -152,40 +152,45 @@ def risk_nutrition(id_user, comp=False, db=DBHelper()):
     score += table_1(group=6, n=ans[17])
     score += table_1(group=1, n=ans[18])
     score += table_1(group=1, n=ans[19])
-    score += table_1(group=1, n=ans[20])
+    score += table_1(group=1, n=ans[20]) # sopa de fideos o arroz
     # 5th block #21
     score += table_1(group=5, n=ans[21])
     score += table_1(group=5, n=ans[22])
     score += table_1(group=5, n=ans[23])
-    score += table_1(group=7, n=ans[24])
-    score += table_1(group=5, n=ans[25])
-    score += table_1(group=5, n=ans[26])
+    score += table_1(group=7, n=ans[24]) # picada
+    score += table_1(group=5, n=ans[25]) # pescado blanco
+    score += table_1(group=5, n=ans[26]) # pescado azul
     score += table_1(group=5, n=ans[27]) # marisco
-    # 28 have no score
-    # 6th block
-    score += table_1(group=7, n=ans[29]) #jamon #29
-    # 30 have no score
-    score += table_1(group=4, n=ans[31])
-    score += table_1(group=4, n=ans[32])
-    score += table_1(group=3, n=ans[33])
-    score += table_1(group=3, n=ans[34])
-    score += table_1(group=8, n=ans[35]) # fruta en almibar
-    score += table_1(group=3, n=ans[36])
-    score += table_1(group=3, n=ans[37])
-    score += table_3(ans[38]) # frutos secos
-    score += table_1(group=8, n=ans[39])
-    score += table_1(group=8, n=ans[40])
-    score += table_1(group=8, n=ans[41])
-    score += table_1(group=8, n=ans[42])
-    score += table_1(group=8, n=ans[43])
-    # 7th block
-    score += table_1(group=9, n=ans[44])
-    # last quesions have not asociated score
+    # 28 es ahora las croquetas
+    # Y NUEVO 29: patatas fritas
+    score += table_1(group=8, n=ans[28])
+    score += table_1(group=7, n=ans[29])
 
-    # WARNING -> now we have 43 items!!
-    # WARNING -> changed: 49 -> 48 ;  46 -> 45
-    # get an score between 0-100 for this part
-    return score*10/43
+    # 6th block
+    score += table_1(group=7, n=ans[30]) # jamon serrano
+    score += table_1(group=4, n=ans[31]) # jamon cocido
+    score += table_1(group=4, n=ans[32]) # queso blanco
+    score += table_1(group=5, n=ans[33]) # otros curado
+    score += table_1(group=3, n=ans[34])
+    score += table_1(group=3, n=ans[35])
+    score += table_1(group=8, n=ans[36]) # fruta en almibar
+    score += table_1(group=3, n=ans[37])
+    score += table_1(group=3, n=ans[38])
+    score += table_3(ans[39]) # frutos secos
+    score += table_1(group=8, n=ans[40]) # postres lacteos
+    score += table_1(group=8, n=ans[41]) # pasteles de crema
+    score += table_1(group=8, n=ans[42]) # chips
+    score += table_1(group=8, n=ans[43]) # golosinas
+    score += table_1(group=8, n=ans[44]) # helados
+    # 7th block
+    score += table_1(group=7, n=ans[45]) # bebidas bajas en calorias
+    score += table_1(group=9, n=ans[46]) # bebidas azucaradas
+    # Vino o sangria no esta
+    score += table_1(group=7, n=ans[48])  # Cerveza sin alcohol
+    # Cerveza no esta
+    # whisky etc no esta
+
+    return score*10/47
 
 
 def risk_activity(id_user, comp=False, db=DBHelper()):
