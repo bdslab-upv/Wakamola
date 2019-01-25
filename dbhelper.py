@@ -163,7 +163,7 @@ class DBHelper:
             self.cursor.execute(stmt, args)
             rs = self.cursor.fetchall()
             self.cursor.close()
-            return int([el[0] for el in rs][0]) > 0
+            return int(rs[0][0]) > 0
         except Exception as e:
             print(e)
             self.reconnect()

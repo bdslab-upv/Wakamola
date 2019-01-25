@@ -5,6 +5,7 @@ This class is meant to have the risk models
 from dbhelper import DBHelper
 from statistics import mean
 from math import log
+from pandas import read_csv
 
 MAX_NETWORK = 10
 
@@ -128,69 +129,19 @@ def risk_nutrition(id_user, comp=False, db=DBHelper()):
 
     # obtain the responses
     ans = db.get_responses_category(id_user=id_user, phase=2)
-    # TODO review these rules
-    score += table_1(group=4, n=ans[0]) # leche
-    score += table_1(group=4, n=ans[1]) # yogur
-    score += table_1(group=1, n=ans[2]) # cereales
-    score += table_1(group=8, n=ans[3]) # galletas
-    score += table_1(group=1, n=ans[4]) # pan
-    score += table_1(group=1, n=ans[5]) # pan integral
-    # secon block
-    score += table_2(ans[6])
-    score += table_2(ans[7])
-    score += table_2(ans[8]) # mantequilla
-    # thrid block weekly
-    score += table_1(group=8, n=ans[9])
-    score += table_1(group=8, n=ans[10])
-    score += table_1(group=8, n=ans[11])
-    score += table_1(group=8, n=ans[12]) # ensaimada, donut, croisant
-    # 4th block
-    score += table_1(group=2, n=ans[13])
-    score += table_1(group=2, n=ans[14])
-    score += table_1(group=2, n=ans[15]) # verdura de guarnicion
-    score += table_1(group=1, n=ans[16]) # patatas
-    score += table_1(group=6, n=ans[17])
-    score += table_1(group=1, n=ans[18])
-    score += table_1(group=1, n=ans[19])
-    score += table_1(group=1, n=ans[20]) # sopa de fideos o arroz
-    # 5th block #21
-    score += table_1(group=5, n=ans[21])
-    score += table_1(group=5, n=ans[22])
-    score += table_1(group=5, n=ans[23])
-    score += table_1(group=7, n=ans[24]) # picada
-    score += table_1(group=5, n=ans[25]) # pescado blanco
-    score += table_1(group=5, n=ans[26]) # pescado azul
-    score += table_1(group=5, n=ans[27]) # marisco
-    # 28 es ahora las croquetas
-    # Y NUEVO 29: patatas fritas
-    score += table_1(group=8, n=ans[28])
-    score += table_1(group=7, n=ans[29])
+    # load the rules file
+    table = read_csv('food_model.csv', sep=',')
+    for _, row in table.iterrows():
+        # Item Table Group
+        if row['Table'] == 1:
+            score += table_1(group=row['Group'], n=ans[row['Item']])
+        elif row['Table'] == 2:
+            score += table_2(ans[row['Item']])
+        elif row['Table'] == 3:
+            score += table_3(ans[row['Item']])
 
-    # 6th block
-    score += table_1(group=7, n=ans[30]) # jamon serrano
-    score += table_1(group=4, n=ans[31]) # jamon cocido
-    score += table_1(group=4, n=ans[32]) # queso blanco
-    score += table_1(group=5, n=ans[33]) # otros curado
-    score += table_1(group=3, n=ans[34])
-    score += table_1(group=3, n=ans[35])
-    score += table_1(group=8, n=ans[36]) # fruta en almibar
-    score += table_1(group=3, n=ans[37])
-    score += table_1(group=3, n=ans[38])
-    score += table_3(ans[39]) # frutos secos
-    score += table_1(group=8, n=ans[40]) # postres lacteos
-    score += table_1(group=8, n=ans[41]) # pasteles de crema
-    score += table_1(group=8, n=ans[42]) # chips
-    score += table_1(group=8, n=ans[43]) # golosinas
-    score += table_1(group=8, n=ans[44]) # helados
-    # 7th block
-    score += table_1(group=7, n=ans[45]) # bebidas bajas en calorias
-    score += table_1(group=9, n=ans[46]) # bebidas azucaradas
-    # Vino o sangria no esta
-    score += table_1(group=7, n=ans[48])  # Cerveza sin alcohol
-    # Cerveza no esta
-    # whisky etc no esta
 
-    return score*10/47
+    return score*10 / 
 
 
 def risk_activity(id_user, comp=False, db=DBHelper()):
