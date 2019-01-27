@@ -322,7 +322,8 @@ def social_keyboard(lang='en'):
     key_ = [[{'text':emoji.emojize(options[0]), 'callback_data':roles[0]},
              {'text':emoji.emojize(options[1]), 'callback_data':roles[1]}],
             [{'text':emoji.emojize(options[2]), 'callback_data':roles[2]},
-             {'text':emoji.emojize(options[3]), 'callback_data':roles[3]}]]
+             {'text':emoji.emojize(options[3]), 'callback_data':roles[3]}],
+            [{'text':emoji.emojize(options[4]), 'callback_data':'_back_main'}]]
     keyboard = {'inline_keyboard': key_}
     return json.dumps(keyboard)
 
