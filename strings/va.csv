@@ -1,15 +1,15 @@
-action,text
-1_activity,"Pensa en totes les activitats **intenses** que has fet els **últims 7 dies**. Les activitats físiques **intenses** són les que impliquen un esforç físic intens i que et fan respirar molt més intensament del que és normal. Pensa només en les activitats físiques que vas fer durant **almenys 10 minuts seguits**.
+"action","text"
+"1_activity","Pensa en totes les activitats **intenses** que has fet els **últims 7 dies**. Les activitats físiques **intenses** són les que impliquen un esforç físic intens i que et fan respirar molt més intensament del que és normal. Pensa només en les activitats físiques que vas fer durant **almenys 10 minuts seguits**.
  "
-2_activity,"Pensa en totes les activitats **moderades** que has fet els **últims 7 dies**. Les activitats **moderades** són les que requereixen un esforç físic moderat que et fa respirar una mica més intensament del que és normal. Pensa només en aquelles activitats físiques que vas fer durant **almenys 10 minuts seguits**.
+"2_activity","Pensa en totes les activitats **moderades** que has fet els **últims 7 dies**. Les activitats **moderades** són les que requereixen un esforç físic moderat que et fa respirar una mica més intensament del que és normal. Pensa només en aquelles activitats físiques que vas fer durant **almenys 10 minuts seguits**.
  "
-3_activity,"Pensa en el temps que vas dedicar a **caminar** els **últims 7 dies**. Això inclou anar a peu a la faena o a casa, per a traslladar-te d'un lloc a un altre, o qualsevol altra caminada que pots haver fer només per recreació, esport, exercici o oci.
+"3_activity","Pensa en el temps que vas dedicar a **caminar** els **últims 7 dies**. Això inclou anar a peu a la faena o a casa, per a traslladar-te d'un lloc a un altre, o qualsevol altra caminada que pots haver fer només per recreació, esport, exercici o oci.
  "
-4_activity,"L'última pregunta és sobre el temps que vas passar **assegut** durant els dies hàbils dels **últims 7** dies. Això inclou el temps que vas estar així a la faena, a casa, en una classe o durant el teu temps lliure. Pot incloure el temps que vas passar assegut davant un escriptori, visitant amics, llegint, viatjant en autobús o mirant la televisió.
+"4_activity","L'última pregunta és sobre el temps que vas passar **assegut** durant els dies hàbils dels **últims 7** dies. Això inclou el temps que vas estar així a la faena, a casa, en una classe o durant el teu temps lliure. Pot incloure el temps que vas passar assegut davant un escriptori, visitant amics, llegint, viatjant en autobús o mirant la televisió.
  "
-be_number,"Ho sent, però la resposta a aquesta pregunta ha de ser un número.
+"be_number","Ho sent, però la resposta a aquesta pregunta ha de ser un número.
  "
-credits,"El projecte Wakamola l'ha desenvolupat el grup d'investigació BDSLab de la Universitat Politècnica de València en col·laboració amb la Universitat Mèdica de Taipei, amb l'assessorament mèdic i expert de l'hospital La Fe i l'assessorament en nutrició d'experts de la Facultat de Farmàcia de la Universitat de València.
+"credits","El projecte Wakamola l'ha desenvolupat el grup d'investigació BDSLab de la Universitat Politècnica de València en col·laboració amb la Universitat Mèdica de Taipei, amb l'assessorament mèdic i expert de l'hospital La Fe i l'assessorament en nutrició d'experts de la Facultat de Farmàcia de la Universitat de València.
  
  Han contribuït a fer possible aquest projecte:
  
@@ -30,33 +30,33 @@ credits,"El projecte Wakamola l'ha desenvolupat el grup d'investigació BDSLab d
 -Ángel Esteban
 -Marta Lavall
 "
-end_activity,"Gràcies per parlar-me també de la teua activitat física. Amb tot el que hem parlat he calculat el teu wakaestat. Fes clic al botó :green_heart: 'wakaestat' per a conèixer-lo.
+"end_activity","Gràcies per parlar-me també de la teua activitat física. Amb tot el que hem parlat he calculat el teu wakaestat. Fes clic al botó :green_heart: 'wakaestat' per a conèixer-lo.
  "
-end_food,"Ja sé moltes coses sobre la teua alimentació. Ara parlem de la teua activitat física setmanal.
+"end_food","Ja sé moltes coses sobre la teua alimentació. Ara parlem de la teua activitat física setmanal.
  
  Prem :person_running: 'activitat' per a començar.
  "
-end_personal,"Gràcies per respondre, ja conec més coses sobre tu.
+"end_personal","Gràcies per respondre, ja conec més coses sobre tu.
  
  Podem parlar ara de la teua alimentació? Fes clic al botó :green_apple: 'dieta'.
  "
-food_intro,"En el qüestionari d'alimentació has d'indicar quantes vegades *PER DIA*, com a *mitjana*, consumeixes els aliments següents.
+"food_intro","En el qüestionari d'alimentació has d'indicar quantes vegades *PER DIA*, com a *mitjana*, consumeixes els aliments següents.
  "
-food_weekly,"Perfecte! Ara m'agradaria saber quantes vegades prens els aliments següents *PER SETMANA*.
+"food_weekly","Perfecte! Ara m'agradaria saber quantes vegades prens els aliments següents *PER SETMANA*.
  "
-generic_tip,"No has respost encara totes les preguntes. En les fases següents del desenvolupament se t'enviarà un consell genèric.
+"generic_tip","No has respost encara totes les preguntes. En les fases següents del desenvolupament se t'enviarà un consell genèric.
  "
-keyboard_social," Família
+"keyboard_social"," Família
  Parella
  Amic
  Company de treball
  Un altre
  "
-not_supported,"Aquest tipus de missatge no té suport de moment.
+"not_supported","Aquest tipus de missatge no té suport de moment.
  "
-numeric_response,"Les preguntes estan dissenyades per a rebre com a resposta un valor numèric *vàlid*. Només en els casos que s'indiquen es poden respondre amb sí/no.
+"numeric_response","Les preguntes estan dissenyades per a rebre com a resposta un valor numèric *vàlid*. Només en els casos que s'indiquen es poden respondre amb sí/no.
  "
-options," :bust_in_silhouette: personal
+"options"," :bust_in_silhouette: personal
  :green_apple: dieta
  :person_running: activitat
  :green_heart: wakaestat
@@ -64,35 +64,35 @@ options," :bust_in_silhouette: personal
  :speech_balloon: comparteix-me
  :light_bulb: sobre Wakamola
  :point_right: inicia "
-select,"Tria una opció!
+"select","Tria una opció!
  "
-social,"M'agradaria poder ajudar també els teus amics i familiars.
+"social","M'agradaria poder ajudar també els teus amics i familiars.
  Com millor siga el wakaestat del teu entorn, millor serà el teu, i aniré actualitzant-lo per a tu periòdicament.
  Per a compartir-me només cal que reenvies la imatge següent.
  Gràcies per compartir-me!
  "
-wakaestado,"La puntuació del teu wakaestat és: {} sobre 100
+"wakaestado","La puntuació del teu wakaestat és: {} sobre 100
  "
-wakaestado_parcial,"Ara com ara, amb la informació que tinc sobre tu, aquest és el teu wakaestat: {} sobre 100
+"wakaestado_parcial","Ara com ara, amb la informació que tinc sobre tu, aquest és el teu wakaestat: {} sobre 100
  "
-welcome,"Hola, encantat de parlar amb tu!
+"welcome","Hola, encantat de parlar amb tu!
  Et faré algunes preguntes per conèixer-te i poder donar-te un wakaestat.
  
  Et recomane que comences pel qüestionari :bust_in_silhouette: personal.
  "
-social_roles," Casa :house:
+"social_roles"," Casa :house:
  Família :woman: :man: :old_woman:
  Amics  :busts_in_silhouette:
  Treball :briefcase:
  He acabat de compartir :thumbs_up:"
-share,"Gràcies per voler compartir-me! Ara selecciona el grup de persones amb les quals vols compartir-me i comparteix la imatge en Telegram, o bé mantín premut l'enllaç per a copiar-lo i apegar-lo en Whatsapp, SMS, Facebook, Instagram, etc."
-share2,Selecciona el grup de persones amb les quals vols compartir-me.
-share_caption,"Hola, sóc Wakamola! 
+"share","Gràcies per voler compartir-me! Ara selecciona el grup de persones amb les quals vols compartir-me i comparteix la imatge en Telegram, o bé mantín premut l'enllaç per a copiar-lo i apegar-lo en Whatsapp, SMS, Facebook, Instagram, etc."
+"share2","Selecciona el grup de persones amb les quals vols compartir-me."
+"share_caption","Hola, sóc Wakamola! 
  Sóc un bot que t'ajuda a conèixer millor els teus hàbits nutricionals i d'activitat física. M'ha creat el grup d'investigació BDSLab de la Universitat Politècnica de València en col·laboració amb la Universitat Mèdica de Taipei, amb l'assessorament mèdic i expert de l'hospital La Fe, i l'assessorament d'experts en nutrició de la Facultat de Farmàcia de la Universitat de València.
  
  Amb aquest enllaç podràs conèixer-me i parlar amb mi sobre hàbits saludables: {}"
-share_habite,Comparteix-ho amb més gent!
-wakaestado_detail,"Aquest és el desglossament del teu wakaestat, que es calcula a partir de les puntuacions parcials següents:
+"share_more","Comparteix-ho amb més gent!"
+"wakaestado_detail","Aquest és el desglossament del teu wakaestat, que es calcula a partir de les puntuacions parcials següents:
  
  Wakalimentacio:
  {} sobre 100
@@ -109,26 +109,26 @@ wakaestado_detail,"Aquest és el desglossament del teu wakaestat, que es calcula
  Wakasocial (calculat a partir del wakaestat dels teus contactes):
  {} sobre 100
  "
-get_details,Detalls del wakaestat
-after_wakaestado_detail,Recorda que pots actualitzar el teu wakaestat tantes vegades com vulgues tornant a respondre les meues preguntes i compartint-me.
-h4ck,"S'ha completat el mode!
+"get_details","Detalls del wakaestat"
+"after_wakaestado_detail","Recorda que pots actualitzar el teu wakaestat tantes vegades com vulgues tornant a respondre les meues preguntes i compartint-me."
+"h4ck","S'ha completat el mode!
  "
-edit,"Recorda que pots canviar la teua resposta fent-hi clic damunt i mantenint-lo, i editant el missatge."
-pesos," Pes baix
+"edit","Recorda que pots canviar la teua resposta fent-hi clic damunt i mantenint-lo, i editant el missatge."
+"pesos"," Pes baix
  Pes normal
  Sobrepès
  Obesitat tipus 1
  Obesitat tipus 2
  Obesitat tipus 3"
-generos,"Home
+"generos","Home
 Dona
 Altre
 No contestar"
-estudios,"Sense estudis
+"estudios","Sense estudis
 Primària
 Secundària
 Superior"
-estado_civil,"Solter
+"estado_civil","Solter
 Casat/Parella
 Viudo
 Altre"

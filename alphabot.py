@@ -317,7 +317,18 @@ def go_main(chat, lang):
     send_message(languages[lang]['select'], chat, main_menu_keyboard(chat, lang))
 
 
-def dynamic_keyboard(chat, string, lang='en'):
+def social_keyboard(lang='en'):
+    options = [el for el in languages[lang]['social_roles'].split('\n') if el]
+    key_ = [[{'text':emoji.emojize(options[0]), 'callback_data':roles[0]},
+             {'text':emoji.emojize(options[1]), 'callback_data':roles[1]}],
+            [{'text':emoji.emojize(options[2]), 'callback_data':roles[2]},
+             {'text':emoji.emojize(options[3]), 'callback_data':roles[3]}]]
+    keyboard = {'inline_keyboard': key_}
+    return json.dumps(keyboard)
+
+
+
+def dynamic_keyboard(string, lang='en'):
     '''
     This is a keyboard created for selecting the type of person to share
     '''
@@ -325,20 +336,17 @@ def dynamic_keyboard(chat, string, lang='en'):
     key_ = []
     aux_ = []
     for i in range(len(options)):
-        aux_.append({'text': options[i], 'callback_data': options[i]})
+        callback_ = options[i]
+        if ':' in callback_:
+            # TODO IMPROVE THIS -> maybe regex
+            # Just remove from the first : to the end
+            callback_ = callback_[:callback_.index(':')]
+        aux_.append({'text': emoji.emojize(options[i]), 'callback_data': callback_})
         if i % 2 == 1:
             key_.append(aux_)
             aux_ = []
     print(key_)
     keyboard = {'inline_keyboard': key_}
-    '''
-    keyboard = {'inline_keyboard': [[{'text': emoji.emojize(options[0]), 'callback_data': roles[0]},
-                                     {'text': emoji.emojize(options[1]), 'callback_data': roles[1]}],
-                                    [{'text': emoji.emojize(options[2]), 'callback_data': roles[2]},
-                                     {'text': emoji.emojize(options[3]), 'callback_data': roles[3]}],
-                                    [{'text': emoji.emojize(options[4]), 'callback_data': '_back_main'}]]}
-                                    
-    '''
     return json.dumps(keyboard)
 
 
@@ -365,7 +373,7 @@ def main_menu_keyboard(chat, lang='en'):
     return json.dumps(keyboard)
 
 
-def detailed_wakamola_keyboard(chat, lang='en'):
+def detailed_wakamola_keyboard(lang='en'):
     '''
     A simple button for getting a detailed wakamola explanation
     '''
@@ -448,7 +456,7 @@ def wakaestado(chat, lang):
     if completed[0] and completed[1] and completed[2]:
         # append the button for the whole description
         send_message(emoji.emojize(languages[lang]['wakaestado'].format(str(risk) + avocados(risk))), chat,
-                     detailed_wakamola_keyboard(chat, lang))
+                     detailed_wakamola_keyboard(lang))
     # WakaEstado partial
     else:
         # give a general advice
@@ -576,7 +584,7 @@ def handle_updates(updates):
 
                 send_image(images[lang][role_ + '.jpg'], chat,
                            caption=(languages[lang]['share_caption'].format(create_shared_link(md5(chat), role_))))
-                send_message(languages[lang]['share_more'], chat, dynamic_keyboard(chat, 'social_roles',lang))
+                send_message(languages[lang]['share_more'], chat, social_keyboard(lang))
                 continue
 
             # if its not a correct callback
@@ -592,7 +600,7 @@ def handle_updates(updates):
 
         elif text.lower() == 'share':
             # Send a message with the role keyboard
-            send_message(languages[lang]['share'], chat, dynamic_keyboard(chat, 'social_roles', lang))
+            send_message(languages[lang]['share'], chat, social_keyboard(lang))
             continue
 
         # return from the share phase
@@ -687,13 +695,13 @@ def handle_updates(updates):
 
                 if status[0] == 1 and status[1] == 8: # genero
 
-                    print(send_message(emoji.emojize(q), chat, dynamic_keyboard(chat, 'generos', lang)))
+                    print(send_message(emoji.emojize(q), chat, dynamic_keyboard('generos', lang)))
 
                 elif status[0] == 1 and status[1] == 10: # nivel estudios
-                    print(send_message(emoji.emojize(q), chat, dynamic_keyboard(chat, 'estudios', lang)))
+                    print(send_message(emoji.emojize(q), chat, dynamic_keyboard('estudios', lang)))
 
                 elif status[0] == 1 and status[1] == 11:  # estado civil
-                    print(send_message(emoji.emojize(q), chat, dynamic_keyboard(chat, 'estado_civil', lang)))
+                    print(send_message(emoji.emojize(q), chat, dynamic_keyboard('estado_civil', lang)))
 
                 else:
                     send_message(emoji.emojize(q), chat)
@@ -709,7 +717,6 @@ def handle_updates(updates):
                     send_message(emoji.emojize(languages[lang]['end_food']), chat, main_menu_keyboard(chat, lang))
                 elif status[0] == 3:
                     send_message(emoji.emojize(languages[lang]['end_activity']), chat, main_menu_keyboard(chat, lang))
-                # send_message(languages[lang]['select'], chat, main_menu_keyboard(chat, lang))
 
 
 def main():
