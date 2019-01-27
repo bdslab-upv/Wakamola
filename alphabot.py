@@ -341,7 +341,7 @@ def dynamic_keyboard(string, lang='en'):
             # TODO IMPROVE THIS -> maybe regex
             # Just remove from the first : to the end
             callback_ = callback_[:callback_.index(':')]
-        aux_.append({'text': emoji.emojize(options[i]), 'callback_data': callback_})
+        aux_.append({'text': emoji.emojize(options[i]), 'callback_data': options.index(callback_)})
         if i % 2 == 1:
             key_.append(aux_)
             aux_ = []
