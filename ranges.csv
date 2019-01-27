@@ -7,10 +7,10 @@ phase,question,type,low,high,comment
 1,6,affirmation,0,1,diabetes
 1,7,affirmation,0,1,colesterol
 1,8,affirmation,0,1,cardio
-1,9,text,,,genero
+1,9,int,0,3,genero
 1,10,int,12,125,edad
-1,11,text,,,estudis
-1,12,text,,,civil
+1,11,int,0,3,estudis
+1,12,int,0,3,civil
 1,13,int,0,15,casa
 1,14,affirmation,0,1,estudies
 1,15,affirmation,0,1,treballes
