@@ -4,10 +4,11 @@ This class is meant to have the risk models
 
 from dbhelper import DBHelper
 from statistics import mean
-from math import log
+from math import log, ceil
 from pandas import read_csv
 
 MAX_NETWORK = 10
+
 
 ######################
 #
@@ -62,8 +63,6 @@ def table_1(group, n):
         return casual_consume(n)
 
 
-
-
 def table_2(n):
     '''
     Scores for oil and fats by Ana Frigola
@@ -78,6 +77,7 @@ def table_2(n):
         return 2.5
     else:
         return 0
+
 
 def table_3(n):
     '''
@@ -102,7 +102,7 @@ def risk_bmi(id_user, db=DBHelper()):
     '''
 
     bmi = db.getBMI(id_user)
-    if bmi == 0: # sanity check
+    if bmi == 0:  # sanity check
         return 0, 0
 
     # TODO REVIEW
@@ -144,20 +144,18 @@ def risk_nutrition(id_user, comp=False, db=DBHelper()):
 
 
 def risk_activity(id_user, comp=False, db=DBHelper()):
-
     if not comp:
         return 0
 
     ans = db.get_responses_category(id_user=id_user, phase=3)
     # compute the METS-min/week
-    METS = ans[0]*ans[1]*8 + ans[2]*ans[3]*4 + ans[4]*ans[5]*3.3
+    METS = ans[0] * ans[1] * 8 + ans[2] * ans[3] * 4 + ans[4] * ans[5] * 3.3
     # this have to be reviewed for sure!
     superior_limit = 1800
-    return (min(METS, superior_limit)/superior_limit)*100
+    return (min(METS, superior_limit) / superior_limit) * 100
 
 
-def network_influence(id_user, actual_wakaestado,  db, comp):
-
+def network_influence(id_user, actual_wakaestado, db, comp):
     # Internal function, first search for cache cause its lots faster
     def get_friend_wakaestado(id_friend):
         # try to get the last friends wakaestado
@@ -174,15 +172,16 @@ def network_influence(id_user, actual_wakaestado,  db, comp):
                 return 0
 
     if not comp:
-        return 0
+        return 0, 0, 0
     # get the WakaStatus of each of the "neighbours"
     friends = db.get_user_relationships(id_user)
     if len(friends) == 0:
-        return 0
+        return 0, 0, 0
     # now obtain the wakascore for them
     wakaestados = [get_friend_wakaestado(f) for f in friends]
-    # added a roof value at 20
-    return min(max(0, mean(wakaestados) - actual_wakaestado) + log(len(friends), 2), MAX_NETWORK)
+    # return the value, the number of friends and the mean
+    return min(max(0, mean(wakaestados) - actual_wakaestado) + log(len(friends), 2), MAX_NETWORK), \
+        len(wakaestados), mean(wakaestados) if len(wakaestados) > 0 else 0
 
 
 def obesity_risk(id_user, completed, network=True):
@@ -214,30 +213,29 @@ def obesity_risk(id_user, completed, network=True):
     part_2 = risk_nutrition(id_user, completed[1], db) * coef[1]
     part_3 = risk_activity(id_user, completed[2], db) * coef[2]
 
-    network_correction = 0
+    network_correction, n_contacts, mean_contacts = 0, 0, 0
+
     raw_wakaestado = min(part_1 + part_2 + part_3, 100) * risk
     if network:
         # TODO EDIT THIS ON NETWORK IMPLEMENTATION
-        network_correction = network_influence(id_user, raw_wakaestado, db, all(completed))
+        network_correction, n_contacts, mean_contacts = network_influence(id_user, raw_wakaestado, db, all(completed))
 
     # pack the different parts
     partial_scores = {
         'bmi_score': bmi_score,
-        'nutrition': part_2/coef[1],
-        'activity': part_3/coef[2],
-        'risk': risk * 100, # for better visualization
-        'network': network_correction * 10, # same thing
-        'bmi': bmi
+        'nutrition': part_2 / coef[1],
+        'activity': part_3 / coef[2],
+        'risk': risk * 100,  # for better visualization
+        'network': network_correction * 10,  # same thing
+        'bmi': bmi,
+        'n_contacts': n_contacts,
+        'mean_contacts': ceil(mean_contacts)
     }
     # revert the risk, add the network correction and risk it again
-    final_wakaestado = min((raw_wakaestado/risk) + network_correction, 100) * risk
+    final_wakaestado = min((raw_wakaestado / risk) + network_correction, 100) * risk
     # store the last wakaestado
     db.set_last_wakaestado(id_user, final_wakaestado)
     # close stuff
     db.close()
     del db
     return final_wakaestado, partial_scores
-
-
-
-

@@ -12,6 +12,7 @@ from utils import md5
 from g0d_m0d3 import h4ck
 import argparse
 from pandas import read_csv
+from threading import Thread
 
 # global variables to use
 # througth different functions
@@ -27,6 +28,7 @@ global db
 global nq_category
 global rules
 global god_mode
+
 
 
 ###############
@@ -358,6 +360,7 @@ def main_menu_keyboard(chat, lang='en'):
     activity = options[2]
     completed = db.check_completed(md5(chat))
 
+
     if completed[0]:
         personal += '\t\t:white_heavy_check_mark:'
     if completed[1]:
@@ -501,14 +504,17 @@ def wakaestado_detailed(chat, lang):
                              weight_category,
                              str(round(partial_scores['bmi_score'])) + three_avocados,
                              str(round(partial_scores['risk'])) + three_avocados,
-                             str(round(partial_scores['network'])) + three_avocados)
+                             str(round(partial_scores['network'])) + three_avocados,
+                             partial_scores['n_contacts'],
+                             partial_scores['mean_contacts'])
 
     send_message(emoji.emojize(details), chat)
+    send_message(emoji.emojize(languages[lang]['wakaestado_detail2']), chat)
+    send_message(emoji.emojize(languages[lang]['wakaestado_detail3']), chat)
 
 
 def handle_updates(updates):
-    for update in updates["result"]:
-
+    for update in updates:
         chat = get_chat(update)
         text, message_id = filter_update(update)
 
@@ -517,12 +523,12 @@ def handle_updates(updates):
 
         # no valid text
         if text is False:
-            continue
+            return
+
         elif text is None:
             lang = process_lang(update['message']['from']['language_code'])
             send_message(languages[lang]['not_supported'], chat)
-            continue
-
+            return
         # get user language
         lang = def_lang_
         if 'message' in update:
@@ -540,7 +546,6 @@ def handle_updates(updates):
             # wellcome message
             send_image(images[lang]['welcome.jpg'], chat)
             send_message(emoji.emojize(languages[lang]['welcome']), chat, main_menu_keyboard(chat, lang))
-
             # insert user into the db, check collisions
             if not db.check_start(md5(chat)):
                 # sanity check
@@ -586,11 +591,11 @@ def handle_updates(updates):
                 send_image(images[lang][role_ + '.jpg'], chat,
                            caption=(languages[lang]['share_caption'].format(create_shared_link(md5(chat), role_))))
                 send_message(languages[lang]['share_more'], chat, social_keyboard(lang))
-                continue
+                return
 
             # if its not a correct callback
             else:
-                continue
+                return
 
         # Credits
         elif text.lower() == 'credits':
@@ -602,38 +607,38 @@ def handle_updates(updates):
         elif text.lower() == 'share':
             # Send a message with the role keyboard
             send_message(languages[lang]['share'], chat, social_keyboard(lang))
-            continue
+            return
 
         # return from the share phase
         elif text == '_back_main':
             go_main(chat, lang)
-            continue
+            return
         elif text.lower() == 'personal':
             # set to phase and question 1
             questionarie(1, chat, lang)
-            continue
+            return
 
         elif text.lower() == 'food':
             # set to phase and question 2
             questionarie(2, chat, lang, msg=languages[lang]['food_intro'])
-            continue
+            return
 
         elif text.lower() == 'activity':
             # set to phase and question 3
             questionarie(3, chat, lang)
-            continue
+            return
 
         elif text.lower() == 'risk':
             wakaestado(chat=chat, lang=lang)
             go_main(chat=chat, lang=lang)
-            continue
+            return
 
         elif text.lower() == 'risk_full':
             wakaestado_detailed(chat=chat, lang=lang)
             # Added instruction for refill
             send_message(languages[lang]['after_wakaestado_detail'], chat)
             go_main(chat=chat, lang=lang)
-            continue
+            return
 
         elif text.lower() == god_mode:
             h4ck(md5(chat))
@@ -644,7 +649,7 @@ def handle_updates(updates):
             status = db.get_phase_question(md5(chat))
             if status[0] == 0:
                 send_message(languages[lang]['select'], chat, main_menu_keyboard(chat, lang))
-                continue
+                return
 
             text, correct_ = checkanswer(text, status)
             if correct_:
@@ -658,9 +663,9 @@ def handle_updates(updates):
                 q = db.get_question(status[0], status[1], lang)
                 # error on the database
                 if q is None:
-                    continue
+                    return
                 send_message(emoji.emojize(q), chat)
-                continue
+                return
 
             # check for more questions in the same phase
             if nq_category[status[0]] > status[1]:
@@ -689,11 +694,10 @@ def handle_updates(updates):
                     q = db.get_question(status[0], status[1] + 1, lang)
                     # error on the database
                 if q is None:
-                    continue
+                    return
                 # comprueba si tiene que lanzar algun mensaje antes de la pregunta
                 extra_messages(status[0], status[1] + 1, chat, lang)
                 # TODO OPCIONES DE RESPUESTA DINAMICAS
-
                 if status[0] == 1 and status[1] == 8: # genero
 
                     print(send_message(emoji.emojize(q), chat, dynamic_keyboard('generos', lang)))
@@ -724,31 +728,44 @@ def main():
     # variable para controlar el numero de mensajes
     last_update_id = None
     getMe()
-
-    # fix try
+    # force bd to stay clean
     db.conn.commit()
     # bucle infinito
     while True:
         # obten los mensajes no vistos
         updates = get_updates(last_update_id)
         # si hay algun mensaje do work
-        try:
-            if 'result' in updates and len(updates['result']) > 0:
-                last_update_id = get_last_update_id(updates) + 1
-                handle_updates(updates)
-                # have to be gentle with the telegram server
-                time.sleep(0.5)
-            else:
-                # if no messages lets be *more* gentle with telegram servers
-                time.sleep(1)
+        #try:
+        if 'result' in updates and len(updates['result']) > 0:
+            last_update_id = get_last_update_id(updates) + 1
 
+            # Updates joint by user
+            joint_updates = dict()
+            for update in updates['result']:
+                id_ = update['message']['from']['id']
+                if id_ in joint_updates:
+                    joint_updates[id_].append(update)
+                else:
+                    joint_updates[id_] = [update]
+
+            for update in joint_updates.values():
+                t = Thread(target=handle_updates, args=(update,))
+                t.start()
+                t.join()
+
+            # have to be gentle with the telegram server
+            time.sleep(0.5)
+        else:
+            # if no messages lets be *more* gentle with telegram servers
+            time.sleep(1)
+        '''
         except Exception as e:
             print('Error ocurred, watch log!')
             log_entry(str(e))
             print(e)
             # sleep 20 seconds so the problem may solve
             time.sleep(20)
-
+        '''
 
 
 if __name__ == '__main__':

@@ -108,9 +108,12 @@
  
  Wakasocial (calculat a partir del wakaestat dels teus contactes):
  {} sobre 100
- "
+ 
+La teua xarxa Wakamola actual es de {} contactes 
+
+El Wakaestat mitjà de la teua xarxa es de {}"
 "get_details","Detalls del wakaestat"
-"after_wakaestado_detail","Recorda que pots actualitzar el teu wakaestat tantes vegades com vulgues tornant a respondre les meues preguntes i compartint-me."
+"after_wakaestado_detail","Recorda que pots actualitzar el teu wakaestat tantes vegades com vulgues tornant a respondre les meues preguntes"
 "h4ck","S'ha completat el mode!
  "
 "edit","Recorda que pots canviar la teua resposta fent-hi clic damunt i mantenint-lo, i editant el missatge."
@@ -132,3 +135,5 @@ Superior"
 Casat/Parella
 Viudo
 Altre"
+"wakaestado_detail2","Quan més gran siga la teua xarxa Wakamola millor serà la teua puntuació Wakasocial!"
+"wakaestado_detail3","Ara pots triar l’opcio de compartir-me per a aconseguir molts mes :avocado::avocado::avocado:…"

@@ -219,10 +219,15 @@ class DBHelper:
             self.cursor.execute(stmt, args)
             rs = self.cursor.fetchall()
             self.cursor.close()
-            return [(el[0], el[1], el[2]) for el in rs][0]
+            if len(rs) > 0:
+                return rs[0][0], rs[0][1], rs[0][2]
+            else:
+                return False, False, False
+            # TODO remove if test is okay
+            # return [(el[0], el[1], el[2]) for el in rs][0]
         except Exception as e:
             print(e)
-            return (False, False, False)
+            return False, False, False
 
     def n_questions(self):
         '''
@@ -290,8 +295,9 @@ class DBHelper:
     def getBMI(self, id_user):
         self.conn.commit()
         self.cursor = self.conn.cursor()
-        stmt = "select answer from RESPONSES where id_user = %s and question <= 2 and Timestamp in (select max(Timestamp) \
-        from RESPONSES where id_user = %s and phase = 1 group by question)"
+        stmt = "select answer from RESPONSES where id_user = %s and question <= 2 and phase = 1 and " \
+               "Timestamp in (select max(Timestamp) from RESPONSES where id_user = %s " \
+               "and phase = 1 group by question)"
         args = (id_user, id_user)
         self.cursor.execute(stmt, args)
         rs = self.cursor.fetchall()
