@@ -466,19 +466,23 @@ def wakaestado(chat, lang):
         # normal weight, overweight...
         weight_cat = weight_category(round(partial_scores['bmi']), lang)
 
+        difference = partial_scores['mean_contacts'] - partial_scores['wakascore']
+        # load "debajo/arriba" string
+        index = 0 if difference > 0 else 1
+        position = languages[lang]['posicion_media'].split('\n')[index]
+
         details = details.format(str(risk) + three_avocados,
+                                 str(round(difference)),
+                                 position,
+                                 str(partial_scores['n_contacts']),
                                  str(round(partial_scores['nutrition'])) + three_avocados,
                                  str(round(partial_scores['activity'])) + three_avocados,
-                                 str(round(partial_scores['bmi_score'])),
+                                 str(round(partial_scores['bmi_score'])) + three_avocados,
                                  str(round(partial_scores['bmi'])),
                                  weight_cat,
-                                 str(round(partial_scores['network'])) + three_avocados,
-                                 partial_scores['n_contacts'],
-                                 partial_scores['mean_contacts'])
+                                 str(round(partial_scores['network'])) + three_avocados)
 
         send_message(emoji.emojize(details), chat)
-        send_message(emoji.emojize(languages[lang]['wakaestado_detail2']), chat)
-        send_message(emoji.emojize(languages[lang]['wakaestado_detail3']), chat)
 
     # WakaEstado partial
     else:
@@ -558,7 +562,7 @@ def handle_updates(updates):
 
         elif text.lower() == 'share':
             # get the number of contacts in each category
-            contacts_counter = db.get_contacts_by_categorie()
+            contacts_counter = db.get_contacts_by_category(md5(chat))
             msg_share = languages[lang]['share'].format(
                 str(sum(contacts_counter.values())),
                 str(contacts_counter['home']),
@@ -568,17 +572,11 @@ def handle_updates(updates):
             )
             send_message(msg_share, chat)
             # get the different links for sharing
-            msg_links = languages[lang]['share2']
             # OJO estan en el orden adecuado ahora
-            # [1:] para quitar el dolar
             links = [create_shared_link(chat, r).replace('_', '\\_') for r in roles]
-            msg_links = msg_links.format(
-                links[0],
-                links[1],
-                links[2],
-                links[3])
-            # scaped text
-            send_message(emoji.emojize(msg_links), chat)
+            for i in range(len(links)):
+                # first of the four messages is the share2
+                send_message(emoji.emojize(languages[lang]['share'+str(i+2)].format(links[i])), chat)
             go_main(chat, lang)
             return
 
@@ -615,6 +613,7 @@ def handle_updates(updates):
                 str(dbnumbers[2])
             )
             send_message(txt_, chat)
+            go_main(chat=chat, lang=lang)
 
         else:
             # rescata a que responde
@@ -749,7 +748,7 @@ if __name__ == '__main__':
     parser.add_argument('-t', action="store", help="Token to use", required=True)
     parser.add_argument('-l', action="store", default='es', help="Default languages")
     parser.add_argument('--godmode', action="store", default="wakafill", help="god mode password")
-    parser.add_argument('--statistics', action="store", default="statistics_word",
+    parser.add_argument('--statistics', action="store", default="tell me your secrets",
                         help="password for getting statistics")
     spacename = parser.parse_args()
 

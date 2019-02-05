@@ -30,11 +30,11 @@ credits,"El projecte Wakamola l'ha desenvolupat el grup d'investigació BDSLab d
 -Ángel Esteban
 -Marta Lavall
 "
-end_activity,"Gràcies per parlar-me també de la teua activitat física. Amb tot el que hem parlat he calculat el teu wakaestat. Fes clic al botó :green_heart: 'wakaestat' per a conèixer-lo.
+end_activity,"Gràcies per parlar-me també de la teua activitat física. Amb tot el que hem parlat he calculat el teu Wakaestat. Fes clic al botó :green_heart: 'Wakaestat' per a conèixer-lo.
  "
 end_food,"Ja sé moltes coses sobre la teua alimentació. Ara parlem de la teua activitat física setmanal.
  
- Prem :person_running: 'activitat' per a començar.
+Prem :person_running: 'activitat' per a començar.
  "
 end_personal,"Gràcies per respondre, ja conec més coses sobre tu.
  
@@ -59,7 +59,7 @@ numeric_response,"Les preguntes estan dissenyades per a rebre com a resposta un 
 options," :bust_in_silhouette: personal
  :green_apple: dieta
  :person_running: activitat
- :green_heart: wakaestat
+ :green_heart: Wakaestat
  :memo: consells
  :speech_balloon: Wakaxarxa
  :light_bulb: sobre Wakamola
@@ -67,16 +67,16 @@ options," :bust_in_silhouette: personal
 select,"Tria una opció!
  "
 social,"M'agradaria poder ajudar també els teus amics i familiars.
- Com millor siga el wakaestat del teu entorn, millor serà el teu, i aniré actualitzant-lo per a tu periòdicament.
+ Com millor siga el Wakaestat del teu entorn, millor serà el teu, i aniré actualitzant-lo per a tu periòdicament.
  Per a compartir-me només cal que reenvies la imatge següent.
  Gràcies per compartir-me!
  "
-wakaestado,"La puntuació del teu wakaestat és: {} sobre 100
+wakaestado,"La puntuació del teu Wakaestat és: {} sobre 100
  "
-wakaestado_parcial,"Ara com ara, amb la informació que tinc sobre tu, aquest és el teu wakaestat: {} sobre 100
+wakaestado_parcial,"Ara com ara, amb la informació que tinc sobre tu, aquest és el teu Wakaestat: {} sobre 100
  "
 welcome,"Hola, encantat de parlar amb tu!
- Et faré algunes preguntes per conèixer-te i poder donar-te un wakaestat.
+ Et faré algunes preguntes per conèixer-te i poder donar-te un Wakaestat.
  
  Et recomane que comences pel qüestionari :bust_in_silhouette: personal.
  "
@@ -85,9 +85,11 @@ social_roles," Casa :house:
  Amics  :busts_in_silhouette:
  Treball :briefcase:
  He acabat de compartir :thumbs_up:"
-wakaestado_detail,"La puntuació del teu wakaestat és: {} sobre 100
+wakaestado_detail,"La puntuació del teu Wakaestat és: {} sobre 100
 
-Desglossament del teu wakaestat (puntuacions sobre 100):
+{} punts per {} del Wakaestat mitjà dels teus {} Wakacontactes! 
+
+Desglossament del teu Wakaestat (puntuacions sobre 100):
 
 Wakalimentacio: {}
  
@@ -95,20 +97,18 @@ Wakactivitat: {}
  
 WakaIMC: {} (índex de massa corporal = {} que correspon a {})
  
-Wakasocial  {} (calculat a partir del wakaestat dels teus wakacontactes)
-
-Wakaestat mitjà del teus {} Wakacontactes: {}"
-get_details,Detalls del wakaestat
-after_wakaestado_detail,Recorda que pots actualitzar el teu wakaestat tantes vegades com vulgues tornant a respondre les meues preguntes
+Wakasocial  {} (calculat a partir del Wakaestat dels teus Wakacontactes)
+"
+after_wakaestado_detail,Recorda que pots actualitzar el teu Wakaestat tantes vegades com vulgues tornant a respondre les meues preguntes
 h4ck,"S'ha completat el mode!
  "
 edit,"Recorda que pots canviar la teua resposta fent-hi clic damunt i mantenint-lo, i editant el missatge."
 pesos," Pes baix
- Pes normal
- Sobrepès
- Obesitat tipus 1
- Obesitat tipus 2
- Obesitat tipus 3"
+ pes normal
+ sobrepès
+ obesitat tipus 1
+ obesitat tipus 2
+ obesitat tipus 3"
 generos,"Home
 Dona
 Altre
@@ -129,13 +129,12 @@ share,"Tens {} Wakacontactes
 
 Còpia i pega els enllaços per a convidar!"
 share2,"Convidar a Casa :house: 
-{}
-
-Convidar a Família :woman::man::old_woman: 
-{}
-
-Convidar a Amics  :bust_in_silhouette:
-{}
-
-Convidar a Treball :briefcase: 
 {}"
+share3,"Convidar a Família :woman::man::old_woman: 
+{}"
+share4,"Convidar a Amics  :bust_in_silhouette:
+{}"
+share5,"Convidar a Treball :briefcase: 
+{}"
+posicion_media,"davall
+damunt"

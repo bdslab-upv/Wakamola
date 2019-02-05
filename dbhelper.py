@@ -270,9 +270,11 @@ class DBHelper:
                     args = (type, id_user, contact)
                     self.cursor.execute(stmt, args)
             else:
-                stmt = 'Insert into RELATIONSHIPS (active, passive, type) values (%s, %s, %s)'
-                args = (id_user, contact, type)
-                self.cursor.execute(stmt, args)
+                # Dont allow autorelationship
+                if not id_user == contact:
+                    stmt = 'Insert into RELATIONSHIPS (active, passive, type) values (%s, %s, %s)'
+                    args = (id_user, contact, type)
+                    self.cursor.execute(stmt, args)
             self.conn.commit()
             self.cursor.close()
         except Exception as e:
@@ -362,12 +364,18 @@ class DBHelper:
             self.reconnect()
             return None
 
-    def get_contacts_by_categorie(self):
+    def get_contacts_by_category(self, id_user):
         try:
             res = {'home': 0, 'family': 0, 'friend': 0, 'coworker': 0}
             self.conn.commit()
             self.cursor = self.conn.cursor()
-            # TODO things
+            stmt = 'select count(*), type from RELATIONSHIPS where active = %s or passive = %s group by type'
+            args = (id_user, id_user)
+            self.cursor.execute(stmt, args)
+            rs = self.cursor.fetchall()
+            self.cursor.close()
+            for line in rs:
+                res[line[1]] = line[0]
             return res
         except:
             self.reconnect()

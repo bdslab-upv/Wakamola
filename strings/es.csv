@@ -68,7 +68,7 @@ options,":bust_in_silhouette: Personal
 select,"¡Elige una opción!
 "
 social,"Me gustaría poder ayudar también a tus amigos y familiares.
-Cuanto mejor sea el wakaestado de tu entorno mejor será el tuyo e iré actualizandolo para ti periódicamente.
+Cuanto mejor sea el Wakaestado de tu entorno mejor será el tuyo e iré actualizandolo para ti periódicamente.
 Para compartirme únicamente tienes que reenviar la siguiente imagen.
 ¡Gracias por compartirme!
 "
@@ -86,9 +86,11 @@ Familia :woman: :man: :old_woman:
 Amigos  :busts_in_silhouette:
 Trabajo :briefcase:
 He terminado de compartir :thumbs_up:"
-wakaestado_detail,"La puntuación de tu wakaestado es: {} sobre 100
+wakaestado_detail,"La puntuación de tu Wakaestado es: {} sobre 100
 
-Desglose de tu wakaestado (puntuaciones sobre 100):
+{} puntos por {} del Wakaestado medio de tus {} Wakacontactos! 
+
+Desglose de tu Wakaestado (puntuaciones sobre 100):
 
 Wakaalimentacion: {}
 
@@ -96,19 +98,17 @@ Wakaactvidad: {}
 
 WakaIMC {} (Tu índice de Masa Corporal es {} que corresponde a {})
 
-Wakasocial {} (Calculado a partir del Wakaestado de tus contactos)
-
-Wakaestado medio de tus {} contactos es {}"
+Wakasocial {} (Calculado a partir del Wakaestado de tus contactos)"
 get_details,Detalles Wakaestado
-after_wakaestado_detail,Recuérda que puedes actualizar tu wakaestado tantas veces como quieras volviendo a responder a mis preguntas
+after_wakaestado_detail,Recuérda que puedes actualizar tu Wakaestado tantas veces como quieras volviendo a responder a mis preguntas
 h4ck,"s4v3 Us, W4k4m0L4"
 edit,Recuerda que puedes cambiar tu respuesta manteniendo pulsado sobre ella y editando el mensaje.
 pesos,"Peso bajo
-Peso normal
-Sobrepeso
-Obesidad tipo 1
-Obesidad tipo 2
-Obesidad tipo 3"
+peso normal
+sobrepeso
+obesidad tipo 1
+obesidad tipo 2
+obesidad tipo 3"
 generos,"Hombre
 Mujer
 Otro
@@ -129,13 +129,12 @@ share,"Tienes {} Wakacontactos
 
 ¡Copia y pega los enlaces para invitar!"
 share2,"Invitar a Casa :house: 
-{}
-
-Invitar a Familia :woman::man::old_woman: 
-{}
-
-Invitar a Amigos :busts_in_silhouette: 
-{}
-
-Invitar a Trabajo :briefcase: 
-{}  "
+{}"
+posicion_media,"debajo
+arriba"
+share3,"Invitar a Familia :woman::man::old_woman:
+{} "
+share4,"Invitar a Amigos :busts_in_silhouette:
+{}"
+share5,"Invitar a Trabajo 💼
+{}"

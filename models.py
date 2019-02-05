@@ -180,7 +180,7 @@ def network_influence(id_user, actual_wakaestado, db, comp):
     # now obtain the wakascore for them
     wakaestados = [get_friend_wakaestado(f) for f in friends]
     # return the value, the number of friends and the mean
-    return min(max(0, mean(wakaestados) - actual_wakaestado) + log(len(friends), 2), MAX_NETWORK), \
+    return min(max(0, mean(wakaestados) - actual_wakaestado)/MAX_NETWORK + log(len(friends), 2), MAX_NETWORK), \
         len(wakaestados), mean(wakaestados) if len(wakaestados) > 0 else 0
 
 
@@ -200,13 +200,6 @@ def obesity_risk(id_user, completed, network=True):
 
     # coeficient for each part
     coef = (0.33, 0.34, 0.33)
-    # compute disease risk
-    if completed[0]:
-        ans = db.get_responses_category(id_user=id_user, phase=1)
-        # if people is healthy risk = 1, if people have all conditions risk = 0.25
-        risk = 1 - sum([int(el == 1) * 0.25 for el in ans[-3:]])
-    else:
-        risk = 1
 
     bmi_score, bmi = risk_bmi(id_user, db)
     part_1 = bmi_score * coef[0]
@@ -215,25 +208,24 @@ def obesity_risk(id_user, completed, network=True):
 
     network_correction, n_contacts, mean_contacts = 0, 0, 0
 
-    raw_wakaestado = min(part_1 + part_2 + part_3, 100) * risk
+    raw_wakaestado = min(part_1 + part_2 + part_3, 100)
     if network:
         # TODO EDIT THIS ON NETWORK IMPLEMENTATION
         network_correction, n_contacts, mean_contacts = network_influence(id_user, raw_wakaestado, db, all(completed))
 
-
+    final_wakaestado = min(raw_wakaestado + network_correction, 100)
     # pack the different parts
     partial_scores = {
+        'wakascore': final_wakaestado,
         'bmi_score': bmi_score,
         'nutrition': part_2 / coef[1],
         'activity': part_3 / coef[2],
-        'risk': risk * 100,  # for better visualization
-        'network': network_correction * 10,  # same thing
+        'network': network_correction * 10,  # visualizacion
         'bmi': bmi,
         'n_contacts': n_contacts,
         'mean_contacts': ceil(mean_contacts)
     }
-    # revert the risk, add the network correction and risk it again
-    final_wakaestado = min((raw_wakaestado / risk) + network_correction, 100) * risk
+
     # store the last wakaestado
     db.set_last_wakaestado(id_user, final_wakaestado)
     # close stuff
