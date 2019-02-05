@@ -220,6 +220,7 @@ def obesity_risk(id_user, completed, network=True):
         # TODO EDIT THIS ON NETWORK IMPLEMENTATION
         network_correction, n_contacts, mean_contacts = network_influence(id_user, raw_wakaestado, db, all(completed))
 
+
     # pack the different parts
     partial_scores = {
         'bmi_score': bmi_score,

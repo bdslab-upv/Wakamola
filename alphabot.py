@@ -28,7 +28,7 @@ global db
 global nq_category
 global rules
 global god_mode
-
+global statistics_word
 
 
 ###############
@@ -112,7 +112,7 @@ def send_message(text, chat_id, reply_markup=None):
     # reply_markup is for a special keyboard
     if reply_markup:
         url += "&reply_markup={}".format(reply_markup)
-    get_url(url)
+    return get_url(url)
 
 
 def send_image(img, chat_id, caption=None):
@@ -319,18 +319,6 @@ def go_main(chat, lang):
     send_message(languages[lang]['select'], chat, main_menu_keyboard(chat, lang))
 
 
-def social_keyboard(lang='en'):
-    options = [el for el in languages[lang]['social_roles'].split('\n') if el]
-    key_ = [[{'text':emoji.emojize(options[0]), 'callback_data':roles[0]},
-             {'text':emoji.emojize(options[1]), 'callback_data':roles[1]}],
-            [{'text':emoji.emojize(options[2]), 'callback_data':roles[2]},
-             {'text':emoji.emojize(options[3]), 'callback_data':roles[3]}],
-            [{'text':emoji.emojize(options[4]), 'callback_data':'_back_main'}]]
-    keyboard = {'inline_keyboard': key_}
-    return json.dumps(keyboard)
-
-
-
 def dynamic_keyboard(string, lang='en'):
     '''
     This is a keyboard created for selecting the type of person to share
@@ -359,7 +347,6 @@ def main_menu_keyboard(chat, lang='en'):
     food = options[1]
     activity = options[2]
     completed = db.check_completed(md5(chat))
-
 
     if completed[0]:
         personal += '\t\t:white_heavy_check_mark:'
@@ -414,7 +401,8 @@ def questionarie(num, chat, lang, msg=None):
 
 
 def create_shared_link(chat: str, social_role: str) -> str:
-    return 'https://telegram.me/{}?start={}AAA{}'.format(BOT_USERNAME, chat, social_role)
+    token = db.create_short_link(id_user=md5(chat), type=social_role)
+    return 't.me/{}?start={}'.format(BOT_USERNAME, token)
 
 
 def extra_messages(phase, question, chat, lang):
@@ -439,78 +427,63 @@ def avocados(score):
     return avo_emojis_
 
 
+def weight_category(bmi, lang):
+    categories = languages[lang]['pesos'].split('\n')
+    if bmi < 18.5:
+        weight_cat = categories[0]
+    elif bmi < 25:
+        weight_cat = categories[1]
+    elif bmi < 30:
+        weight_cat = categories[2]
+    elif bmi < 35:
+        weight_cat = categories[3]
+    else:
+        weight_cat = categories[4]
+    return weight_cat
+
+
 def wakaestado(chat, lang):
     '''
     Piece of the standard flow to calculate and send the wakaestado
     '''
-    global languages
-    global images
     completed = db.check_completed(md5(chat))
     # put phase to 0
     db.change_phase(newphase=0, id_user=md5(chat))
 
     # final risk and "explanation"
-    risk, _ = obesity_risk(md5(chat), completed)
+    risk, partial_scores = obesity_risk(md5(chat), completed)
     risk = round(risk)
 
     # imagen wakaestado
     send_image(images[lang]['wakaestado.jpg'], chat)
 
-    # Full Wakaestado
+    # wakaestado detailed
     if completed[0] and completed[1] and completed[2]:
-        # append the button for the whole description
-        send_message(emoji.emojize(languages[lang]['wakaestado'].format(str(risk) + avocados(risk))), chat,
-                     detailed_wakamola_keyboard(lang))
+        details = languages[lang]['wakaestado_detail']
+        # nutrition, activity, bmi, risk, network
+        three_avocados = ' :avocado: :avocado: :avocado:'
+
+        # normal weight, overweight...
+        weight_cat = weight_category(round(partial_scores['bmi']), lang)
+
+        details = details.format(str(risk) + three_avocados,
+                                 str(round(partial_scores['nutrition'])) + three_avocados,
+                                 str(round(partial_scores['activity'])) + three_avocados,
+                                 str(round(partial_scores['bmi_score'])),
+                                 str(round(partial_scores['bmi'])),
+                                 weight_cat,
+                                 str(round(partial_scores['network'])) + three_avocados,
+                                 partial_scores['n_contacts'],
+                                 partial_scores['mean_contacts'])
+
+        send_message(emoji.emojize(details), chat)
+        send_message(emoji.emojize(languages[lang]['wakaestado_detail2']), chat)
+        send_message(emoji.emojize(languages[lang]['wakaestado_detail3']), chat)
+
     # WakaEstado partial
     else:
         # give a general advice
         send_message(emoji.emojize(languages[lang]['wakaestado_parcial'].format(str(risk) + avocados(risk))), chat)
-
-
-def wakaestado_detailed(chat, lang):
-    '''
-    This piece of code throws a message explaining the whole score
-    WARNING: Only allow this is all the questions are complete
-    '''
-    global languages
-    completed = db.check_completed(md5(chat))
-    # check all answers are completed
-    # Its sanity check
-    if not all(completed):
-        go_main(chat, lang)
-        return
-
-    _, partial_scores = obesity_risk(md5(chat), completed)
-    details = languages[lang]['wakaestado_detail']
-    # nutrition, activity, bmi, risk, network
-    three_avocados = ' :avocado: :avocado: :avocado:'
-    weight_category = None
-    aux = partial_scores['bmi']
-    categories = languages[lang]['pesos'].split('\n')
-    if aux < 18.5:
-        weight_category = categories[0]
-    elif aux < 25:
-        weight_category = categories[1]
-    elif aux < 30:
-        weight_category = categories[2]
-    elif aux < 35:
-        weight_category = categories[3]
-    else:
-        weight_category = categories[4]
-
-    details = details.format(str(round(partial_scores['nutrition'])) + three_avocados,
-                             str(round(partial_scores['activity'])) + three_avocados,
-                             str(round(partial_scores['bmi'])),
-                             weight_category,
-                             str(round(partial_scores['bmi_score'])) + three_avocados,
-                             str(round(partial_scores['risk'])) + three_avocados,
-                             str(round(partial_scores['network'])) + three_avocados,
-                             partial_scores['n_contacts'],
-                             partial_scores['mean_contacts'])
-
-    send_message(emoji.emojize(details), chat)
-    send_message(emoji.emojize(languages[lang]['wakaestado_detail2']), chat)
-    send_message(emoji.emojize(languages[lang]['wakaestado_detail3']), chat)
 
 
 def handle_updates(updates):
@@ -561,17 +534,13 @@ def handle_updates(updates):
                 aux = text.split(' ')
                 # TOKEN CHECK -> AFTER REGISTRATION
                 if len(aux) == 2:
-                    # it comes with the token. The separator is AAA
-                    info_ = aux[1].split('AAA')
-                    if debug:
-                        print('Info token', info_)
-                    friend_token = info_[0]
-                    role = info_[1]
+                    # token base64 is in the second position
+                    friend_token, role = db.get_short_link(aux[1])
                     try:
                         # friend token already in md5 -> after next code block
                         db.add_relationship(md5(chat), friend_token, role)
                     except Exception as e:
-                        print('Error ocurred on relationship add')
+                        print('Error ocurred on relationship add', e)
                         log_entry(e)
 
         # Check if the user have done the start command
@@ -581,23 +550,6 @@ def handle_updates(updates):
             db.change_phase(newphase=0, id_user=md5(chat))
             send_message(languages[lang]['select'], chat)
 
-        elif text.startswith('$'):
-            # the different social roles option
-            if text in roles:
-                role_ = text[1:]
-                # send_message(languages[lang]['share3'], chat)
-                options = [el for el in languages[lang]['social_roles'].split('\n') if el]
-
-                send_image(images[lang][role_ + '.jpg'], chat,
-                           caption=(languages[lang]['share_caption'].format(create_shared_link(md5(chat), role_))))
-                send_message(languages[lang]['share_more'], chat, social_keyboard(lang))
-                return
-
-            # if its not a correct callback
-            else:
-                return
-
-        # Credits
         elif text.lower() == 'credits':
             # just sed a message with the credits and return to the main menu
             send_message(languages[lang]['credits'], chat)
@@ -605,14 +557,31 @@ def handle_updates(updates):
             go_main(chat, lang)
 
         elif text.lower() == 'share':
-            # Send a message with the role keyboard
-            send_message(languages[lang]['share'], chat, social_keyboard(lang))
-            return
-
-        # return from the share phase
-        elif text == '_back_main':
+            # get the number of contacts in each category
+            contacts_counter = db.get_contacts_by_categorie()
+            msg_share = languages[lang]['share'].format(
+                str(sum(contacts_counter.values())),
+                str(contacts_counter['home']),
+                str(contacts_counter['family']),
+                str(contacts_counter['friend']),
+                str(contacts_counter['coworker'])
+            )
+            send_message(msg_share, chat)
+            # get the different links for sharing
+            msg_links = languages[lang]['share2']
+            # OJO estan en el orden adecuado ahora
+            # [1:] para quitar el dolar
+            links = [create_shared_link(chat, r).replace('_', '\\_') for r in roles]
+            msg_links = msg_links.format(
+                links[0],
+                links[1],
+                links[2],
+                links[3])
+            # scaped text
+            send_message(emoji.emojize(msg_links), chat)
             go_main(chat, lang)
             return
+
         elif text.lower() == 'personal':
             # set to phase and question 1
             questionarie(1, chat, lang)
@@ -633,16 +602,19 @@ def handle_updates(updates):
             go_main(chat=chat, lang=lang)
             return
 
-        elif text.lower() == 'risk_full':
-            wakaestado_detailed(chat=chat, lang=lang)
-            # Added instruction for refill
-            send_message(languages[lang]['after_wakaestado_detail'], chat)
-            go_main(chat=chat, lang=lang)
-            return
-
         elif text.lower() == god_mode:
             h4ck(md5(chat))
             go_main(chat=chat, lang=lang)
+
+        # hardcoded statistics
+        elif text.lower() == statistics_word:
+            dbnumbers = db.statistics()
+            txt_ = "Completado todo: {}\nIniciado el bot: {}\nNúmero de relaciones {}".format(
+                str(dbnumbers[0]),
+                str(dbnumbers[1]),
+                str(dbnumbers[2])
+            )
+            send_message(txt_, chat)
 
         else:
             # rescata a que responde
@@ -698,11 +670,11 @@ def handle_updates(updates):
                 # comprueba si tiene que lanzar algun mensaje antes de la pregunta
                 extra_messages(status[0], status[1] + 1, chat, lang)
                 # TODO OPCIONES DE RESPUESTA DINAMICAS
-                if status[0] == 1 and status[1] == 8: # genero
+                if status[0] == 1 and status[1] == 8:  # genero
 
                     print(send_message(emoji.emojize(q), chat, dynamic_keyboard('generos', lang)))
 
-                elif status[0] == 1 and status[1] == 10: # nivel estudios
+                elif status[0] == 1 and status[1] == 10:  # nivel estudios
                     print(send_message(emoji.emojize(q), chat, dynamic_keyboard('estudios', lang)))
 
                 elif status[0] == 1 and status[1] == 11:  # estado civil
@@ -735,14 +707,15 @@ def main():
         # obten los mensajes no vistos
         updates = get_updates(last_update_id)
         # si hay algun mensaje do work
-        #try:
+        # try:
         if 'result' in updates and len(updates['result']) > 0:
             last_update_id = get_last_update_id(updates) + 1
 
             # Updates joint by user
             joint_updates = dict()
             for update in updates['result']:
-                id_ = update['message']['from']['id']
+
+                id_ = get_chat(update)
                 if id_ in joint_updates:
                     joint_updates[id_].append(update)
                 else:
@@ -776,6 +749,8 @@ if __name__ == '__main__':
     parser.add_argument('-t', action="store", help="Token to use", required=True)
     parser.add_argument('-l', action="store", default='es', help="Default languages")
     parser.add_argument('--godmode', action="store", default="wakafill", help="god mode password")
+    parser.add_argument('--statistics', action="store", default="statistics_word",
+                        help="password for getting statistics")
     spacename = parser.parse_args()
 
     # handler to the database
@@ -791,6 +766,8 @@ if __name__ == '__main__':
     debug = spacename.d
     # god mode
     god_mode = spacename.godmode.lower()
+    # hidden statistics message
+    statistics_word = spacename.statistics.lower()
     # languages
     languages = load_languages()
     # images
@@ -802,7 +779,7 @@ if __name__ == '__main__':
     negations = [el for el in open('strings/negations.txt', 'r').read().split('\n') if el]
     affirmations = [el for el in open('strings/affirmations.txt', 'r').read().split('\n') if el]
     # role calls -> avoid hardcodding them in different places
-    roles = ['$home', '$family', '$friend', '$coworker']
+    roles = ['home', 'family', 'friend', 'coworker']
 
     with open(spacename.t, 'r') as sec_info:
         credentials_text = sec_info.read().split('\n')

@@ -11,5 +11,11 @@ CREATE TABLE IF NOT EXISTS RELATIONSHIPS (active varchar(32), passive varchar(32
 Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, UNIQUE(active, passive),
 FOREIGN KEY (active) references STATUS (id_user));
 
+CREATE TABLE IF NOT EXISTS SHORT_URLS (ID int NOT NULL AUTO_INCREMENT, id_user varchar(32) NOT NULL,
+type varchar (20) NOT NULL, UNIQUE(id_user, type), PRIMARY KEY (ID),  
+FOREIGN KEY (id_user) references STATUS (id_user));
+
+
+
 
 

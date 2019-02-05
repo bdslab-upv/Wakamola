@@ -1,5 +1,6 @@
 from os import listdir
 import mysql.connector as mariadb
+from base64 import b64encode, b64decode
 
 '''
 Refactored: ALL id_user is now the hashed version
@@ -244,18 +245,39 @@ class DBHelper:
         self.cursor.close()
         return aux
 
-    def add_relationship(self, id_user, contact, typ):
+    def exists_relationship(self, id_user, contact):
+        self.conn.commit()
+        self.cursor = self.conn.cursor()
+        stmt = 'select type from RELATIONSHIPS where active = %s and passive = %s'
+        args = (id_user, contact)
+        self.cursor.execute(stmt, args)
+        rs = self.cursor.fetchall()
+        self.cursor.close()
+        if len(rs) > 0:
+            return True, rs[0][0]
+        else:
+            return False, None
+
+    def add_relationship(self, id_user, contact, type):
         try:
+            exists, existent_type = self.exists_relationship(id_user, contact)
             self.conn.commit()
             self.cursor = self.conn.cursor()
-            stmt = 'Insert into RELATIONSHIPS (active, passive, type) values (%s, %s, %s)'
-            args = (id_user, contact, typ)
-            self.cursor.execute(stmt, args)
+            if exists:
+                # if the type is different update it
+                if not type == existent_type:
+                    stmt = 'UPDATE RELATIONSHIPS SET type = %s where active = %s and passive = %s'
+                    args = (type, id_user, contact)
+                    self.cursor.execute(stmt, args)
+            else:
+                stmt = 'Insert into RELATIONSHIPS (active, passive, type) values (%s, %s, %s)'
+                args = (id_user, contact, type)
+                self.cursor.execute(stmt, args)
             self.conn.commit()
             self.cursor.close()
         except Exception as e:
-            print(e)
             self.reconnect()
+            print(e)
 
     def get_relationships(self):
         '''
@@ -339,6 +361,81 @@ class DBHelper:
         except:
             self.reconnect()
             return None
+
+    def get_contacts_by_categorie(self):
+        try:
+            res = {'home': 0, 'family': 0, 'friend': 0, 'coworker': 0}
+            self.conn.commit()
+            self.cursor = self.conn.cursor()
+            # TODO things
+            return res
+        except:
+            self.reconnect()
+            return None
+
+    def create_short_link(self, id_user, type):
+        try:
+            self.conn.commit()
+            self.cursor = self.conn.cursor()
+            stmt = 'insert into SHORT_URLS (id_user, type) values (%s, %s)'
+            args = (id_user, type)
+            self.cursor.execute(stmt, args)
+            self.conn.commit()
+            # get the last id introduced in the database
+            last_id = self.cursor.lastrowid
+            self.cursor.close()
+            return b64encode(str(last_id).encode()).decode('utf-8')
+        except:
+            self.reconnect()
+            self.cursor = self.conn.cursor()
+            stmt = 'select ID from SHORT_URLS where id_user = %s and type = %s'
+            args = (id_user, type)
+            self.cursor.execute(stmt, args)
+            self.conn.commit()
+            rs = self.cursor.fetchall()
+            self.cursor.close()
+            return b64encode(str(rs[0][0]).encode()).decode('utf-8')
+
+    def get_short_link(self, id):
+        try:
+            id = int(b64decode(id))
+            self.conn.commit()
+            self.cursor = self.conn.cursor()
+            stmt = 'select id_user, type from SHORT_URLS where ID = %s'
+            args = (id, )
+            self.cursor.execute(stmt, args)
+            rs = self.cursor.fetchall()
+            self.cursor.close()
+            # return a tuple id_user, type
+            return rs[0]
+        except:
+            self.reconnect()
+            return None
+
+    def statistics(self):
+        try:
+            results = []
+            self.conn.commit()
+            self.cursor = self.conn.cursor()
+            # completed everything
+            stmt = 'select count(*) from STATUS where completed_personal + completed_food + completed_activity = 3;'
+            self.cursor.execute(stmt)
+            results.append(self.cursor.fetchall()[0][0])
+            # started the bot
+            stmt = 'select count(*) from STATUS;'
+            self.cursor.execute(stmt)
+            results.append(self.cursor.fetchall()[0][0])
+            # number of relationships
+            stmt = 'select count(*) from RELATIONSHIPS;'
+            self.cursor.execute(stmt)
+            results.append(self.cursor.fetchall()[0][0])
+            self.cursor.close()
+        except:
+            self.reconnect()
+            return [None, None, None]
+        return results
+
+
 
     ################################
     #
