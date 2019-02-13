@@ -1,7 +1,6 @@
 import json
 import requests
 import time
-import datetime
 from dbhelper import DBHelper
 import urllib
 from os import listdir
@@ -13,6 +12,8 @@ from g0d_m0d3 import h4ck
 import argparse
 from pandas import read_csv
 from threading import Thread
+from math import ceil
+import datetime
 
 # global variables to use
 # througth different functions
@@ -29,6 +30,7 @@ global nq_category
 global rules
 global god_mode
 global statistics_word
+global init_date
 
 
 ###############
@@ -442,10 +444,21 @@ def weight_category(bmi, lang):
     return weight_cat
 
 
+def n_avocados(value, minimum=0, maximum=10):
+    base = ':avocado:'
+    res = ''
+    # change base from 0 to max, then set a minimum value
+    # 100 is the max value in all the metrics
+    n = max(ceil(value * maximum / 100), minimum)
+    for _ in range(n):
+        res += base
+    return res
+
 def wakaestado(chat, lang):
     '''
     Piece of the standard flow to calculate and send the wakaestado
     '''
+
     completed = db.check_completed(md5(chat))
     # put phase to 0
     db.change_phase(newphase=0, id_user=md5(chat))
@@ -459,10 +472,7 @@ def wakaestado(chat, lang):
 
     # wakaestado detailed
     if completed[0] and completed[1] and completed[2]:
-        details = languages[lang]['wakaestado_detail']
         # nutrition, activity, bmi, risk, network
-        three_avocados = ' :avocado: :avocado: :avocado:'
-
         # normal weight, overweight...
         weight_cat = weight_category(round(partial_scores['bmi']), lang)
 
@@ -470,17 +480,17 @@ def wakaestado(chat, lang):
         # load "debajo/arriba" string
         index = 0 if difference > 0 else 1
         position = languages[lang]['posicion_media'].split('\n')[index]
-
-        details = details.format(str(risk) + three_avocados,
-                                 str(round(difference)),
+        details = languages[lang]['wakaestado_detail']
+        details = details.format(str(risk) + n_avocados(risk),
+                                 str(abs(round(difference))),
                                  position,
                                  str(partial_scores['n_contacts']),
-                                 str(round(partial_scores['nutrition'])) + three_avocados,
-                                 str(round(partial_scores['activity'])) + three_avocados,
-                                 str(round(partial_scores['bmi_score'])) + three_avocados,
+                                 str(round(partial_scores['nutrition'])) + n_avocados(partial_scores['nutrition']),
+                                 str(round(partial_scores['activity'])) + n_avocados(partial_scores['activity']),
+                                 str(round(partial_scores['bmi_score'])) + n_avocados(partial_scores['bmi_score']),
                                  str(round(partial_scores['bmi'])),
                                  weight_cat,
-                                 str(round(partial_scores['network'])) + three_avocados)
+                                 str(round(partial_scores['network'])) + n_avocados(partial_scores['network']))
 
         send_message(emoji.emojize(details), chat)
 
@@ -561,6 +571,7 @@ def handle_updates(updates):
             go_main(chat, lang)
 
         elif text.lower() == 'share':
+            send_image(images[lang]['wakanetwork.jpg'], chat)
             # get the number of contacts in each category
             contacts_counter = db.get_contacts_by_category(md5(chat))
             msg_share = languages[lang]['share'].format(
@@ -570,7 +581,8 @@ def handle_updates(updates):
                 str(contacts_counter['friend']),
                 str(contacts_counter['coworker'])
             )
-            send_message(msg_share, chat)
+            send_message(emoji.emojize(msg_share), chat)
+            send_message(languages[lang]['share_copy'], chat)
             # get the different links for sharing
             # OJO estan en el orden adecuado ahora
             links = [create_shared_link(chat, r).replace('_', '\\_') for r in roles]
@@ -607,10 +619,17 @@ def handle_updates(updates):
         # hardcoded statistics
         elif text.lower() == statistics_word:
             dbnumbers = db.statistics()
-            txt_ = "Completado todo: {}\nIniciado el bot: {}\nNúmero de relaciones {}".format(
+            date_now = datetime.datetime.now()
+            time_diff = date_now - init_date
+            days_ = time_diff.days
+            seconds_ = time_diff.seconds
+            minutes_ = seconds_ // 60
+            seconds_ = seconds_ % 60
+            txt_ = "Completado todo: {}\nIniciado el bot: {}\nNúmero de relaciones: {}\nUptime: {}".format(
                 str(dbnumbers[0]),
                 str(dbnumbers[1]),
-                str(dbnumbers[2])
+                str(dbnumbers[2]),
+                "Days {} Minutes {} Seconds {}".format(days_, minutes_, seconds_)
             )
             send_message(txt_, chat)
             go_main(chat=chat, lang=lang)
@@ -742,6 +761,7 @@ def main():
 
 if __name__ == '__main__':
     # TODO QUESTIONS ON CACHE FOR NEXT VERSION
+    init_date = datetime.datetime.now()
     # argument parser
     parser = argparse.ArgumentParser(description="Telegram BOT")
     parser.add_argument('-d', action="store_true", default=True, help="Debug mode: Print the messages on console")

@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="58d56159-c5ed-4f1f-a461-04298403718b" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/afirmations.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/alphabot.py" beforeDir="false" afterPath="$PROJECT_DIR$/alphabot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dbhelper.py" beforeDir="false" afterPath="$PROJECT_DIR$/dbhelper.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/error.log" beforeDir="false" afterPath="$PROJECT_DIR$/error.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/g0d_m0d3.py" beforeDir="false" afterPath="$PROJECT_DIR$/g0d_m0d3.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/afirmations.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/alphabot.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/change_strings_format.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/dbhelper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/error.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/graph_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/graphs/cytoscape_graph.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/en/activity.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/en/food.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/en/personal.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/en/risk_h.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/en/risk_l.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/en/risk_m.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/en/welcome.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/es/activity.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/es/food.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/es/personal.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/es/wakaestado.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/es/welcome.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/sanus/en/activity.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/sanus/en/bienvenidaEnglish-01.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/sanus/en/food.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/sanus/en/personal.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/sanus/en/risk_h.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/sanus/en/risk_l.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/sanus/en/risk_m.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/sanus/en/risk_none.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/sanus/es/activity.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/sanus/es/food.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/sanus/es/personal.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/sanus/es/risk_h.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/sanus/es/risk_l.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/sanus/es/risk_m.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/sanus/es/risk_none.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/sanus/es/welcome.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/va/activity.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/va/food.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/va/personal.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/va/wakaestadi.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/img/va/welcome.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/maintenance.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/models.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/negations.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/questions/en/1personal" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/questions/en/2food" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/questions/en/3activity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/questions/es/1personal" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/questions/es/2food" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/questions/es/3activity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/questions/es/4social" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/strings/afirmations.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/strings/en.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/strings/es.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/strings/negations.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/en/1_activity.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/en/2_activity.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/en/3_activity.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/en/4_activity.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/en/be_number.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/en/completed_social.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/en/completed_survey.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/en/credits.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/en/error.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/en/food_intro.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/en/generic_tip.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/en/keyboard_social" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/en/no_ID.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/en/not_supported.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/en/options.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/en/post_fail_social.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/en/select.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/en/share.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/en/social.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/en/surveys_incemplete.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/en/welcome.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/es/1_activity.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/es/2_activity.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/es/3_activity.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/es/4_activity.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/es/OLD/completed_survey.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/es/be_number.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/es/credits.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/es/end_activity.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/es/end_food.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/es/end_personal.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/es/food_intro.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/es/food_weekly.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/es/generic_tip.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/es/keyboard_social" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/es/not_supported.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/es/numeric_response.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/es/options.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/es/select.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/es/share.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/es/social.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/es/wakaestado.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/es/wakaestado_parcial.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/text/es/welcome.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/negations.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/strings/es.csv" beforeDir="false" afterPath="$PROJECT_DIR$/strings/es.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/strings/va.csv" beforeDir="false" afterPath="$PROJECT_DIR$/strings/va.csv" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="alphahealth" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dbhelper.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="3638">
+              <caret line="215" column="44" selection-start-line="215" selection-start-column="44" selection-end-line="215" selection-end-column="44" />
+              <folding>
+                <element signature="e#0#22#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/init_db_queries.sql">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="102">
+              <caret line="6" column="112" selection-start-line="6" selection-start-column="100" selection-end-line="6" selection-end-column="112" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/alphabot.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="450">
+              <caret line="743" column="44" selection-start-line="743" selection-start-column="44" selection-end-line="743" selection-end-column="44" />
+              <folding>
+                <element signature="e#0#11#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bd_restart.sh">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="17">
+              <caret line="1" column="66" selection-start-line="1" selection-start-column="66" selection-end-line="1" selection-end-column="66" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/__developer_utils/string_files_tester.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="374">
+              <caret line="23" selection-start-line="23" selection-end-line="23" />
+              <folding>
+                <element signature="e#141#151#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/g0d_m0d3.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="340">
+              <caret line="21" column="34" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
+              <folding>
+                <element signature="e#0#29#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2550">
+              <caret line="153" column="25" selection-start-line="153" selection-start-column="25" selection-end-line="153" selection-end-column="25" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/utils.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1020">
+              <caret line="63" selection-start-line="63" selection-end-line="63" />
+              <folding>
+                <element signature="e#0#21#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/maintenance.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="68">
+              <caret line="7" column="8" selection-start-line="7" selection-start-column="8" selection-end-line="7" selection-end-column="8" />
+              <folding>
+                <element signature="e#0#11#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>load</find>
+      <find>affir</find>
+      <find>afirm</find>
+      <find>affi</find>
+      <find>sep</find>
+      <find>social_rol_keyboard</find>
+      <find>social_rol_keyboar</find>
+      <find>setup</find>
+      <find>set</find>
+      <find>check</find>
+      <find>edit</find>
+      <find>share</find>
+      <find>family</find>
+      <find>detailed_wakamola_keyboard</find>
+      <find>main_menu_keyboard</find>
+      <find>dynamic</find>
+      <find>checkans</find>
+      <find>get</find>
+      <find>bmi</find>
+      <find>_bac</find>
+      <find>getBMI</find>
+      <find>wakaesta</find>
+      <find>getBM</find>
+      <find>start</find>
+      <find>/start</find>
+      <find>chec</find>
+      <find>process_lang</find>
+      <find>adam</find>
+      <find>check_comple</find>
+      <find>risk</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/maintenance.py" />
+        <option value="$PROJECT_DIR$/graph_utils.py" />
+        <option value="$PROJECT_DIR$/utils.py" />
+        <option value="$PROJECT_DIR$/init_db_queries.sql" />
+        <option value="$PROJECT_DIR$/bd_restart.sh" />
+        <option value="$PROJECT_DIR$/__developer_utils/string_files_tester.py" />
+        <option value="$PROJECT_DIR$/g0d_m0d3.py" />
+        <option value="$PROJECT_DIR$/models.py" />
+        <option value="$PROJECT_DIR$/dbhelper.py" />
+        <option value="$PROJECT_DIR$/alphabot.py" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="61" />
+    <option name="y" value="29" />
+    <option name="width" value="1859" />
+    <option name="height" value="1051" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="alphahealth" type="b2602c69:ProjectViewProjectNode" />
+              <item name="alphahealth" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="58d56159-c5ed-4f1f-a461-04298403718b" name="Default" comment="" />
+      <created>1541409149873</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1541409149873</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49945712" visible="true" weight="0.23709168" />
+      <window_info id="Structure" order="1" weight="0.25" />
+      <window_info id="Favorites" order="2" sideWeight="0.5005429" side_tool="true" weight="0.16611479" />
+      <window_info id="Project Explorer" order="3" />
+      <window_info id="DB Browser" order="4" weight="0.3294702" />
+      <window_info id="Job Explorer" order="5" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32899022" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info anchor="bottom" id="Python Console" order="9" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Console" order="11" />
+      <window_info anchor="bottom" id="DB Execution Console" order="12" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Data View" order="3" />
+    </layout>
+    <layout-to-restore>
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49945712" visible="true" weight="0.23825137" />
+      <window_info id="Structure" order="1" weight="0.25" />
+      <window_info id="Favorites" order="2" sideWeight="0.5005429" side_tool="true" weight="0.16611479" />
+      <window_info id="Project Explorer" order="3" />
+      <window_info id="DB Browser" order="4" weight="0.3294702" />
+      <window_info id="Job Explorer" order="5" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32899022" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info anchor="bottom" id="Python Console" order="9" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Console" order="11" />
+      <window_info anchor="bottom" id="DB Execution Console" order="12" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Data View" order="3" />
+    </layout-to-restore>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/passwd">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dbhelper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3638">
+          <caret line="215" column="44" selection-start-line="215" selection-start-column="44" selection-end-line="215" selection-end-column="44" />
+          <folding>
+            <element signature="e#0#22#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/init_db_queries.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="112" selection-start-line="6" selection-start-column="100" selection-end-line="6" selection-end-column="112" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bd_restart.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="66" selection-start-line="1" selection-start-column="66" selection-end-line="1" selection-end-column="66" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/__developer_utils/string_files_tester.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="23" selection-start-line="23" selection-end-line="23" />
+          <folding>
+            <element signature="e#141#151#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/g0d_m0d3.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="21" column="34" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2550">
+          <caret line="153" column="25" selection-start-line="153" selection-start-column="25" selection-end-line="153" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1020">
+          <caret line="63" selection-start-line="63" selection-end-line="63" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maintenance.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="7" column="8" selection-start-line="7" selection-start-column="8" selection-end-line="7" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/alphabot.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="743" column="44" selection-start-line="743" selection-start-column="44" selection-end-line="743" selection-end-column="44" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

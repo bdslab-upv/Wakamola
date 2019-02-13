@@ -5,7 +5,7 @@ import requests
 
 # info to load at start
 # token is not in the source code for security
-TOKEN = open('token.txt', 'r').read().split('\n')[0].strip()
+TOKEN = open('token_tavernes.txt', 'r').read().split('\n')[0].strip()
 # URL to interact with the API
 URL = "https://api.telegram.org/bot{}/".format(TOKEN)
 
@@ -95,7 +95,7 @@ def handle_updates(updates):
     global languages
     for update in updates["result"]:
         chat = update['message']['chat']['id']
-        send_message('Sorry, the bot is under maintenance now, try later!', chat)
+        send_message('Wakamola està en manteniment! En breu tornarà a la normalitat, disculpa les molèsties.', chat)
 
 
 def main():

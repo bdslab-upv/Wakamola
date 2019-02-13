@@ -338,3 +338,19 @@ unsupported operand type(s) for +=: 'int' and 'NoneType'
 2019-02-04 22:40
 1205 (HY000): Lock wait timeout exceeded; try restarting transaction
 
+
+2019-02-07 08:29
+unsupported operand type(s) for +=: 'float' and 'NoneType'
+
+
+2019-02-07 08:29
+unsupported operand type(s) for +=: 'float' and 'NoneType'
+
+
+2019-02-07 19:14
+unsupported operand type(s) for +=: 'int' and 'NoneType'
+
+
+2019-02-07 19:14
+unsupported operand type(s) for +=: 'int' and 'NoneType'
+
