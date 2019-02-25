@@ -12,7 +12,7 @@ MAX_NETWORK = 10
 
 ######################
 #
-# IMPLEMENTACIÓN TABLAS ALIMENTACION
+# IMPLEMENTACION TABLAS ALIMENTACION
 #
 ######################
 def table_1(group, n):

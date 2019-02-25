@@ -1,4 +1,4 @@
-from os import listdir
+from os import listdir, environ
 import mysql.connector as mariadb
 from base64 import b64encode, b64decode
 
@@ -6,12 +6,16 @@ from base64 import b64encode, b64decode
 Refactored: ALL id_user is now the hashed version
 '''
 
-DATABASE = 'bot_preprod'
+#DATABASE = 'bot_preprod'
+# password=open('passwd', 'r').read().split('\n')[0].strip()
 
 class DBHelper:
-    def __init__(self, dbname="alphahealth.sqlite"):
-        self.conn = mariadb.connect(user='bothandler',
-                                    password=open('passwd', 'r').read().split('\n')[0].strip(), database=DATABASE,
+    def __init__(self):
+        self.conn = mariadb.connect(host=environ['HOST'],
+                                    port=environ['PORT'],
+                                    user=environ['USER_WAKAMOLA'],
+                                    password= environ['PASSWORD_WAKAMOLA'],
+                                    database= environ['DATABASE'],
                                     buffered=True)
         self.cursor = self.conn.cursor()
 
@@ -45,8 +49,11 @@ class DBHelper:
         Create a fresh connection to the database
         also a new cursor
         '''
-        self.conn = mariadb.connect(user='bothandler',
-                                    password=open('passwd', 'r').read().split('\n')[0].strip(), database=DATABASE,
+        self.conn = mariadb.connect(host=environ['HOST'],
+                                    port=environ['PORT'],
+                                    user=environ['USER_WAKAMOLA'],
+                                    password=environ['PASSWORD_WAKAMOLA'],
+                                    database=environ['DATABASE'],
                                     buffered=True)
         self.cursor = self.conn.cursor()
 
