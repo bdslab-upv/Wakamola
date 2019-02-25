@@ -2,7 +2,7 @@ import json
 import requests
 import time
 from dbhelper import DBHelper
-import urllib
+from urllib.parse import quote_plus
 from os import listdir, environ
 import emoji
 from models import obesity_risk
@@ -109,7 +109,7 @@ def getMe():
 
 
 def send_message(text, chat_id, reply_markup=None):
-    text = urllib.parse.quote_plus(text)
+    text = quote_plus(text)
     url = URL + "sendMessage?text={}&chat_id={}&parse_mode=Markdown".format(text, chat_id)
     # reply_markup is for a special keyboard
     if reply_markup:
