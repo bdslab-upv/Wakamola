@@ -13,13 +13,19 @@ Authors:
 - Juan M. García-Gómez, PhD
 - Sabina Asensio-Cuesta, PhD
 - Alberto Conejero, PhD
+
 *Taipei Medical University*
+
 - Shabbir Syed Abdul, MD, MSc, PhD
 - Yu-Chuan (Jack) Li, MD, PhD
+
 *Hospital Universitari i Politècnic La Fe*
+
 - Juan Francisco Merino-Torres, MD, PhD
 - Matilde Rubio Almanza, MD
+
 *Universitat de València*
+
 - Ana Frigola, PhD
 
 - Salvador Tortajada, PhD
