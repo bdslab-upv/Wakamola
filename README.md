@@ -27,6 +27,6 @@ Authors:
 
 *GFX Designers*
 
--Mª Dolores Blanco
--Ángel Esteban
--Marta Lavall
+- Mª Dolores Blanco
+- Ángel Esteban
+- Marta Lavall
