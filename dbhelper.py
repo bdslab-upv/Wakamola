@@ -42,9 +42,7 @@ class DBHelper:
                 print(e)
         self.cursor.close()
 
-
-
-    def reconnect(self, dbname="alphahealth.sqlite"):
+    def reconnect(self):
         '''
         Create a fresh connection to the database
         also a new cursor
