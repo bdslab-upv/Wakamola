@@ -28,6 +28,8 @@ Authors:
 
 - Ana Frigola, PhD
 
+*Other affiliations*
+
 - Salvador Tortajada, PhD
 - Ruth Vilar-Mateo, PhD
 
