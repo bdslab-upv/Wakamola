@@ -26,6 +26,7 @@ Authors:
 - Ruth Vilar-Mateo, PhD
 
 *GFX Designers*
+
 -Mª Dolores Blanco
 -Ángel Esteban
 -Marta Lavall
