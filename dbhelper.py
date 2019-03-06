@@ -1,13 +1,10 @@
 from os import listdir, environ
 import mysql.connector as mariadb
+import logging
 from base64 import b64encode, b64decode
 
-'''
-Refactored: ALL id_user is now the hashed version
-'''
+logging.basicConfig(level=logging.INFO)
 
-#DATABASE = 'bot_preprod'
-# password=open('passwd', 'r').read().split('\n')[0].strip()
 
 class DBHelper:
     def __init__(self):
@@ -39,7 +36,7 @@ class DBHelper:
                             else:
                                 blanks += 1
             except Exception as e:
-                print(e)
+                logging.error(e)
         self.cursor.close()
 
     def reconnect(self):
@@ -81,7 +78,7 @@ class DBHelper:
             self.conn.commit()
             self.cursor.close()
         except Exception as e:
-            print(e)
+            logging.error(e)
             self.reconnect()
 
     def check_user(self, id_user):
@@ -113,7 +110,7 @@ class DBHelper:
             self.conn.commit()
             self.cursor.close()
         except Exception as e:
-            print(e)
+            logging.error(e)
             self.reconnect()
 
     def get_phase_question(self, id_user):
@@ -127,7 +124,7 @@ class DBHelper:
             self.cursor.close()
             return rs
         except Exception as e:
-            print(e)
+            logging.error(e)
             self.reconnect()
             return 0, 0
 
@@ -141,7 +138,7 @@ class DBHelper:
             self.conn.commit()
             self.cursor.close()
         except Exception as e:
-            print(e)
+            logging.error(e)
             self.reconnect()
 
     def get_question(self, phase, question, lang):
@@ -156,7 +153,7 @@ class DBHelper:
             self.cursor.close()
             return str([el[0] for el in rs][0])
         except Exception as e:
-            print(e)
+            logging.error(e)
             self.reconnect()
             return None
 
@@ -171,7 +168,7 @@ class DBHelper:
             self.cursor.close()
             return int(rs[0][0]) > 0
         except Exception as e:
-            print(e)
+            logging.error(e)
             self.reconnect()
             return None
 
@@ -184,8 +181,8 @@ class DBHelper:
             self.cursor.execute(stmt, args)
             self.conn.commit()
         except Exception as e:
-            print(e)
-            print("Primary key exception for Add Answer - dbhelper")
+            logging.error(e)
+            logging.error("Primary key exception for Add Answer - dbhelper")
             self.reconnect()
         self.cursor.close()
 
@@ -193,7 +190,7 @@ class DBHelper:
         self.conn.commit()
         self.cursor = self.conn.cursor()
         stmt = "update RESPONSES set answer = %s where id_message = %s"
-        print(id_message, answer)
+        logging.info(id_message, answer)
         args = (answer, id_message)
         self.cursor.execute(stmt, args)
         self.conn.commit()
@@ -201,7 +198,7 @@ class DBHelper:
 
     def completed_survey(self, id_user, phase):
         '''
-        TODO error controls on this method
+        TODO logging.error controls on this method
         '''
         self.conn.commit()
         self.cursor = self.conn.cursor()
@@ -232,13 +229,13 @@ class DBHelper:
             # TODO remove if test is okay
             # return [(el[0], el[1], el[2]) for el in rs][0]
         except Exception as e:
-            print(e)
+            logging.error(e)
             return False, False, False
 
     def n_questions(self):
         '''
         Return a dict with the number of question per phase
-        This method is called at the start, so no error control
+        This method is called at the start, so no logging.error control
         '''
         self.conn.commit()
         self.cursor = self.conn.cursor()
@@ -284,7 +281,7 @@ class DBHelper:
             self.cursor.close()
         except Exception as e:
             self.reconnect()
-            print(e)
+            logging.error(e)
 
     def get_relationships(self):
         '''
@@ -318,7 +315,7 @@ class DBHelper:
             self.cursor.close()
             return list(set([el[0] for el in rs1+rs2]))
         except Exception as e:
-            print(e)
+            logging.error(e)
             self.reconnect()
 
     def getBMI(self, id_user):
@@ -443,7 +440,8 @@ class DBHelper:
             self.cursor.execute(stmt)
             results.append(self.cursor.fetchall()[0][0])
             self.cursor.close()
-        except:
+        except Exception as e:
+            logging.error(e)
             self.reconnect()
             return [None, None, None]
         return results
@@ -471,14 +469,14 @@ class DBHelper:
             self.conn.commit()
             self.cursor.close()
         except Exception as e:
-            print(e)
+            logging.error(e)
             self.reconnect()
 
     def get_last_wakaestado(self, id_user):
         """
         Method called during 'crontab' time
         :param id_user:
-        :return: Last wakaestado, -1 if error occurs
+        :return: Last wakaestado, -1 if logging.error occurs
         """
         try:
             self.conn.commit()
@@ -493,7 +491,7 @@ class DBHelper:
             else:
                 return float(rs[0][0])
         except Exception as e:
-            print(e)
+            logging.error(e)
             self.reconnect()
             return None
 

@@ -33,8 +33,6 @@ def create_graph(name):
         if rel[1] not in in_:
             in_[rel[1]] = len(in_)
 
-        #bmis
-        print(rel[0])
         bmi1_ = round(db.getBMI(rel[0]), 1)
         bmi2_ = round(db.getBMI(rel[1]), 1)
 

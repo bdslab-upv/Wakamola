@@ -1,15 +1,15 @@
-"action","text"
-"1_activity","Piensa en todas las actividades **intensas** que has realizado en los **últimos 7 días**. Las actividades físicas **intensas** se refieren a aquellas que implican un esfuerzo físico intenso y que lo hacen respirar mucho más intensamente que lo normal. Piensa solo en aquellas actividades físicas que realizaste durante **por lo menos 10 minutos seguidos**.
+action,text
+1_activity,"Piensa en todas las actividades **intensas** que has realizado en los **últimos 7 días**. Las actividades físicas **intensas** se refieren a aquellas que implican un esfuerzo físico intenso y que lo hacen respirar mucho más intensamente que lo normal. Piensa solo en aquellas actividades físicas que realizaste durante **por lo menos 10 minutos seguidos**.
 "
-"2_activity","Piense en todas las actividades **moderadas** que has realizado en los **últimos 7 días**. Las actividades **moderadas** son aquellas que requieren un esfuerzo físico moderado que lo hace respirar algo más intensamente que lo normal. Piensa solo en aquellas actividades físicas que realizaste durante **por lo menos 10 minutos seguidos**.
+2_activity,"Piense en todas las actividades **moderadas** que has realizado en los **últimos 7 días**. Las actividades **moderadas** son aquellas que requieren un esfuerzo físico moderado que lo hace respirar algo más intensamente que lo normal. Piensa solo en aquellas actividades físicas que realizaste durante **por lo menos 10 minutos seguidos**.
 "
-"3_activity","Piense en el tiempo que dedicaste a **caminar** en los **últimos 7 días**. Esto incluye caminar en el trabajo o en la casa, para trasladarse de un lugar a otro, o cualquier otra caminata que podrías hacer solamente para la recreación, el deporte, el ejercicio o el ocio
+3_activity,"Piense en el tiempo que dedicaste a **caminar** en los **últimos 7 días**. Esto incluye caminar en el trabajo o en la casa, para trasladarse de un lugar a otro, o cualquier otra caminata que podrías hacer solamente para la recreación, el deporte, el ejercicio o el ocio
 "
-"4_activity","La última pregunta es acerca del tiempo que pasó usted **sentado** durante los días hábiles de los **últimos 7** días. Esto incluye el tiempo dedicado al trabajo, en la casa, en una clase, y durante el tiempo libre. Puede incluir el tiempo que pasó sentado ante un escritorio, visitando amigos, leyendo, viajando en ómnibus, o sentado o recostado mirando la televisión.
+4_activity,"La última pregunta es acerca del tiempo que pasó usted **sentado** durante los días hábiles de los **últimos 7** días. Esto incluye el tiempo dedicado al trabajo, en la casa, en una clase, y durante el tiempo libre. Puede incluir el tiempo que pasó sentado ante un escritorio, visitando amigos, leyendo, viajando en ómnibus, o sentado o recostado mirando la televisión.
 "
-"be_number","¡Lo siento, pero la respuesta a esta pregunta debe ser un número!
+be_number,"¡Lo siento, pero la respuesta a esta pregunta debe ser un número!
 "
-"credits","El proyecto Wakamola ha sido desarrollando por el grupo de investigación BDSLab de la Universitat Politènica de València en colaboración con Taipei Medical University, bajo el asesoramiento médico y experto del hospital La Fe, y el asesoramiento en nutrición de expertos de la Facultad de Farmacia de la Universitat de València.
+credits,"El proyecto Wakamola ha sido desarrollando por el grupo de investigación BDSLab de la Universitat Politènica de València en colaboración con Taipei Medical University, bajo el asesoramiento médico y experto del hospital La Fe, y el asesoramiento en nutrición de expertos de la Facultad de Farmacia de la Universitat de València.
 
 Han contribuido a que este proyecto sea posible:
 
@@ -29,34 +29,36 @@ Diseñadores gráficos (ETSID, UPV):
 -Mª Dolores Blanco
 -Ángel Esteban
 -Marta Lavall
+
+El contenido de esta obra está bajo una licencia de Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional. https://creativecommons.org/licenses/by-sa/3.0/es/deed.es
 "
-"end_activity","Gracias por hablarme también de tu actividad física. Con todo lo que hemos hablado he calculado tu Wakaestado, haz click en el botón :green_heart: Wakaetado para conocerlo.
+end_activity,"Gracias por hablarme también de tu actividad física. Con todo lo que hemos hablado he calculado tu Wakaestado, haz click en el botón :green_heart: Wakaetado para conocerlo.
 "
-"end_food","Ya sé muchas cosas sobre tu alimentación, ahora hablemos de tu actividad física semanal.
+end_food,"Ya sé muchas cosas sobre tu alimentación, ahora hablemos de tu actividad física semanal.
 
 Pulsa :person_running: Actividad para empezar.
 "
-"end_personal","Gracias por contestar, ya conozco más sobre ti.
+end_personal,"Gracias por contestar, ya conozco más sobre ti.
 
 ¿Podemos hablar ahora de tu alimentación? Haz click en el botón :green_apple: Dieta
 "
-"food_intro","En el cuestionario de alimentación tendrás que indicar cuantas veces de *media* consumes los siguientes alimentos *POR DIA*.
+food_intro,"En el cuestionario de alimentación tendrás que indicar cuantas veces de *media* consumes los siguientes alimentos *POR DIA*.
 "
-"food_weekly","¡Perfecto! Ahora me gustaría saber cuantas veces tomas los siguientes alimentos *POR SEMANA*
+food_weekly,"¡Perfecto! Ahora me gustaría saber cuantas veces tomas los siguientes alimentos *POR SEMANA*
 "
-"generic_tip","No has respondido todavía a todas las preguntas, un consejo genérico será enviado en las siguentes fases del desarrollo
+generic_tip,"No has respondido todavía a todas las preguntas, un consejo genérico será enviado en las siguentes fases del desarrollo
 "
-"keyboard_social","Familia
+keyboard_social,"Familia
 Pareja
 Amigo
 Compañero de trabajo
 Otro
 "
-"not_supported","Este tipo de mensaje no tiene soporte de momento
+not_supported,"Este tipo de mensaje no tiene soporte de momento
 "
-"numeric_response","Las preguntas están diseñadas para ser respondidas con un valor numérico *válido*. Unicamente aquellas que se indican pueden ser respondidas con si/no.
+numeric_response,"Las preguntas están diseñadas para ser respondidas con un valor numérico *válido*. Unicamente aquellas que se indican pueden ser respondidas con si/no.
 "
-"options",":bust_in_silhouette: Personal
+options,":bust_in_silhouette: Personal
 :green_apple: Dieta
 :person_running: Actividad
 :green_heart: Wakaestado
@@ -65,28 +67,28 @@ Otro
 :light_bulb: Acerca de Wakamola
 :point_right: Iniciar
 "
-"select","¡Elige una opción!
+select,"¡Elige una opción!
 "
-"social","Me gustaría poder ayudar también a tus amigos y familiares.
+social,"Me gustaría poder ayudar también a tus amigos y familiares.
 Cuanto mejor sea el Wakaestado de tu entorno mejor será el tuyo e iré actualizandolo para ti periódicamente.
 Para compartirme únicamente tienes que reenviar la siguiente imagen.
 ¡Gracias por compartirme!
 "
-"wakaestado","La puntuación de tu Wakaestado es: {} sobre 100
+wakaestado,"La puntuación de tu Wakaestado es: {} sobre 100
 "
-"wakaestado_parcial","Por ahora con la información que tengo sobre ti este es tu Wakaestado: {} sobre 100
+wakaestado_parcial,"Por ahora con la información que tengo sobre ti este es tu Wakaestado: {} sobre 100
 "
-"welcome","¡Hola encantado de hablar contigo!
+welcome,"¡Hola encantado de hablar contigo!
 Voy a hacerte algunas preguntas para conocerte y poder darte un Wakaestado.
 
 Te recomiendo que empieces por el cuestionario :bust_in_silhouette: Personal
 "
-"social_roles","Casa :house:
+social_roles,"Casa :house:
 Familia :woman: :man: :old_woman:
 Amigos  :busts_in_silhouette:
 Trabajo :briefcase:
 He terminado de compartir :thumbs_up:"
-"wakaestado_detail","La puntuación de tu Wakaestado es: {} sobre 100
+wakaestado_detail,"La puntuación de tu Wakaestado es: {} sobre 100
 
 {} puntos por {} del Wakaestado medio de tus {} Wakacontactos!
 
@@ -99,42 +101,42 @@ Wakaactvidad: {}
 WakaIMC {} (Tu índice de Masa Corporal es {} que corresponde a {})
 
 Wakasocial {} (Calculado a partir del Wakaestado de tus contactos)"
-"get_details","Detalles Wakaestado"
-"after_wakaestado_detail","Recuérda que puedes actualizar tu Wakaestado tantas veces como quieras volviendo a responder a mis preguntas"
-"h4ck","s4v3 Us, W4k4m0L4"
-"edit","Recuerda que puedes cambiar tu respuesta manteniendo pulsado sobre ella y editando el mensaje."
-"pesos","Peso bajo
+get_details,Detalles Wakaestado
+after_wakaestado_detail,Recuérda que puedes actualizar tu Wakaestado tantas veces como quieras volviendo a responder a mis preguntas
+h4ck,"s4v3 Us, W4k4m0L4"
+edit,Recuerda que puedes cambiar tu respuesta manteniendo pulsado sobre ella y editando el mensaje.
+pesos,"Peso bajo
 peso normal
 sobrepeso
 obesidad tipo 1
 obesidad tipo 2
 obesidad tipo 3"
-"generos","Hombre
+generos,"Hombre
 Mujer
 Otro
 No responder"
-"estudios","Sin estudios
+estudios,"Sin estudios
 Primaria
 Secundaria
 Superior"
-"estado_civil","Soltero
+estado_civil,"Soltero
 Casado/Pareja
 Viudo
 Otro"
-"wakaestado_detail2","Cuando más grande sea tu red Wakamola mejor será tu puntuación Wakasocial!"
-"wakaestado_detail3","Ahora puedes elegir la opción de compartirme para conseguir muchos más :avocado::avocado::avocado:…"
-"share","Tienes {} Wakacontactos :woman: :man: :old_woman: :house: :briefcase:
+wakaestado_detail2,Cuando más grande sea tu red Wakamola mejor será tu puntuación Wakasocial!
+wakaestado_detail3,Ahora puedes elegir la opción de compartirme para conseguir muchos más :avocado::avocado::avocado:…
+share,"Tienes {} Wakacontactos :woman: :man: :old_woman: :house: :briefcase:
 
 {} Casa, {} Familia, {} Amigos y {} Trabajo"
-"share_copy","
+share_copy,"
 *¡Copia y pega los enlaces para invitar!*"
-"share2","Invitar a Casa :house:
+share2,"Invitar a Casa :house:
 {}"
-"posicion_media","debajo
+posicion_media,"debajo
 arriba"
-"share3","Invitar a Familia :woman::man::old_woman:
+share3,"Invitar a Familia :woman::man::old_woman:
 {} "
-"share4","Invitar a Amigos :busts_in_silhouette:
+share4,"Invitar a Amigos :busts_in_silhouette:
 {}"
-"share5","Invitar a Trabajo 💼:briefcase:
+share5,"Invitar a Trabajo 💼:briefcase:
 {}"

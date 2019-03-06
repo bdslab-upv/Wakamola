@@ -14,11 +14,11 @@ from pandas import read_csv
 from threading import Thread
 from math import ceil
 import datetime
+import logging
 
 # global variables to use
 # througth different functions
 global URL
-global debug
 global languages
 global images
 global def_lang_
@@ -32,6 +32,7 @@ global god_mode
 global statistics_word
 global init_date
 
+logging.basicConfig(level=logging.INFO)
 
 ###############
 #
@@ -105,7 +106,7 @@ def get_last_update_id(updates):
 def getMe():
     # Check API method
     getme = URL + "getMe"
-    print(get_url(getme))
+    logging.info(get_url(getme))
 
 
 def send_message(text, chat_id, reply_markup=None):
@@ -160,7 +161,7 @@ def send_file(localpath, chat_id):
     # atributtes
     files = {'document': open(localpath, 'rb')}
     data = {'chat_id': chat_id}
-    print(requests.post(url, files=files, data=data))
+    logging.info(requests.post(url, files=files, data=data))
 
 
 ###############################
@@ -338,7 +339,7 @@ def dynamic_keyboard(string, lang='en'):
         if i % 2 == 1:
             key_.append(aux_)
             aux_ = []
-    print(key_)
+    logging.info(key_)
     keyboard = {'inline_keyboard': key_}
     return json.dumps(keyboard)
 
@@ -454,6 +455,7 @@ def n_avocados(value, minimum=0, maximum=10):
         res += base
     return res
 
+
 def wakaestado(chat, lang):
     '''
     Piece of the standard flow to calculate and send the wakaestado
@@ -505,8 +507,7 @@ def handle_updates(updates):
         chat = get_chat(update)
         text, message_id = filter_update(update)
 
-        if debug:
-            print(chat, text)
+        logging.info(chat, text)
 
         # no valid text
         if text is False:
@@ -554,7 +555,7 @@ def handle_updates(updates):
                         # friend token already in md5 -> after next code block
                         db.add_relationship(md5(chat), friend_token, role)
                     except Exception as e:
-                        print('Error ocurred on relationship add', e)
+                        logging.error('Error ocurred on relationship add', e)
                         log_entry(e)
 
         # Check if the user have done the start command
@@ -618,7 +619,8 @@ def handle_updates(updates):
 
         # hardcoded statistics
         elif text.lower() == statistics_word:
-            dbnumbers = db.statistics()
+
+            db_statistics = db.statistics()
             date_now = datetime.datetime.now()
             time_diff = date_now - init_date
             days_ = time_diff.days
@@ -628,9 +630,9 @@ def handle_updates(updates):
             hours_ = minutes_ // 60
             minutes_ = minutes_ % 60
             txt_ = "Completado todo: {}\nIniciado el bot: {}\nNumero de relaciones: {}\nUptime: {}".format(
-                str(dbnumbers[0]),
-                str(dbnumbers[1]),
-                str(dbnumbers[2]),
+                str(db_statistics[0]),
+                str(db_statistics[1]),
+                str(db_statistics[2]),
                 "Days: {} Hours: {} Minutes: {} Seconds: {}".format(days_, hours_, minutes_, seconds_)
             )
             send_message(txt_, chat)
@@ -692,13 +694,13 @@ def handle_updates(updates):
                 # TODO OPCIONES DE RESPUESTA DINAMICAS
                 if status[0] == 1 and status[1] == 8:  # genero
 
-                    print(send_message(emoji.emojize(q), chat, dynamic_keyboard('generos', lang)))
+                    logging.info(send_message(emoji.emojize(q), chat, dynamic_keyboard('generos', lang)))
 
                 elif status[0] == 1 and status[1] == 10:  # nivel estudios
-                    print(send_message(emoji.emojize(q), chat, dynamic_keyboard('estudios', lang)))
+                    logging.info(send_message(emoji.emojize(q), chat, dynamic_keyboard('estudios', lang)))
 
                 elif status[0] == 1 and status[1] == 11:  # estado civil
-                    print(send_message(emoji.emojize(q), chat, dynamic_keyboard('estado_civil', lang)))
+                    logging.info(send_message(emoji.emojize(q), chat, dynamic_keyboard('estado_civil', lang)))
 
                 else:
                     send_message(emoji.emojize(q), chat)
@@ -753,12 +755,10 @@ def main():
                 time.sleep(1)
 
         except Exception as e:
-            print('Error ocurred, watch log!')
             log_entry(str(e))
-            print(e)
+            logging.error(e)
             # sleep 20 seconds so the problem may solve
             time.sleep(20)
-
 
 
 if __name__ == '__main__':
@@ -766,7 +766,6 @@ if __name__ == '__main__':
     init_date = datetime.datetime.now()
     # argument parser
     parser = argparse.ArgumentParser(description="Telegram BOT")
-    parser.add_argument('-d', action="store_true", default=True, help="Debug mode: Print the messages on console")
     parser.add_argument('-l', action="store", default='es', help="Default languages")
     parser.add_argument('--godmode', action="store", default="wakafill", help="god mode password")
     parser.add_argument('--statistics', action="store", default="tell me your secrets",
@@ -782,8 +781,7 @@ if __name__ == '__main__':
 
     # default language
     def_lang_ = spacename.l
-    # debug
-    debug = spacename.d
+
     # god mode
     god_mode = spacename.godmode.lower()
     # hidden statistics message
