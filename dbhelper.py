@@ -28,6 +28,7 @@ class DBHelper:
                         blanks = 0
                         lines = fich.read().split('\n')
                         for j, lin in enumerate(lines):
+                            logging.info(str(i) + str(j))
                             if lin.strip():
                                 stmt = 'INSERT INTO QUESTIONS VALUES(%s, %s, %s, %s)'
                                 args = (j + 1 - blanks, i + 1, lin.strip(), lang)
@@ -190,7 +191,7 @@ class DBHelper:
         self.conn.commit()
         self.cursor = self.conn.cursor()
         stmt = "update RESPONSES set answer = %s where id_message = %s"
-        logging.info(id_message, answer)
+        logging.info(str(id_message) + str(answer))
         args = (answer, id_message)
         self.cursor.execute(stmt, args)
         self.conn.commit()
@@ -446,6 +447,33 @@ class DBHelper:
             return [None, None, None]
         return results
 
+    def get_language(self, id_user):
+        try:
+            self.conn.commit()
+            self.cursor = self.conn.cursor()
+            # completed everything
+            stmt = 'select language from STATUS where id_user = %s;'
+            self.cursor.execute(stmt, (id_user, ))
+            # first (and only) raw, first tuple index (also only)
+            rs = self.cursor.fetchall()[0][0]
+            self.cursor.close()
+            return rs
+        except Exception as e:
+            logging.error(e)
+            self.reconnect()
+
+    def set_language(self, id_user, new_lang):
+        try:
+            self.conn.commit()
+            self.cursor = self.conn.cursor()
+            stmt = 'update STATUS SET language = %s where id_user = %s'
+            args = (new_lang, id_user)
+            self.cursor.execute(stmt, args)
+            self.conn.commit()
+            self.cursor.close()
+        except Exception as e:
+            logging.error(e)
+            self.reconnect()
 
 
     ################################

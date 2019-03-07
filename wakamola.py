@@ -34,6 +34,7 @@ global init_date
 
 logging.basicConfig(level=logging.INFO)
 
+
 ###############
 #
 #   ERROR LOG
@@ -223,12 +224,20 @@ def checkanswer(str, status):
 #############################
 
 
-def process_lang(language):
-    '''
-    By the moment this method only allows
-    one language. TODO -> Implement multilanguage as files become ready
-    '''
-    return def_lang_
+def get_language(chat):
+    l = db.get_language(md5(chat))
+    if l is None:
+        return def_lang_
+    else:
+        return l
+
+
+def set_language(chat, new_lang):
+    if new_lang in languages.keys():
+        db.set_language(md5(chat), new_lang)
+        return new_lang
+    else:
+        return def_lang_
 
 
 def load_images():
@@ -339,7 +348,6 @@ def dynamic_keyboard(string, lang='en'):
         if i % 2 == 1:
             key_.append(aux_)
             aux_ = []
-    logging.info(key_)
     keyboard = {'inline_keyboard': key_}
     return json.dumps(keyboard)
 
@@ -506,28 +514,18 @@ def handle_updates(updates):
     for update in updates:
         chat = get_chat(update)
         text, message_id = filter_update(update)
+        # get user language
+        lang = get_language(chat)
 
-        logging.info(chat, text)
+        logging.info(str(chat) + " - " + str(text))
 
         # no valid text
         if text is False:
             return
 
         elif text is None:
-            lang = process_lang(update['message']['from']['language_code'])
             send_message(languages[lang]['not_supported'], chat)
             return
-        # get user language
-        lang = def_lang_
-        if 'message' in update:
-            if 'language_code' in update['message']['from']:
-                lang = process_lang(update['message']['from']['language_code'])
-            else:
-                lang = def_lang_
-        # callback version of the language
-        elif 'callback_query' in update:
-            if 'language_code' in update['callback_query']['from']:
-                lang = process_lang(update['callback_query']['from']['language_code'])
 
         # start command / second condition it's for the shared link
         if text.lower() == 'start' or '/start' in text.lower():
@@ -555,7 +553,7 @@ def handle_updates(updates):
                         # friend token already in md5 -> after next code block
                         db.add_relationship(md5(chat), friend_token, role)
                     except Exception as e:
-                        logging.error('Error ocurred on relationship add', e)
+                        logging.error('Error ocurred on relationship add' + str(e))
                         log_entry(e)
 
         # Check if the user have done the start command
@@ -589,7 +587,12 @@ def handle_updates(updates):
             links = [create_shared_link(chat, r).replace('_', '\\_') for r in roles]
             for i in range(len(links)):
                 # first of the four messages is the share2
-                send_message(emoji.emojize(languages[lang]['share'+str(i+2)].format(links[i])), chat)
+                send_message(emoji.emojize(languages[lang]['share' + str(i + 2)].format(links[i])), chat)
+            go_main(chat, lang)
+            return
+
+        elif 'change_lang:' in text.lower():
+            lang = set_language(chat, text.lower().split(':')[1])
             go_main(chat, lang)
             return
 

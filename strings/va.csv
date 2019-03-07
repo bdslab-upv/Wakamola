@@ -45,8 +45,6 @@ food_intro,"En el qüestionari d'alimentació has d'indicar quantes vegades *PER
  "
 food_weekly,"Perfecte! Ara m'agradaria saber quantes vegades prens els aliments següents *PER SETMANA*.
  "
-generic_tip,"No has respost encara totes les preguntes. En les fases següents del desenvolupament se t'enviarà un consell genèric.
- "
 keyboard_social,"Família
 Parella
 Amic
@@ -105,10 +103,10 @@ h4ck,"S'ha completat el mode!
  "
 edit,"Recorda que pots canviar la teua resposta fent-hi clic damunt i mantenint-lo, i editant el missatge."
 pesos,"Pes baix
-pes normal
-sobrepès
-obesitat tipus 1
-obesitat tipus 2
+Pes normal
+Sobrepès
+Obesitat tipus 1
+Obesitat tipus 2
 Obesitat tipus 3"
 generos,"Home
 Dona
