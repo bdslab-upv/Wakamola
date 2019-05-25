@@ -7,7 +7,7 @@ from os import listdir, environ
 import emoji
 from models import obesity_risk
 import csv
-from utils import md5
+from utils import md5, send_mail
 from g0d_m0d3 import h4ck
 import argparse
 from pandas import read_csv
@@ -80,15 +80,28 @@ def get_json_from_url(url):
 
 
 def get_updates(offset=None):
-    # peticion para obtener las novedades
-    url = URL + "getUpdates"
-    # offset es el numero del ultimo mensaje recibido
-    # el objetivo es no volver a pedirlo to-do
-    if offset:
-        url += "?offset={}".format(offset)
-    # llamada a la funcion auxiliar
-    js = get_json_from_url(url)
-    return js
+    try:
+        # peticion para obtener las novedades
+        url = URL + "getUpdates"
+        # offset es el numero del ultimo mensaje recibido
+        # el objetivo es no volver a pedirlo to-do
+        if offset:
+            url += "?offset={}".format(offset)
+        # llamada a la funcion auxiliar
+        js = get_json_from_url(url)
+        return js
+    except Exception as e:
+        mail_args = {
+            'sender': environ['MAIL'],
+            'receivers': [environ['MAIL'], environ['MAIL2']],
+            'subject': 'Wakamola error log',
+            'body': environ['BOT_USERNAME_WAKAMOLA']+" ha sufrido un error\n\n"+str(e),
+            'smtp_server': environ['SMTPSERVER'],
+            'smtp_port': environ['SMTPPORT'],
+            'password': environ['PASSMAIL']
+        }
+        send_mail(**mail_args)
+        return None
 
 
 def get_last_update_id(updates):
@@ -731,6 +744,9 @@ def main():
     while True:
         # obten los mensajes no vistos
         updates = get_updates(last_update_id)
+        # sanity check for maxRetryErrors TODO best solution
+        if updates is None:
+            continue
         # si hay algun mensaje do work
         try:
             if 'result' in updates and len(updates['result']) > 0:
