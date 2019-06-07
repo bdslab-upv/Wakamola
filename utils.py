@@ -7,6 +7,11 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import smtplib
 import ssl
+import pickle
+
+
+logging.basicConfig(level=logging.INFO)
+
 '''
 Refactored to be a general utils class
 MD5 was moved here in order to be more general
@@ -71,8 +76,8 @@ def create_graph(name):
         if rel[0] != rel[1]:
             G.add_edge((in_[rel[0]], bmi1_), (in_[rel[1]], bmi2_))
 
-        # the isolated nodes TODO
-        users_ = db.get_users_md5()
+        # the isolated nodes
+        users_ = db.get_users()
         for us in users_:
             if us not in in_:
                 bmi_ = round(db.getBMI(us[0]), 1)
@@ -81,10 +86,13 @@ def create_graph(name):
 
     # export to cytoscape format
     nx.write_graphml(G, 'graphs/'+name+'.xml')
+    # save to pickle
+    pickle.dump(G, open("pickled_graph.p", "wb"))
+    pickle.dump(in_, open("ids_graph_ids_telegram.p", "wb"))
 
     # very basic visualization, just for error checking
-    nx.draw_networkx(G)
-    plt.show()
+    #nx.draw_networkx(G)
+    #plt.show()
     # return the graph for the TODO future methods
     return G
 
