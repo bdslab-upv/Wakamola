@@ -51,7 +51,7 @@ def send_mail(sender, receivers, subject, body, smtp_server, smtp_port, password
 
 
 def create_graph(name):
-    # db instance
+    # database helper
     db = DBHelper()
     # query the relationships
     rels_ = db.get_relationships()
@@ -75,15 +75,18 @@ def create_graph(name):
         # no loops allowed
         if rel[0] != rel[1]:
             G.add_edge((in_[rel[0]], bmi1_), (in_[rel[1]], bmi2_))
+    logging.info("Connected number of nodes: "+str(len(in_)))
 
-        # the isolated nodes
-        users_ = db.get_users()
-        for us in users_:
-            if us not in in_:
-                bmi_ = round(db.getBMI(us[0]), 1)
-                in_[us] = len(in_)
-                G.add_node((in_[us], bmi_))
+    # the isolated nodes
+    users_ = db.get_users()
+    for us in users_:
+        u = us[0]
+        if u not in in_:
+            bmi_ = round(db.getBMI(u), 1)
+            in_[u] = len(in_)
+            G.add_node((in_[u], bmi_))
 
+    logging.info("Total number of nodes: "+str(len(in_)))
     # export to cytoscape format
     nx.write_graphml(G, 'graphs/'+name+'.xml')
     # save to pickle
@@ -91,8 +94,8 @@ def create_graph(name):
     pickle.dump(in_, open("ids_graph_ids_telegram.p", "wb"))
 
     # very basic visualization, just for error checking
-    #nx.draw_networkx(G)
-    #plt.show()
+    nx.draw_networkx(G)
+    plt.show()
     # return the graph for the TODO future methods
     return G
 
