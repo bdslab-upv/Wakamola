@@ -93,7 +93,7 @@ def get_updates(offset=None):
     except Exception as e:
         mail_args = {
             'sender': environ['MAIL'],
-            'receivers': [environ['MAIL'], environ['MAIL2']],
+            'receivers': [environ['MAIL']],
             'subject': 'Wakamola error log',
             'body': environ['BOT_USERNAME_WAKAMOLA']+" ha sufrido un error\n\n"+str(e),
             'smtp_server': environ['SMTPSERVER'],
