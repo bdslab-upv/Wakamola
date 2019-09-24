@@ -1,4 +1,5 @@
 from os import listdir, environ
+import pandas as pd
 import mysql.connector as mariadb
 import logging
 from base64 import b64encode, b64decode
@@ -474,6 +475,38 @@ class DBHelper:
         except Exception as e:
             logging.error(e)
             self.reconnect()
+
+    def complete_table(self):
+        '''
+        Metodos embebidos para este metodo
+        '''
+        self.conn.commit()
+        users = list(self.get_users())
+        # for each user get all the info
+        matrix = []
+        for i, user in enumerate(users):
+            u = user[0]
+            self.cursor = self.conn.cursor()
+            row = {"user": u}
+            stmt = 'select phase, question, answer, Timestamp from RESPONSES \
+            where id_user = %s and Timestamp in (select max(Timestamp)\
+            from RESPONSES where id_user = %s group by question, phase)'
+            args = (u, u)
+            self.cursor.execute(stmt, args)
+            rs = self.cursor.fetchall()
+            # iterate over each question
+            dates = []
+            for register in rs:
+                # store all the answers
+                row["phase_" + str(register[0]) + "_question_" + str("{:02d}".format(register[1]))] = register[2]
+                # pick all the dates to pick the maximum later
+                dates.append(register[3])
+
+            self.cursor.close()
+            matrix.append(row)
+        df = pd.DataFrame(matrix)
+        df = df.reindex(sorted(df.columns), axis=1)
+        return df
 
 
     ################################

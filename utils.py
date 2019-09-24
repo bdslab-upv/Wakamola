@@ -1,14 +1,9 @@
-import networkx as nx
-from dbhelper import DBHelper
-import matplotlib.pyplot as plt
 import hashlib
 import logging
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import smtplib
 import ssl
-import pickle
-
 
 logging.basicConfig(level=logging.INFO)
 
@@ -48,57 +43,3 @@ def send_mail(sender, receivers, subject, body, smtp_server, smtp_port, password
     except Exception as e:
         logging.error(e)
         logging.error('Error sending mail')
-
-
-def create_graph(name):
-    # database helper
-    db = DBHelper()
-    # query the relationships
-    rels_ = db.get_relationships()
-
-    #void graph
-    G = nx.Graph()
-    # add nodes and edges
-    in_ = {}
-    for i, rel in enumerate(rels_):
-
-        if rel[0] not in in_:
-            in_[rel[0]] = len(in_)
-        if rel[1] not in in_:
-            in_[rel[1]] = len(in_)
-
-        bmi1_ = round(db.getBMI(rel[0]), 1)
-        bmi2_ = round(db.getBMI(rel[1]), 1)
-
-        G.add_node((in_[rel[0]], bmi1_))
-        G.add_node((in_[rel[1]], bmi2_))
-        # no loops allowed
-        if rel[0] != rel[1]:
-            G.add_edge((in_[rel[0]], bmi1_), (in_[rel[1]], bmi2_))
-    logging.info("Connected number of nodes: "+str(len(in_)))
-
-    # the isolated nodes
-    users_ = db.get_users()
-    for us in users_:
-        u = us[0]
-        if u not in in_:
-            bmi_ = round(db.getBMI(u), 1)
-            in_[u] = len(in_)
-            G.add_node((in_[u], bmi_))
-
-    logging.info("Total number of nodes: "+str(len(in_)))
-    # export to cytoscape format
-    nx.write_graphml(G, 'graphs/'+name+'.xml')
-    # save to pickle
-    pickle.dump(G, open("pickled_graph.p", "wb"))
-    pickle.dump(in_, open("ids_graph_ids_telegram.p", "wb"))
-
-    # very basic visualization, just for error checking
-    nx.draw_networkx(G)
-    plt.show()
-    # return the graph for the TODO future methods
-    return G
-
-
-if __name__ == '__main__':
-    create_graph(name='cytoscape_graph')
