@@ -11,6 +11,7 @@ strings/en_backup.csv
 dbhelper.py___jb_old___
 .idea
 strings/.~*
+graphs/*
 
 # Created by https://www.gitignore.io/api/python,pycharm
 # Edit at https://www.gitignore.io/?templates=python,pycharm
