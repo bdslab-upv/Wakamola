@@ -117,7 +117,7 @@ def fisher_exact_test(labels, values):
     return oddsratio, pvalue
 
 
-def update_graph(path_graphs='networkVisualizer/ficheros_p/'):
+def update_graph_files(path_graphs='ficheros_p/'):
     G, in_ = create_graph()
     answers, in_ = read_wakamola_answers(in_)
     communities = find_communities(G)

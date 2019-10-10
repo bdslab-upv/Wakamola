@@ -16,7 +16,8 @@ from math import ceil
 import datetime
 import logging
 # implementation of pipeline w/ graph visualization
-from graph_utils import update_graph
+from graph_utils import update_graph_files
+from generador import create_html
 import subprocess
 
 # global variables to use
@@ -532,10 +533,13 @@ def create_graph():
     and moves it to the apache folder
     '''
     # update the files
-    update_graph()
-    # call the script
-    subprocess.call(["sh update_graph.sh"], shell=True)
-
+    update_graph_files()
+    # create the
+    create_html()
+    # move the file to /var/www
+    logging.info("ready to move")
+    subprocess.call(["mv ejemplo.html /var/www/html/index.html"], shell=True)
+    logging.info("moved!")
 
 def handle_updates(updates):
     for update in updates:
@@ -618,7 +622,7 @@ def handle_updates(updates):
             go_main(chat, lang)
             return
 
-        elif 'create_graph' in text.lower():
+        elif  text.lower() == network_pass:
             create_graph()
 
         elif 'change_lang:' in text.lower():
@@ -806,6 +810,7 @@ if __name__ == '__main__':
     parser.add_argument('--godmode', action="store", default="wakafill", help="god mode password")
     parser.add_argument('--statistics', action="store", default="tell me your secrets",
                         help="password for getting statistics")
+    parser.add_argument('--network', action="store", default="create_graph", help="command to create and set the network in the apache server")                    
     spacename = parser.parse_args()
 
     # handler to the database
@@ -822,6 +827,8 @@ if __name__ == '__main__':
     god_mode = spacename.godmode.lower()
     # hidden statistics message
     statistics_word = spacename.statistics.lower()
+    # network
+    network_pass = spacename.network.lower()
     # languages
     languages = load_languages()
     # images

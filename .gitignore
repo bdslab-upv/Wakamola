@@ -13,6 +13,12 @@ dbhelper.py___jb_old___
 strings/.~*
 graphs/*
 .vscode
+ficheros_p
+ficheros_p/*
+html
+html/*
+ejemplo.html
+
 
 # Created by https://www.gitignore.io/api/python,pycharm
 # Edit at https://www.gitignore.io/?templates=python,pycharm
