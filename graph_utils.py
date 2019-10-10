@@ -63,21 +63,25 @@ def read_wakamola_answers(in_):
     '''
     db = DBHelper()
     df = db.complete_table()
+    new_df = []
     for index, row in df.iterrows():
-        # completes questionnaries
-        u = row["user"]
+        # need to this to edit the rows
+        aux_ = dict(row)
+        u = aux_["user"]
+        
         comp = db.check_completed(u)
         _, info = obesity_risk(u, comp, network=True)
         # add the risk from the class models
         # BMI itself is more informative than score
-        row["BMI"] = info["bmi"]
-        row["BMI_score"] = info["bmi_score"]
-        row["score_nutrition"] = info["nutrition"]
-        row["score_activity"] = info["activity"]
-        row["wakaestado"] = info["wakascore"]
-        # TODO se pueden incluir más info
+        aux_["BMI"] = info["bmi"]
+        aux_["BMI_score"] = info["bmi_score"]
+        aux_["score_nutrition"] = info["nutrition"]
+        aux_["score_activity"] = info["activity"]
+        aux_["wakaestado"] = info["wakascore"]
+        aux_["social"] = info["network"]
+        new_df.append(aux_)
         in_[u] = (in_[u], index)
-    return df, in_
+    return pd.DataFrame(new_df), in_
 
 
 def find_communities(G):
@@ -113,11 +117,12 @@ def fisher_exact_test(labels, values):
     return oddsratio, pvalue
 
 
-if __name__ == '__main__':
+def update_graph(path_graphs='networkVisualizer/ficheros_p/'):
     G, in_ = create_graph()
     answers, in_ = read_wakamola_answers(in_)
     communities = find_communities(G)
     # pickle the stuff
-    pickle.dump(G, open("graphs/pickled_graph.p", "wb"))
-    pickle.dump(in_, open("graphs/ids_graph_ids_telegram.p", "wb"))
-    pickle.dump(communities, open("graphs/partitions.p", "wb"))
+    pickle.dump(G, open(path_graphs+"pickled_graph.p", "wb"))
+    pickle.dump(in_, open(path_graphs+"ids_graph_ids_telegram.p", "wb"))
+    pickle.dump(communities, open(path_graphs+"partitions.p", "wb"))
+    answers.to_csv(path_graphs+"desglose.csv", sep=";")

@@ -15,6 +15,9 @@ from threading import Thread
 from math import ceil
 import datetime
 import logging
+# implementation of pipeline w/ graph visualization
+from graph_utils import update_graph
+import subprocess
 
 # global variables to use
 # througth different functions
@@ -523,6 +526,17 @@ def wakaestado(chat, lang):
         send_message(emoji.emojize(languages[lang]['wakaestado_parcial'].format(str(risk) + avocados(risk))), chat)
 
 
+def create_graph():
+    '''
+    This method updates the graph
+    and moves it to the apache folder
+    '''
+    # update the files
+    update_graph()
+    # call the script
+    subprocess.call(["sh update_graph.sh"], shell=True)
+
+
 def handle_updates(updates):
     for update in updates:
         chat = get_chat(update)
@@ -603,6 +617,9 @@ def handle_updates(updates):
                 send_message(emoji.emojize(languages[lang]['share' + str(i + 2)].format(links[i])), chat)
             go_main(chat, lang)
             return
+
+        elif 'create_graph' in text.lower():
+            create_graph()
 
         elif 'change_lang:' in text.lower():
             lang = set_language(chat, text.lower().split(':')[1])

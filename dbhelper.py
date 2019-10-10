@@ -476,15 +476,13 @@ class DBHelper:
             logging.error(e)
             self.reconnect()
 
+
     def complete_table(self):
-        '''
-        Metodos embebidos para este metodo
-        '''
         self.conn.commit()
         users = list(self.get_users())
         # for each user get all the info
         matrix = []
-        for i, user in enumerate(users):
+        for _, user in enumerate(users):
             u = user[0]
             self.cursor = self.conn.cursor()
             row = {"user": u}
