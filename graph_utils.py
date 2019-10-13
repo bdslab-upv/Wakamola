@@ -12,9 +12,18 @@ import numpy as np
 import pandas as pd
 import scipy.stats as stats
 from models import obesity_risk
+import logging
+from os import environ
 
 
-def create_graph(store=True):
+def create_graph(store=False):
+    logger = logging.getLogger("create_graph_function")
+    if environ["MODE"] == 'test':
+        logger.setLevel(logging.INFO)
+    else:
+        logger.setLevel(logging.WARNING)
+    
+
     db = DBHelper()
     # query the relationships
     relationships = db.get_relationships()
@@ -45,6 +54,7 @@ def create_graph(store=True):
             in_[u] = len(in_)
             G.add_node(in_[u])
 
+    logger.info("Number of nodes " + str(len(in_.keys())))
     # export to cytoscape format
     nx.write_graphml(G, 'wakamola_erg' + '.xml')
     if store:

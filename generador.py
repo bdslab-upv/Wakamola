@@ -9,7 +9,10 @@ import logging
 
 def create_html():
     logger = logging.getLogger("networker")
-    logger.setLevel(logging.INFO)
+    if os.environ["MODE"] == 'test':
+        logger.setLevel(logging.INFO)
+    else:
+        logger.setLevel(logging.WARNING)
 
     graph_data = { 'nodes': [], 'links': [] }
 
@@ -19,7 +22,6 @@ def create_html():
 
     # Nodos y arcos
     nodos_y_arcos = nx.read_gpickle("ficheros_p/pickled_graph.p")
-    logger.info("Nodos y arcos: "+str(nodos_y_arcos))
     # Identificadores
     identificadores = nx.read_gpickle("ficheros_p/ids_graph_ids_telegram.p")
     # Agrupaciones
@@ -40,13 +42,15 @@ def create_html():
         csv_reader = csv.DictReader(csv_file, delimiter=';')
 
         # csv_reader = csv.reader(csv_file, delimiter=';')
+        line_count = 0
         for row in csv_reader:
-                csv_BMI.append(row["BMI"])
-                csv_score_activity.append(row["score_activity"])
-                csv_score_nutrition.append(row["score_nutrition"])
-                csv_id_telegram.append(row["user"])
-                csv_wakaestado.append(row["wakaestado"])
-                csv_score_social.append(row["social"])
+            csv_BMI.append(row["BMI"])
+            csv_score_activity.append(row["score_activity"])
+            csv_score_nutrition.append(row["score_nutrition"])
+            csv_id_telegram.append(row["user"])
+            csv_wakaestado.append(row["wakaestado"])
+            csv_score_social.append(row["social"])
+            line_count+=1
 
 
     # ---------------------------------------------------------------
@@ -62,6 +66,8 @@ def create_html():
     contador = 1
     listado_nodos = []
     nodos_validos = []
+    logging.info("Numero de lineas contados " + str(line_count))
+    logging.info("Numero de nodos " + str(len(nodos_y_arcos.nodes())))
     for node in nodos_y_arcos.nodes():
 
         # Cruce de idnodo con tabla CSV
@@ -69,7 +75,6 @@ def create_html():
         if str(ids[node][1]) in csv_id_telegram:
             value_index = csv_id_telegram.index(str(ids[node][1]))
 
-        logger.info(value_index)
         txtstr = "ID_Node: " + str(node) + " / "
         txtstr = txtstr + "ID_Telegram: " +   str(ids[node][1])+ " / "
         txtstr = txtstr + "ID_Variable: " +   str(ids[node][0][1])+ " / "

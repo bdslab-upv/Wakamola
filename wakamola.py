@@ -36,8 +36,10 @@ global god_mode
 global statistics_word
 global init_date
 
-logging.basicConfig(level=logging.INFO)
-
+if environ["MODE"] == 'test':
+    logging.basicConfig(level=logging.INFO)
+else:
+    logging.basicConfig(level=logging.WARNING)
 
 ###############
 #
@@ -537,9 +539,8 @@ def create_graph():
     # create the
     create_html()
     # move the file to /var/www
-    logging.info("ready to move")
     subprocess.call(["mv ejemplo.html /var/www/html/index.html"], shell=True)
-    logging.info("moved!")
+    logging.info("moved to apache!")
 
 def handle_updates(updates):
     for update in updates:
