@@ -76,7 +76,7 @@ def read_wakamola_answers(in_):
     new_df = []
     for index, row in df.iterrows():
         # need to this to edit the rows
-        aux_ = OrderedDict(row)
+        aux_ = dict(row)
         u = aux_["user"]
         
         comp = db.check_completed(u)
@@ -127,7 +127,8 @@ def fisher_exact_test(labels, values):
     return oddsratio, pvalue
 
 
-def update_graph_files(path_graphs='ficheros_p/'):    
+def update_graph_files(path_graphs='ficheros_p/'):
+    
     G, in_ = create_graph()
     answers, in_ = read_wakamola_answers(in_)
     communities = find_communities(G)
