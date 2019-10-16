@@ -63,7 +63,7 @@ def create_html():
         ids.append(node[::-1])
 
 
-    contador = 1
+    contador = 0
     listado_nodos = []
     nodos_validos = []
     logging.info("Numero de lineas contados " + str(line_count))
@@ -121,6 +121,7 @@ def create_html():
 
     j = 0
     for edge in nodos_y_arcos.edges():
+        logging.info(edge)
         source = edge[0]
         target = edge[1]
 
