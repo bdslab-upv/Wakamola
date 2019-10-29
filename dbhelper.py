@@ -12,8 +12,8 @@ class DBHelper:
         self.conn = mariadb.connect(host=environ['HOST'],
                                     port=environ['PORT'],
                                     user=environ['USER_WAKAMOLA'],
-                                    password= environ['PASSWORD_WAKAMOLA'],
-                                    database= environ['DATABASE'],
+                                    password=environ['PASSWORD_WAKAMOLA'],
+                                    database=environ['DATABASE'],
                                     buffered=True)
         self.cursor = self.conn.cursor()
 
@@ -42,10 +42,10 @@ class DBHelper:
         self.cursor.close()
 
     def reconnect(self):
-        '''
+        """
         Create a fresh connection to the database
         also a new cursor
-        '''
+        """
         self.conn = mariadb.connect(host=environ['HOST'],
                                     port=environ['PORT'],
                                     user=environ['USER_WAKAMOLA'],
@@ -84,10 +84,10 @@ class DBHelper:
             self.reconnect()
 
     def check_user(self, id_user):
-        '''
+        """
         This function is for sanity check, just force the user to do the /start if
         its not registered on the status table
-        '''
+        """
         try:
             self.conn.commit()
             self.cursor = self.conn.cursor()
@@ -199,9 +199,9 @@ class DBHelper:
         self.cursor.close()
 
     def completed_survey(self, id_user, phase):
-        '''
+        """
         TODO logging.error controls on this method
-        '''
+        """
         self.conn.commit()
         self.cursor = self.conn.cursor()
         if phase == 1:
@@ -235,10 +235,10 @@ class DBHelper:
             return False, False, False
 
     def n_questions(self):
-        '''
+        """
         Return a dict with the number of question per phase
         This method is called at the start, so no logging.error control
-        '''
+        """
         self.conn.commit()
         self.cursor = self.conn.cursor()
         aux = {}
@@ -286,9 +286,9 @@ class DBHelper:
             logging.error(e)
 
     def get_relationships(self):
-        '''
+        """
         yields all database relationships
-        '''
+        """
         # WARNING yield on a cursor
         self.conn.commit()
         self.cursor = self.conn.cursor()
@@ -300,9 +300,9 @@ class DBHelper:
             yield el
 
     def get_user_relationships(self, id_user):
-        '''
+        """
         Return a list of MD5 id's for all the relationshios of one person
-        '''
+        """
         try:
             self.conn.commit()
             self.cursor = self.conn.cursor()
@@ -335,9 +335,9 @@ class DBHelper:
         return float(rs[0][0]) / ((float(rs[1][0]) / 100) ** 2)
 
     def get_responses_category(self, phase, id_user):
-        '''
+        """
         Given one phase and one id, return all the answers of that user to that category
-        '''
+        """
         self.conn.commit()
         self.cursor = self.conn.cursor()
         stmt = 'select answer from RESPONSES where \
@@ -351,11 +351,11 @@ class DBHelper:
         return [float(el[0]) for el in rs]
 
     def get_status_by_id_message(self, id_message):
-        '''
+        """
         Given one id_message, return the question and phase asociated
         :param id_message:
         :return: tuple
-        '''
+        """
         try:
             self.conn.commit()
             self.cursor = self.conn.cursor()
@@ -476,7 +476,6 @@ class DBHelper:
             logging.error(e)
             self.reconnect()
 
-
     def complete_table(self):
         self.conn.commit()
         users = list(self.get_users())
@@ -506,13 +505,11 @@ class DBHelper:
         df = df.reindex(sorted(df.columns), axis=1)
         return df
 
-
     ################################
     #
     # "Crontab mecanics for version 3"
     #
-    ################################
-
+    ###############################
     def set_last_wakaestado(self, id_user, score):
         """
         :param id_user: Unhashed user id

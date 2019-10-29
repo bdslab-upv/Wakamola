@@ -14,9 +14,9 @@ MD5 was moved here in order to be more general
 
 
 def md5(id_user):
-    '''
+    """
     Hashes id_user usign MD5. Ensures anonimity.
-    '''
+    """
     return hashlib.md5(str(id_user).encode('utf-8')).hexdigest()
 
 
@@ -28,15 +28,17 @@ def send_mail(sender, receivers, subject, body, smtp_server, smtp_port, password
     # family = the list of all recipients' email addresses
     msg['From'] = sender
     msg['To'] = ', '.join(receivers)
-    body = MIMEText(body) # convert the body to a MIME compatible string
+    # convert the body to a MIME compatible string
+    body = MIMEText(body)
     msg.attach(body)
 
     context = ssl.create_default_context()
     try:
-        server = smtplib.SMTP(smtp_server,smtp_port)
-        server.ehlo() # Can be omitted
-        server.starttls(context=context) # Secure the connection
-        server.ehlo() # Can be omitted
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.ehlo()
+        # Secure the connection
+        server.starttls(context=context)
+        server.ehlo()
         server.login(sender, password)
         server.sendmail(sender, receivers, msg.as_string())
         server.quit()

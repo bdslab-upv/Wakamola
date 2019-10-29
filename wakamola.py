@@ -15,13 +15,15 @@ from threading import Thread
 from math import ceil
 import datetime
 import logging
+# decorator to highlight code to be removed in the future
+from deprecated import deprecated
 # implementation of pipeline w/ graph visualization
 from graph_utils import update_graph_files
 from generador import create_html
 import subprocess
 
-# global variables to use
-# througth different functions
+# these definitions are not mandatory but
+# I think the code is more understable with them
 global URL
 global languages
 global images
@@ -36,10 +38,12 @@ global god_mode
 global statistics_word
 global init_date
 
+
 if environ["MODE"] == 'test':
     logging.basicConfig(level=logging.INFO)
 else:
     logging.basicConfig(level=logging.WARNING)
+
 
 ###############
 #
@@ -101,7 +105,7 @@ def get_updates(offset=None):
             'sender': environ['MAIL'],
             'receivers': [environ['MAIL']],
             'subject': 'Wakamola error log',
-            'body': environ['BOT_USERNAME_WAKAMOLA']+" ha sufrido un error\n\n"+str(e),
+            'body': environ['BOT_USERNAME_WAKAMOLA'] + " ha sufrido un error\n\n" + str(e),
             'smtp_server': environ['SMTPSERVER'],
             'smtp_port': environ['SMTPPORT'],
             'password': environ['PASSMAIL']
@@ -113,7 +117,6 @@ def get_updates(offset=None):
 def get_last_update_id(updates):
     # el orden de llegada de los mensajes al bot produce un id creciente
     # devolvemos el maximo para saber por donde nos hemos quedado
-    update_ids = []
     return max([int(el['update_id']) for el in updates['result']])
 
 
@@ -123,7 +126,7 @@ def get_last_update_id(updates):
 #
 #################
 
-def getMe():
+def get_me():
     # Check API method
     getme = URL + "getMe"
     logging.info(get_url(getme))
@@ -166,7 +169,8 @@ def forward(chat_from, msg_id, chat_id):
     requests.post(url, data=data)
 
 
-def send_GIF(localpath, chat_id):
+@deprecated(version="2", reason="No GIFS sent in this version")
+def send_gif(localpath, chat_id):
     # sent a short video as a GIF
     url = URL + "sendVideo"
     # atributtes
@@ -190,47 +194,47 @@ def send_file(localpath, chat_id):
 #
 ###############################
 def load_rules():
-    '''
+    """
     Loads the especific range rules for each question
     returns dict
-    '''
-    rules = {}
+    """
+    rules_ = {}
     df_ = read_csv('ranges.csv', sep=',')
     for _, row in df_.iterrows():
         question = (row['phase'], row['question'])
         aux_ = {'type': row['type'], 'low': row['low'], 'high': row['high']}
-        rules[question] = aux_
-    return rules
+        rules_[question] = aux_
+    return rules_
 
 
-def checkanswer(str, status):
-    '''
+def check_answer(string_, status):
+    """
     Determine if an answer is valid
-    '''
+    """
     # maximum string length accepted
-    if len(str) > 20:
+    if len(string_) > 20:
         return None, False
 
     try:
         ranges = rules[status]
         # numeric values
         if ranges['type'] == 'int' or ranges['type'] == 'float':
-            val = float(str.replace(',', '.'))
+            val = float(string_.replace(',', '.'))
             assert ranges['low'] <= val <= ranges['high']
             return val, True
 
         # yes/no questions
         elif ranges['type'] == 'affirmation':
-            if str.lower() in affirmations:
+            if string_.lower() in affirmations:
                 return 1, True
-            elif str.lower() in negations:
+            elif string_.lower() in negations:
                 return 0, True
             else:
                 return None, False
 
         # no text restrictions
         elif ranges['type'] == 'text':
-            return str, True
+            return string_, True
 
     except:
         return None, False
@@ -244,11 +248,11 @@ def checkanswer(str, status):
 
 
 def get_language(chat):
-    l = db.get_language(md5(chat))
-    if l is None:
+    lang_ = db.get_language(md5(chat))
+    if lang_ is None:
         return def_lang_
     else:
-        return l
+        return lang_
 
 
 def set_language(chat, new_lang):
@@ -335,25 +339,25 @@ def process_edit(update):
     # get the status of that message_id
     status = db.get_status_by_id_message(message_id)
     try:
-        text, flag = checkanswer(text, status)
+        text, flag = check_answer(text, status)
         if flag:
             db.update_response_edited(message_id, text)
-    except Exception as e:
+    except:
         log_entry('Captured error at editing message.')
 
 
 def go_main(chat, lang):
-    '''
+    """
     Macro for setting up one user to the main phase
-    '''
+    """
     db.change_phase(newphase=0, id_user=md5(chat))
     send_message(languages[lang]['select'], chat, main_menu_keyboard(chat, lang))
 
 
 def dynamic_keyboard(string, lang='en'):
-    '''
+    """
     This is a keyboard created for selecting the type of person to share
-    '''
+    """
     options = [el for el in languages[lang][string].split('\n') if el]
     key_ = []
     aux_ = []
@@ -394,20 +398,21 @@ def main_menu_keyboard(chat, lang='en'):
     return json.dumps(keyboard)
 
 
+@deprecated(version='2', reason="Detailed info already on main option")
 def detailed_wakamola_keyboard(lang='en'):
-    '''
+    """
     A simple button for getting a detailed wakamola explanation
-    '''
+    """
     global languages
     keyboard = {'inline_keyboard': [[{'text': languages[lang]['get_details'], 'callback_data': 'risk_full'}]]}
     return json.dumps(keyboard)
 
 
 def questionarie(num, chat, lang, msg=None):
-    '''
+    """
     Method to start a questionnatie flow
     TODO This can be parametrized and be way more general
-    '''
+    """
     db.change_phase(newphase=num, id_user=md5(chat))
     if num == 1:
         send_image(images[lang]['personal.jpg'], chat)
@@ -436,21 +441,21 @@ def create_shared_link(chat, social_role):
 
 
 def extra_messages(phase, question, chat, lang):
-    '''
+    """
     This method includes all the extra messages that break the
     usual question - response - question... flow
     TODO parametrize this in order to be less horrendous
-    '''
+    """
     # food
     if phase == 2 and question == 10:  # weekly questionnarie
         send_message(languages[lang]['food_weekly'], chat)
 
 
 def avocados(score):
-    '''
+    """
     This function returns a String
     containing N avocado emojis
-    '''
+    """
     avo_emojis_ = " :avocado: :avocado: :avocado:"
     for its in range(int(score / 20)):
         avo_emojis_ += " :avocado:"
@@ -484,9 +489,9 @@ def n_avocados(value, minimum=0, maximum=10):
 
 
 def wakaestado(chat, lang):
-    '''
+    """
     Piece of the standard flow to calculate and send the wakaestado
-    '''
+    """
 
     completed = db.check_completed(md5(chat))
     # put phase to 0
@@ -530,10 +535,10 @@ def wakaestado(chat, lang):
 
 
 def create_graph():
-    '''
+    """
     This method updates the graph
     and moves it to the apache folder
-    '''
+    """
     # update the files
     update_graph_files()
     # create the
@@ -541,6 +546,7 @@ def create_graph():
     # move the file to /var/www
     subprocess.call(["mv ejemplo.html /var/www/html/index.html"], shell=True)
     logging.info("moved to apache!")
+
 
 def handle_updates(updates):
     for update in updates:
@@ -561,16 +567,12 @@ def handle_updates(updates):
 
         # start command / second condition it's for the shared link
         if text.lower() == 'start' or '/start' in text.lower():
-            # wellcome message
+            # welcome message
             send_image(images[lang]['welcome.jpg'], chat)
             send_message(emoji.emojize(languages[lang]['welcome']), chat, main_menu_keyboard(chat, lang))
             # insert user into the db, check collisions
             if not db.check_start(md5(chat)):
-                # sanity check
-                try:
-                    db.register_user(id_user=md5(chat), language=lang)
-                except Exception as e:
-                    log_entry("Error registering the user")
+                db.register_user(id_user=md5(chat), language=lang)
             else:
                 db.change_phase(newphase=0, id_user=md5(chat))
 
@@ -585,7 +587,7 @@ def handle_updates(updates):
                         # friend token already in md5 -> after next code block
                         db.add_relationship(md5(chat), friend_token, role)
                     except Exception as e:
-                        logging.error('Error ocurred on relationship add' + str(e))
+                        logging.error("Error occurred on relationship add" + str(e))
                         log_entry(e)
 
         # Check if the user have done the start command
@@ -598,7 +600,6 @@ def handle_updates(updates):
         elif text.lower() == 'credits':
             # just sed a message with the credits and return to the main menu
             send_message(languages[lang]['credits'], chat)
-            # send_file('theme definitivo.tdesktop-theme', chat)
             go_main(chat, lang)
 
         elif text.lower() == 'share':
@@ -623,7 +624,7 @@ def handle_updates(updates):
             go_main(chat, lang)
             return
 
-        elif  text.lower() == network_pass:
+        elif text.lower() == network_pass:
             create_graph()
 
         elif 'change_lang:' in text.lower():
@@ -683,7 +684,7 @@ def handle_updates(updates):
                 send_message(languages[lang]['select'], chat, main_menu_keyboard(chat, lang))
                 return
 
-            text, correct_ = checkanswer(text, status)
+            text, correct_ = check_answer(text, status)
             if correct_:
                 # store the user response
                 db.add_answer(id_user=md5(chat), phase=status[0], question=status[1], message_id=message_id,
@@ -729,7 +730,7 @@ def handle_updates(updates):
                     return
                 # comprueba si tiene que lanzar algun mensaje antes de la pregunta
                 extra_messages(status[0], status[1] + 1, chat, lang)
-                # TODO OPCIONES DE RESPUESTA DINAMICAS
+
                 if status[0] == 1 and status[1] == 8:  # genero
 
                     logging.info(send_message(emoji.emojize(q), chat, dynamic_keyboard('generos', lang)))
@@ -759,7 +760,7 @@ def handle_updates(updates):
 def main():
     # variable para controlar el numero de mensajes
     last_update_id = None
-    getMe()
+    get_me()
     # force bd to stay clean
     db.conn.commit()
     # bucle infinito
@@ -811,7 +812,8 @@ if __name__ == '__main__':
     parser.add_argument('--godmode', action="store", default="wakafill", help="god mode password")
     parser.add_argument('--statistics', action="store", default="tell me your secrets",
                         help="password for getting statistics")
-    parser.add_argument('--network', action="store", default="create_graph", help="command to create and set the network in the apache server")                    
+    parser.add_argument('--network', action="store", default="create_graph",
+                        help="command to create and set the network in the apache server")
     spacename = parser.parse_args()
 
     # handler to the database

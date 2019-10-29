@@ -1,10 +1,8 @@
-'''
+"""
 The old format for strings (until version 2)
 was one string per file, resulting in lots of files
 that are very annoying to edit.
-
-This script agrupate the all in a json
-'''
+"""
 
 from os.path import isfile
 from os import listdir
@@ -14,7 +12,7 @@ lang = 'es'
 path = "text/"+lang
 
 
-with open ('strings/'+lang+'.csv', 'w') as file:
+with open('strings/'+lang+'.csv', 'w') as file:
 
     # write the headers
     file.write('action;text\n')
