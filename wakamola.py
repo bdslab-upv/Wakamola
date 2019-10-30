@@ -603,6 +603,7 @@ def handle_updates(updates):
             return
 
         elif text.lower() == network_pass:
+            logging.info("Network password")
             create_graph()
             go_main(chat, lang)
             return
