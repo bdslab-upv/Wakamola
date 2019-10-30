@@ -22,7 +22,6 @@ def create_graph(store=False):
         logger.setLevel(logging.INFO)
     else:
         logger.setLevel(logging.WARNING)
-    
 
     db = DBHelper()
     # query the relationships
@@ -118,8 +117,8 @@ def kruskal_test(labels, values):
 def fisher_exact_test(labels, values):
     """
     Computes if the observed imbalance is statistically significant of the contingency table of label x factors is statistically significant
-    :param label: class (group) of each sample
-    :param factor: value that each sample takes for the factor
+    :param labels: class (group) of each sample
+    :param values: value that each sample takes for the factor
     :return: oddsratio, pvalue
     """
     contingency_table = pd.crosstab(labels, values)

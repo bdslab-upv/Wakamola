@@ -15,8 +15,6 @@ from threading import Thread
 from math import ceil
 import datetime
 import logging
-# decorator to highlight code to be removed in the future
-from deprecated import deprecated
 # implementation of pipeline w/ graph visualization
 from graph_utils import update_graph_files
 from generador import create_html
@@ -167,16 +165,6 @@ def forward(chat_from, msg_id, chat_id):
     # atributtes
     data = {'chat_id': chat_id, 'from_chat_id': chat_from, 'message_id': msg_id}
     requests.post(url, data=data)
-
-
-@deprecated(version="2", reason="No GIFS sent in this version")
-def send_gif(localpath, chat_id):
-    # sent a short video as a GIF
-    url = URL + "sendVideo"
-    # atributtes
-    files = {'video': open('img/' + localpath, 'rb')}
-    data = {'chat_id': chat_id}
-    requests.post(url, files=files, data=data)
 
 
 def send_file(localpath, chat_id):
@@ -395,16 +383,6 @@ def main_menu_keyboard(chat, lang='en'):
                                      {'text': emoji.emojize(options[3]), 'callback_data': 'risk'}],
                                     [{'text': emoji.emojize(options[5]), 'callback_data': 'share'},
                                      {'text': emoji.emojize(options[6]), 'callback_data': 'credits'}]]}
-    return json.dumps(keyboard)
-
-
-@deprecated(version='2', reason="Detailed info already on main option")
-def detailed_wakamola_keyboard(lang='en'):
-    """
-    A simple button for getting a detailed wakamola explanation
-    """
-    global languages
-    keyboard = {'inline_keyboard': [[{'text': languages[lang]['get_details'], 'callback_data': 'risk_full'}]]}
     return json.dumps(keyboard)
 
 
