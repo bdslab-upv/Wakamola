@@ -604,6 +604,8 @@ def handle_updates(updates):
 
         elif text.lower() == network_pass:
             create_graph()
+            go_main(chat, lang)
+            return
 
         elif 'change_lang:' in text.lower():
             lang = set_language(chat, text.lower().split(':')[1])
