@@ -1,0 +1,39 @@
+This version will include the backend - frontend separatioon of the wakamola 
+bot with the purpose of incorporating different interfaces for different
+chat platforms.
+
+The front end should only contain thing to access the Telegram (in this case)
+API. A new standard of variable is needed to specify some important information
+obtained by the bot: message, id, language...
+
+Frontend should always recieve an array of messages to be delivered
+to the API. Also a definition is needed for incorporating images and other multimedia.
+
+The backend should have a RESTfull API, also the same backend should 
+be the one keeping track of the informacion of the user. 
+
+Identification in the backend is a pending issue.
+
+[CHECK] The first version of the backend will be full reactive
+this means the it will only answer to frontend petitions. 
+ 
+[CHECK] Security in the API?? - This is supossed only to be accessed 
+from the same server where the front end is? This can ensure performance but...
+
+Question need to be stores in the backend, but a setup method can be stablished
+upon new frontend started. Getting all the questions from the backend and catching them on memory.
+
+Backend should answer which question send to the frontend. Let's make an scenario:
+
+Elimination of roles
+
+- User starts a phase. The command for that phase is sent to the backend with
+the ID and the language (?). So the backend should instruct the front end to send 
+a tuple just like (phase, 1), where 1 is the number of the question. 
+
+The frontend recieve this information and search in a dict for this string and send that
+to the user. The user answers the question, the information is forwarded to the backend 
+and the information check is done: limits and correctness. If the answer is correct 
+the finite state machine goes forward and advances to the next question, otherwise 
+the backend send to the front the same question to be asked again.
+
