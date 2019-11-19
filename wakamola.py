@@ -421,7 +421,7 @@ def create_shared_link(chat, social_role):
     token = db.create_short_link(id_user=md5(chat), type=social_role)
     return 't.me/{}?start={}'.format(BOT_USERNAME, token)
 
-
+# TODO VERY IMPORTANT TO BREAK FLOW
 def extra_messages(phase, question, chat, lang):
     """
     This method includes all the extra messages that break the
