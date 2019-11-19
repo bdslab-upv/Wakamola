@@ -3,6 +3,7 @@ import pandas as pd
 import mysql.connector as mariadb
 import logging
 from base64 import b64encode, b64decode
+from deprecated import deprecated
 
 logging.basicConfig(level=logging.INFO)
 
@@ -368,6 +369,7 @@ class DBHelper:
             self.reconnect()
             return None
 
+    @deprecated(version='4', reason='no more categories')
     def get_contacts_by_category(self, id_user):
         try:
             res = {'home': 0, 'family': 0, 'friend': 0, 'coworker': 0}
@@ -397,6 +399,7 @@ class DBHelper:
             last_id = self.cursor.lastrowid
             self.cursor.close()
             return b64encode(str(last_id).encode()).decode('utf-8')
+
         except:
             self.reconnect()
             self.cursor = self.conn.cursor()

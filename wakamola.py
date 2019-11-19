@@ -19,6 +19,7 @@ import logging
 from graph_utils import update_graph_files
 from generador import create_html
 import subprocess
+from deprecated import deprecated
 
 # these definitions are not mandatory but
 # I think the code is more understable with them
@@ -48,6 +49,7 @@ else:
 #   ERROR LOG
 #
 ################
+@deprecated(version='4', reason='a tomar por culo')
 def log_entry(entry):
     # get actual time
     now = datetime.datetime.now()
@@ -275,7 +277,7 @@ def load_languages():
                 # may happen this is not a csv file
                 if not f.endswith('.csv'):
                     continue
-                csv_ = csv.reader(csvfile, delimiter=',')
+                csv_ = csv.reader(csvfile, delimiter=';')
                 for row in csv_:
                     dict_[row[0]] = row[1]
             langs_[f.split('.')[0]] = dict_
@@ -381,12 +383,14 @@ def main_menu_keyboard(chat, lang='en'):
                                      {'text': emoji.emojize(food), 'callback_data': 'food'}],
                                     [{'text': emoji.emojize(activity), 'callback_data': 'activity'},
                                      {'text': emoji.emojize(options[3]), 'callback_data': 'risk'}],
-                                    [{'text': emoji.emojize(options[5]), 'callback_data': 'share'},
-                                     {'text': emoji.emojize(options[6]), 'callback_data': 'credits'}]]}
+                                    [{'text': emoji.emojize(options[5]), 'callback_data': 'network'},
+                                     {'text': emoji.emojize(options[6]), 'callback_data': 'credits'}],
+                                    [{'text': emoji.emojize(options[7]), 'callback_data': 'share'}]
+                                    ]}
     return json.dumps(keyboard)
 
 
-def questionarie(num, chat, lang, msg=None):
+def questionnaire(num, chat, lang, msg=None):
     """
     Method to start a questionnatie flow
     TODO This can be parametrized and be way more general
@@ -580,25 +584,23 @@ def handle_updates(updates):
             send_message(languages[lang]['credits'], chat)
             go_main(chat, lang)
 
-        elif text.lower() == 'share':
+        elif text.lower() == 'network':
             send_image(images[lang]['wakanetwork.jpg'], chat)
-            # get the number of contacts in each category
-            contacts_counter = db.get_contacts_by_category(md5(chat))
-            msg_share = languages[lang]['share'].format(
-                str(sum(contacts_counter.values())),
-                str(contacts_counter['home']),
-                str(contacts_counter['family']),
-                str(contacts_counter['friend']),
-                str(contacts_counter['coworker'])
-            )
+            contacts_counter = len(db.get_user_relationships(md5(chat)))
+            msg_share = languages[lang]['share'].format(contacts_counter)
             send_message(emoji.emojize(msg_share), chat)
-            send_image(images[lang]['help.jpg'], chat)
-            # get the different links for sharing
-            # OJO estan en el orden adecuado ahora
-            links = [create_shared_link(chat, r).replace('_', '\\_') for r in roles]
-            for i in range(len(links)):
-                # first of the four messages is the share2
-                send_message(emoji.emojize(languages[lang]['share' + str(i + 2)].format(links[i])), chat)
+            # TODO aquí hay un mensaje mas
+            send_message(emoji.emojize(languages[lang]['see_network']), chat)
+            send_message(network_link, chat)
+            go_main(chat, lang)
+            return
+
+        elif text.lower() == 'share':
+            # generate link w/ one fixed relationship
+            link_ = create_shared_link(chat, 'relation')
+            # send link with cosmetics for telegram
+            send_message(text=emoji.emojize(languages[lang]['share_unique']), chat_id=chat)
+            send_message(text=link_, chat_id=chat)
             go_main(chat, lang)
             return
 
@@ -615,17 +617,17 @@ def handle_updates(updates):
 
         elif text.lower() == 'personal':
             # set to phase and question 1
-            questionarie(1, chat, lang)
+            questionnaire(1, chat, lang)
             return
 
         elif text.lower() == 'food':
             # set to phase and question 2
-            questionarie(2, chat, lang, msg=languages[lang]['food_intro'])
+            questionnaire(2, chat, lang, msg=languages[lang]['food_intro'])
             return
 
         elif text.lower() == 'activity':
             # set to phase and question 3
-            questionarie(3, chat, lang)
+            questionnaire(3, chat, lang)
             return
 
         elif text.lower() == 'risk':
@@ -795,6 +797,8 @@ if __name__ == '__main__':
                         help="password for getting statistics")
     parser.add_argument('--network', action="store", default="create_graph",
                         help="command to create and set the network in the apache server")
+    parser.add_argument('--network_link', action='store', default='https://wakamola.webs.upv.es/WakaSNA/wakamola_local_v6.1/ejemplo.html')
+
     spacename = parser.parse_args()
 
     # handler to the database
@@ -807,6 +811,8 @@ if __name__ == '__main__':
     # default language
     def_lang_ = spacename.l
 
+    # link to the network
+    network_link = spacename.network_link
     # god mode
     god_mode = spacename.godmode.lower()
     # hidden statistics message

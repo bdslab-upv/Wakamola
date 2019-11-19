@@ -1,15 +1,15 @@
-action, text,
-1_activity,"Think of all the ** intense ** activities you have done in the last ** 7 days **. Physical activities ** intense ** refer to those activities that involve intense physical effort and that make you breathe a lot more intensely than usual. Think only of those physical activities you did during ** at least 10 minutes in a row **.
-",
-2_activity,"Think of all ** moderate ** activities you have done in the last ** 7 days ** **. Moderate activities ** are those that require moderate physical effort that makes you breathe somewhat more intensely than normal. Think only of those physical activities you did during ** at least 10 minutes in a row **.
-",
-3_activity,"Think about the time you spent ** walking ** in the last 7 days ** .This includes walking at work or at home, moving from one place to another, or any other walk that you could Do only for recreation, sports, exercise or leisure
-",
-4_activity,"The last question is about the time you spent ** sitting ** during the business days of the last * 7 ** days. This includes time spent at work, at home, in a class, and during Free time. You can include the time you spent sitting at a desk, visiting friends, reading, traveling by bus, or sitting or lying watching television.
-",
-be_number,"Sorry, but the answer to this question must be a number.
- ",
-credits,"The Wakamola project has been developed by the BDSLab research group of the Universitat Politècnica de València in collaboration with the Taipei Medical University, with the medical and expert advice from Hospital La Fe and the nutrition advice of Experts from the Faculty of Pharmacy of the Universitat de València.
+action; text;
+1_activity;"Think of all the ** intense ** activities you have done in the last ** 7 days **. Physical activities ** intense ** refer to those activities that involve intense physical effort and that make you breathe a lot more intensely than usual. Think only of those physical activities you did during ** at least 10 minutes in a row **.
+";
+2_activity;"Think of all ** moderate ** activities you have done in the last ** 7 days ** **. Moderate activities ** are those that require moderate physical effort that makes you breathe somewhat more intensely than normal. Think only of those physical activities you did during ** at least 10 minutes in a row **.
+";
+3_activity;"Think about the time you spent ** walking ** in the last 7 days ** .This includes walking at work or at home, moving from one place to another, or any other walk that you could Do only for recreation, sports, exercise or leisure
+";
+4_activity;"The last question is about the time you spent ** sitting ** during the business days of the last * 7 ** days. This includes time spent at work, at home, in a class, and during Free time. You can include the time you spent sitting at a desk, visiting friends, reading, traveling by bus, or sitting or lying watching television.
+";
+be_number;"Sorry, but the answer to this question must be a number.
+ ";
+credits;"The Wakamola project has been developed by the BDSLab research group of the Universitat Politècnica de València in collaboration with the Taipei Medical University, with the medical and expert advice from Hospital La Fe and the nutrition advice of Experts from the Faculty of Pharmacy of the Universitat de València.
 
 Have contributed to making this project possible:
 
@@ -31,60 +31,61 @@ Graphic designers (ETSID, UPV):
 -Marta Lavall
 
 The content of this work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International. https://creativecommons.org/licenses/by-sa/3.0/es/deed.es
-",
-end_activity,"Thanks for telling me about your physical activity. With everything we've talked about, I've calculated your Wakastatus, click on the button :green_heart: Wakaetado to know it.
-",
-end_food,"I already know a lot about your diet, now let's talk about your weekly physical activity.
+";
+end_activity;"Thanks for telling me about your physical activity. With everything we've talked about, I've calculated your Wakastatus, click on the button :green_heart: Wakaetado to know it.
+";
+end_food;"I already know a lot about your diet, now let's talk about your weekly physical activity.
 
 Press :person_running: Activity to start.
-",
-end_personal,"Thanks for answering, I already know more about you.
+";
+end_personal;"Thanks for answering, I already know more about you.
 
 Can we now talk about your diet? Click on the button :green_apple: Diet
-",
-food_intro,"In the diet questionnaire you will have to indicate how many times of * average * you consume the following foods * PER DAY *.
-",
-food_weekly,"Perfect! Now I want to know now how many times you take the following foods * PER WEEK *
-",
-keyboard_social,"Family
+";
+food_intro;"In the diet questionnaire you will have to indicate how many times of * average * you consume the following foods * PER DAY *.
+";
+food_weekly;"Perfect! Now I want to know now how many times you take the following foods * PER WEEK *
+";
+keyboard_social;"Family
 Couple
 Friend
 Coworker
 Other
-",
-not_supported,"This type of message does not have support at the moment
-",
-numeric_response, Questions are designed to be answered with a *valid* numerical value. Only in the cases indicated can you respond with yes / no., only those that are indicated can be answered with yes/no.
-options,":bust_in_silhouette: Personal
+";
+not_supported;"This type of message does not have support at the moment
+";
+numeric_response; Questions are designed to be answered with a *valid* numerical value. Only in the cases indicated can you respond with yes / no.; only those that are indicated can be answered with yes/no.
+options;":bust_in_silhouette: Personal
 :green_apple: Diet
 :person_running: Activity
 :green_heart: Wakastatus
 :memo: Tips
 :speech_balloon: Wakanet
 :light_bulb: About Wakamola
-",
-select,"Choose an option!
-",
-social,"I would like to be able to help your friends and family too.
+Share :speaking_head:
+";
+select;"Choose an option!
+";
+social;"I would like to be able to help your friends and family too.
 The better the Wakastatus of your environment, the better it will be yours and I will update it for you periodically.
 To share me you only have to forward the next image.
 Thanks for sharing!
-",
-Wakaestado,"The score of your Wakastatus is:
-",
-Wakaestado_parcial,"For now, with the information I have about you this is your Wakastatus:
-",
-welcome,"Hello, happy to talk to you!
+";
+Wakaestado;"The score of your Wakastatus is:
+";
+Wakaestado_parcial;"For now, with the information I have about you this is your Wakastatus:
+";
+welcome;"Hello, happy to talk to you!
 I'm going to ask you some questions to know you and give you a Wakastatus.
 
 I recommend you start with the questionnaire :bust_in_silhouette: Personal
-",
-social_roles,"Home :house:
+";
+social_roles;"Home :house:
 Family :woman: :man: :old_woman:
 Friends  :busts_in_silhouette:
 Work :briefcase:
-I’m done sharing :thumbs_up:",
-wakaestado_detail,"Your Wakastatus score is: {} over 100
+I’m done sharing :thumbs_up:";
+wakaestado_detail;"Your Wakastatus score is: {} over 100
 
 {} points for {} the average Wakastatus of your {} Wakacontacts!
 
@@ -96,41 +97,32 @@ Activity: {}
 
 WakaBMI: {} (body mass index = {} that corresponds to {}
 
-Wakasocial {} (calculated from the Wakastatus of your Wakacontacts)",
-after_wakaestado_detail,Remember that you can update your Wakaestat as many times as you want by answering my questions again,
-h4ck,Mode completed!,
-edit,"Remember that you can change your response by keep pressing it, and editing the message.",
-pesos,"Low weight
+Wakasocial {} (calculated from the Wakastatus of your Wakacontacts)";
+after_wakaestado_detail;Remember that you can update your Wakaestat as many times as you want by answering my questions again;
+h4ck;Mode completed!;
+edit;Remember that you can change your response by keep pressing it, and editing the message.;
+pesos;"Low weight
 Normal weight
 Overweight
 Obesity type 1
 Obesity type 2
-Obesity type 3",
-generos,"Male
+Obesity type 3";
+generos;"Male
 Female
 Other
-Not answer",
-estudios,"No studies
+Not answer";
+estudios;"No studies
 Elementary
 High School
-Superior",
-estado_civil,"Single
+Superior";
+estado_civil;"Single
 Married/Couple
 Widow
-Other",
-wakaestado_detail2,"The bigger your Wakamola network, the better your Wakasocial score!",
-wakaestado_detail3,Now you can choose the option to share me to get many more :avocado: :avocado: :avocado: …,
-share,"You have {} Wakacontacts :woman: 👨:old_woman: 🏠💼
-
-{} Home, {} Family, {} Friends and {} Work",
-share_copy,*Copy and paste the links to invite!*,
-share2,"Invite Home :house:
-{}",
-share3,"Invite Family  :woman::man::old_woman:
-{}",
-share4,"Invite Friends :busts_in_silhouette:
-{}",
-share5,"Invite Work :briefcase:
-{}",
-posicion_media,"below
-Above",
+Other";
+wakaestado_detail2;The bigger your Wakamola network, the better your Wakasocial score!;
+wakaestado_detail3;Now you can choose the option to share me to get many more :avocado: :avocado: :avocado: …;
+share;"You have {} Wakacontacts :woman: 👨:old_woman: 🏠💼";
+posicion_media;"below
+Above";
+see_network;Do you want to see your wakamola network?;
+share_unique;Copy the following link and share Wakamola!;
