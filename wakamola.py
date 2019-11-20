@@ -19,7 +19,6 @@ import logging
 from graph_utils import update_graph_files
 from generador import create_html
 import subprocess
-from deprecated import deprecated
 
 # these definitions are not mandatory but
 # I think the code is more understable with them
@@ -42,22 +41,6 @@ if environ["MODE"] == 'test':
     logging.basicConfig(level=logging.INFO)
 else:
     logging.basicConfig(level=logging.WARNING)
-
-
-###############
-#
-#   ERROR LOG
-#
-################
-@deprecated(version='4', reason='a tomar por culo')
-def log_entry(entry):
-    # get actual time
-    now = datetime.datetime.now()
-    dateerror = now.strftime("%Y-%m-%d %H:%M")
-    # open the log file in append mode
-    with open('error.log', 'a') as log:
-        log.write('\n' + dateerror + '\n')
-        log.write(str(entry) + '\n\n')
 
 
 #################
@@ -282,7 +265,7 @@ def load_languages():
                     dict_[row[0]] = row[1]
             langs_[f.split('.')[0]] = dict_
         except Exception as e:
-            log_entry(e)
+            logging.error(e)
             continue  # sanity check
     return langs_
 
@@ -333,7 +316,7 @@ def process_edit(update):
         if flag:
             db.update_response_edited(message_id, text)
     except:
-        log_entry('Captured error at editing message.')
+        logging.error('Captured error at editing message.')
 
 
 def go_main(chat, lang):
@@ -526,7 +509,7 @@ def create_graph():
     # create the
     create_html()
     # move the file to /var/www
-    subprocess.call(["mv ejemplo.html /var/www/html/index.html"], shell=True)
+    subprocess.call(["mv netweb_es.html /var/www/html/index.html"], shell=True)
     logging.info("moved to apache!")
 
 
@@ -570,7 +553,6 @@ def handle_updates(updates):
                         db.add_relationship(md5(chat), friend_token, role)
                     except Exception as e:
                         logging.error("Error occurred on relationship add" + str(e))
-                        log_entry(e)
 
         # Check if the user have done the start command
         elif db.check_user(md5(chat)):
@@ -597,8 +579,9 @@ def handle_updates(updates):
 
         elif text.lower() == 'share':
             # generate link w/ one fixed relationship
-            link_ = create_shared_link(chat, 'relation')
+            link_ = create_shared_link(chat, 'relation').replace('_', '\\_')
             # send link with cosmetics for telegram
+            send_image(images[lang]['share.jpg'], chat)
             send_message(text=emoji.emojize(languages[lang]['share_unique']), chat_id=chat)
             send_message(text=link_, chat_id=chat)
             go_main(chat, lang)
@@ -780,7 +763,6 @@ def main():
                 time.sleep(1)
 
         except Exception as e:
-            log_entry(str(e))
             logging.error(e)
             # sleep 20 seconds so the problem may solve
             time.sleep(20)
@@ -812,7 +794,7 @@ if __name__ == '__main__':
     def_lang_ = spacename.l
 
     # link to the network
-    network_link = spacename.network_link
+    network_link = spacename.network_link.replace('_', '\\_')
     # god mode
     god_mode = spacename.godmode.lower()
     # hidden statistics message

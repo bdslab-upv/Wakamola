@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<!-- saved from url=(0029)https://wakamola.webs.upv.es/ -->
+<html lang="es">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wakamola – Wakamola bot para ayudar a conocer hábitos nutricionales y de actividad física</title>
+
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" id="themeisle-block_styles-css" href="./html/wordpress/style.css" type="text/css" media="all">
+  <link rel="stylesheet" id="zerif_font-css" href="./html/wordpress/css.css" type="text/css" media="all">
+  <link rel="stylesheet" id="zerif_font_all-css" href="./html/wordpress/css(1).css" type="text/css" media="all">
+  <link rel="stylesheet" id="zerif_bootstrap_style-css" href="./html/wordpress/bootstrap.css" type="text/css" media="all">
+  <link rel="stylesheet" id="zerif_fontawesome-css" href="./html/wordpress/font-awesome.min.css" type="text/css" media="all">
+  <link rel="stylesheet" id="zerif_style-css" href="./html/wordpress/style(1).css" type="text/css" media="all">
+  <link rel="stylesheet" id="zerif_responsive_style-css" href="./html/wordpress/responsive.css" type="text/css" media="all">
+  <link rel="icon" href="https://wakamola.webs.upv.es/wp-content/uploads/2019/01/cropped-logo-wakamola-circular-e1547814998378-32x32.jpg" sizes="32x32">
+  <link rel="icon" href="https://wakamola.webs.upv.es/wp-content/uploads/2019/01/cropped-logo-wakamola-circular-e1547814998378-192x192.jpg" sizes="192x192">
+
+  <script src="./html/libreria/d3.js"></script>
+  <!-- <script src="./html/libreria/d3.min.js"></script> -->
+  <script src="./html/libreria/d3.tip.v0.6.3.js"></script>
+
+  <link rel="stylesheet" href="./html/css/toogle.css">
+  <link rel="stylesheet" href="./html/css/custom.css">
+
+
+</head>
+<body class="home page-template-default page page-id-5 custom-background wp-custom-logo">
+  <header id="home" class="header" itemscope="itemscope" itemtype="http://schema.org/WPHeader" style="min-height: 76px;">
+    <div id="main-nav" class="navbar navbar-inverse bs-docs-nav fixed" role="banner" style="min-height: 75px;">
+      <div class="container">
+        <div class="navbar-header responsive-logo">
+          <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+            <span class="sr-only">Cambiar navegación</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <div class="navbar-brand" itemscope="" itemtype="http://schema.org/Organization">
+            <a href="https://wakamola.webs.upv.es/" class="custom-logo-link" rel="home"><img width="567" height="113" src="./html/wordpress/cropped-portada-logos-itaca-upv.jpg" class="custom-logo" alt="Wakamola" srcset="https://wakamola.webs.upv.es/wp-content/uploads/2019/01/cropped-portada-logos-itaca-upv.jpg 567w, https://wakamola.webs.upv.es/wp-content/uploads/2019/01/cropped-portada-logos-itaca-upv-300x60.jpg 300w" sizes="(max-width: 567px) 100vw, 567px"></a>
+          </div>
+        </div>
+        <nav class="navbar-collapse bs-navbar-collapse collapse" id="site-navigation" itemscope="" itemtype="http://schema.org/SiteNavigationElement">
+          <a class="screen-reader-text skip-link" href="https://wakamola.webs.upv.es/#content">Ir al contenido</a>
+          <ul id="menu-primary-menu" class="nav navbar-nav navbar-right responsive-nav main-nav-list">
+            <li id="menu-item-13" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-5 current_page_item menu-item-13"><a href="https://wakamola.webs.upv.es/" aria-current="page">Inicio</a></li>
+            <li id="menu-item-22" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-22"><a href="https://wakamola.webs.upv.es/index.php/proyecto/">Proyecto</a></li>
+            <li id="menu-item-30" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-30"><a href="https://wakamola.webs.upv.es/index.php/equipo/">Equipo Wakamola</a></li>
+            <li id="menu-item-77" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-77"><a href="https://wakamola.webs.upv.es/index.php/2019/01/28/__trashed/">Noticias</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+  <div id="content" class="site-content">
+
+    <div id="my-div" class="container">
+      <h1 style="padding: 50px 0px 30px">Visualizador de red Wakamola</h1>
+      <p>El desarrollo llevado a cabo en el contexto del proyecto Wakamola consiste en un fichero python que interpreta los ficheros de salida de NetworkX y los transforma en una imagen vectorial usando la libreria D3 para la visualización.</p>
+
+
+      <div class="row">
+        <div class="col-iz">
+          <div class="row">
+            <div class="col-iz1"><div class="column"><input id="search"></div></div>
+            <div class="col-de1"><div class="column"><button class="searchbutton" type="button" onclick="searchNode()">Buscar</button></div></div>
+          </div>
+        </div>
+
+        <div class="col-ce">
+          <label class="switch">
+            <input type="checkbox" id="togBtn" onclick="cambiarcolor()">
+            <div class="slider round">
+              <span class="on">WAKAESTADO</span>
+              <span class="off">IMC</span>
+            </div>
+          </label>
+        </div>
+        <div class="col-de">
+          <div style="float:right;padding:0px">
+            <button class="searchbutton" style="width:auto; padding: 0px 20px;min-width:150px" type="button" onclick="relaciones_entre_nodos = particiones(0);">Arcos</button>
+            <button class="searchbutton" style="width:auto; padding: 0px 20px;min-width:150px" type="button" onclick="relaciones_entre_nodos = particiones(1);">Comunidades</button>
+            <!-- <button class="searchbutton" style="width:auto; padding: 0px 20px" type="button" onclick="relaciones_entre_nodos = particiones(2);">Individuales</button> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="vecinos" style="">
+          <div id="neighbors">
+            <div id="select_title">
+              <p id="select_title_p" style="font-weight: bold;">Seleccione un nodo</p>
+            </div>
+            <div id="inner_neighbors"></div>
+          </div>
+        </div>
+        <div id="graph-div"></div>
+      </div>
+
+      <div class="container">
+        <table>
+          <caption>Datos estadísticos</caption>
+          <caption class='sample_size'>Total de la muestra: <strong>_ts</strong>; Número de nodos: <strong>_ty</strong> <em>(participantes con todas las preguntas contestadas)</em>; Número de comunidades: <strong>_tc</strong>; Número de relaciones: <strong>_tr</strong>; </caption>
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Mínimo</th>
+              <th scope="col">Máximo</th>
+              <th scope="col">Media</th>
+              <th scope="col">Desviación típica</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td scope="row" data-label="Account">Puntuación Wakaestado</td>
+              <td id="minWS" data-label="MIN"></td>
+              <td id="maxWS" data-label="MAX"></td>
+              <td id="averageWS"data-label="Average"></td>
+              <td id="standardesvWS"data-label="stddes"></td>
+            </tr>
+            <tr>
+              <td data-label="Account">Puntuación IMC</td>
+              <td id="minBMI" data-label="MIN"></td>
+              <td id="maxBMI" data-label="MAX"></td>
+              <td id="averageBMI"data-label="Average"></td>
+              <td id="standardesvBMI"data-label="stddes"></td>
+            </tr>
+            <tr>
+              <td data-label="Account">Puntuación nutricional</td>
+              <td id="minDiet" data-label="MIN"></td>
+              <td id="maxDiet" data-label="MAX"></td>
+              <td id="averageDiet"data-label="Average"></td>
+              <td id="standardesvDiet"data-label="stddes"></td>
+            </tr>
+            <tr>
+              <td scope="row" data-label="Account">Puntuación de actividad</td>
+              <td id="minActivity" data-label="MIN"></td>
+              <td id="maxActivity" data-label="MAX"></td>
+              <td id="averageActivity"data-label="Average"></td>
+              <td id="standardesvActivity"data-label="stddes"></td>
+            </tr>
+            <tr>
+              <td scope="row" data-label="Account">Puntuación red social</td>
+              <td id="minSocial" data-label="MIN"></td>
+              <td id="maxSocial" data-label="MAX"></td>
+              <td id="averageSocial"data-label="Average"></td>
+              <td id="standardesvSocial"data-label="stddes"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <footer style="margin: 50px 0px 0px" id="footer" itemscope="itemscope" itemtype="http://schema.org/WPFooter">
+      <div class="container">
+        <div class="col-md-6 company-details">
+          <div class="zerif-footer-address">
+            <a>© Universitat Politècnica de València</a>
+            <p>
+              <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licencia de Creative Commons" style="border-width:0" src="./html/wordpress/88x31.png"></a><br>Este página está bajo una <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">licencia de Creative Commons Reconocimiento-NoComercial-CompartirIgual 4.0 Internacional</a>
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6 copyright">
+          <p id="zerif-copyright">Wakamola</p>
+          <div class="zerif-copyright-box"><a class="zerif-copyright" rel="nofollow">Zerif Lite </a>desarrollado por <a class="zerif-copyright" href="https://themeisle.com/" target="_blank" rel="nofollow">ThemeIsle</a></div>
+        </div>
+      </div>
+    </footer>
+
+  </div><!-- mobile-bg-fix-whole-site -->
+</div><!-- .mobile-bg-fix-wrap -->
+<script type="text/javascript" src="./html/wordpress/bootstrap.min.js"></script>
+<script type="text/javascript" src="./html/wordpress/jquery.knob.js"></script>
+<script type="text/javascript" src="./html/wordpress/smoothscroll.js"></script>
+<script type="text/javascript" src="./html/wordpress/scrollReveal.js"></script>
+<script type="text/javascript" src="./html/wordpress/zerif.js"></script>
+<script type="text/javascript" src="./html/wordpress/wp-embed.min.js"></script>
+
+<script type="application/json" id="mis">
+template_json
+</script>
+<script src="./html/index_es.js"></script>
+
+</body>
+</html>

@@ -12,10 +12,14 @@
 // Recuperamos del HTML el JSON con el grafo
 var mis = document.getElementById('mis').innerHTML;
 graph = JSON.parse(mis);
+graph.comunidades = graph.links;
 graphRec = JSON.parse(JSON.stringify(graph));
 
 // Definimos el tamaño del area sobre la que crear el grafo
-var width = 1000;
+var width = window.innerWidth * 0.8;
+if (width > 600) {
+  width = window.innerWidth * 0.6;
+}
 var height = 650;
 var distancia_nodos = 3; // separacion entre nodos
 var radio_nodo = 10;
@@ -35,7 +39,7 @@ var force = d3.layout.force()
 .size([width, height]);
 
 // Creamos un objeto vectorial sobre el que pintar el grafo
-var svg = d3.select("#graph-div").append("svg").attr("width", "100%").attr("height", height).attr("style", "min-width:" + width);
+var svg = d3.select("#graph-div").append("svg").attr("width", "100%").attr("height", height);
 $(function() {  $("#neighbors").draggable();});
 
 // Creamos los tips para cuando naveguemos por el grafo
@@ -49,11 +53,15 @@ $(function() {  $("#neighbors").draggable();});
 force.nodes(graph.nodes).links(graph.links).start();
 
 // Creamos en la instancia de D3 los arcos (sin posiciones)
-var link = svg.selectAll(".link").data(graph.links).enter().append("line").attr("class", "link").style("stroke-width", function(d) {
-  // Le asignamos un grosor
-  // return Math.sqrt(d.value);
+var comunidades = svg.selectAll(".link2").data(graph.comunidades).enter().append("line").attr("class", "link2").style("stroke-width", function(d) {
   return 1;
 });
+
+var link = svg.selectAll(".link").data(graph.links).enter().append("line").attr("class", "link").style("stroke-width", function(d) {
+  return 1;
+});
+
+
 
 // Damos formato a los nodos
 var node = svg.selectAll(".node").data(graph.nodes).enter().append("g").attr("class", "gruponodo")
@@ -80,6 +88,11 @@ var nodetext = svg.selectAll(".nodetext")
 
 force.on("tick", function() {
   link
+  .attr("x1", function(d) { return d.source.x;})
+  .attr("y1", function(d) { return d.source.y;})
+  .attr("x2", function(d) { return d.target.x;})
+  .attr("y2", function(d) { return d.target.y;});
+  comunidades
   .attr("x1", function(d) { return d.source.x;})
   .attr("y1", function(d) { return d.source.y;})
   .attr("x2", function(d) { return d.target.x;})
@@ -184,26 +197,36 @@ function searchNode() {
 // -----------------------------------------------------------------------------------------------
 
 // Función restart para devolver el grafo a su estado habitual
+graph.comunidades =[]
 function restart() {
+
   link = link.data(graph.links);
   link.exit().remove();
-  link.enter().insert("line", ".node").attr("class", "link");
+  link.enter().insert("line", ".node").attr("class", "link").style("stroke-width", 1);
+
   node = node.data(graph.nodes);
   node.enter().insert("circle", ".cursor").attr("class", "node").attr("r", 10).call(force.drag);
   force.start();
+
 }
 
-// Función para la selección dearcos mayores que
 function particiones(thresh) {
+  graph.comunidades = []
   graph.links.splice(0, graph.links.length);
   for (var i = 0; i < graphRec.links.length; i++) {
-    if (graphRec.links[i].value > thresh) {
-      graph.links.push(graphRec.links[i]);
+    var arco = graphRec.links[i];
+    if (arco.value > thresh) {
+      graph.links.push(arco);
+    }
+    else { if (thresh == 1) {
+      graph.comunidades.push(arco);
     }
   }
-
-  restart();
 }
+
+restart();
+}
+
 
 
 // -----------------------------------------------------------------------------------------------
@@ -221,7 +244,7 @@ function texto_vecinos(listado_vecinos, seleccionado) {
       document.getElementById('inner_neighbors').appendChild(par);
     }
   }
-  document.getElementById("select_title_p").innerHTML = seleccionado.texto
+  document.getElementById("select_title_p").innerHTML = seleccionado.texto_en
 
 }
 
@@ -236,8 +259,8 @@ function neighboring(a, b) {
   try {
     if (a.id != b.id) {
       if (relaciones_entre_nodos[a.id + "," + b.id]) {
-        if ($.inArray(a.texto, listado_vecinos) == -1) { listado_vecinos.push(a.texto) }
-        if ($.inArray(b.texto, listado_vecinos) == -1) { listado_vecinos.push(b.texto) }
+        if ($.inArray(a.texto_en, listado_vecinos) == -1) { listado_vecinos.push(a.texto_en) }
+        if ($.inArray(b.texto_en, listado_vecinos) == -1) { listado_vecinos.push(b.texto_en) }
 
       }
     }
@@ -287,17 +310,17 @@ function nodos_conectados() {
 
 // Color en función del BMI
 function colorBMI(valor) {
-  if (valor < 18.5) {    return "#99CCFF" } // azul
-  else if (valor < 25){  return "#00FF00" } // verde
-  else if (valor < 30){  return "#FFFF00" } // amarillo
-  else {                 return "#CD5C5C" } // rojo
+  if (valor < 18.5) {    return "#ddf1fa" } // azul
+  else if (valor < 25){  return "#a5cd86" } // verde
+  else if (valor < 30){  return "#e5dc75" } // amarillo
+  else {                 return "#702220" } // rojo
 }
 
 // Color en función del Wakastatus
 function colorWS(valor) {
-  if (valor >= 60){        return "#00FF00" } // verde
-  else if (valor > 30){   return "#FFFF00" } // amarillo
-  else {                  return "#CD5C5C" } // rojo
+  if (valor >= 60){        return "#a5cd86" } // verde
+  else if (valor > 30){   return "#e5dc75" } // amarillo
+  else {                  return "#702220" } // rojo
 }
 
 // Color en función de escalado
@@ -344,7 +367,7 @@ function cambiarcolor() {
 // -------------------------------VALORES ESTADISTICOS--------------------------------------------
 // -----------------------------------------------------------------------------------------------
 
-var sample_size = 0
+var sample_size = graph.nodes.length
 
 // Metodo para el calculo de la desviación tipica o estandar
 function desviacion_tipica(values){
@@ -373,11 +396,8 @@ var maxWS = 0
 var averageWS = 0
 var arrayWS = []
 
-for (var i = 0; i < graph.nodes.length - 1; i++) {
+for (var i = 0; i < graph.nodes.length; i++) {
   arrayWS.push(Math.round(graph.nodes[i].csv_wakaestado*10)/10);
-  if(graph.nodes[i].csv_wakaestado > 0){
-    sample_size = sample_size + 1
-  }
   if(graph.nodes[i].csv_wakaestado > maxWS){ maxWS = Math.round(graph.nodes[i].csv_wakaestado)}
   if(graph.nodes[i].csv_wakaestado < minWS){ minWS = Math.round(graph.nodes[i].csv_wakaestado)}
   averageWS = averageWS  + Math.round(graph.nodes[i].csv_wakaestado)
@@ -395,7 +415,7 @@ var maxBMI = 20
 var averageBMI = 0
 var arrayBMI = []
 
-for (var i = 0; i < graph.nodes.length - 1; i++) {
+for (var i = 0; i < graph.nodes.length; i++) {
   arrayBMI.push(Math.round(graph.nodes[i].csv_BMI*10)/10);
   if(graph.nodes[i].csv_BMI > maxBMI){ maxBMI = Math.round(graph.nodes[i].csv_BMI*10)/10}
   if(graph.nodes[i].csv_BMI < minBMI){ minBMI = Math.round(graph.nodes[i].csv_BMI*10)/10}
@@ -414,7 +434,7 @@ var maxDiet = 0
 var averageDiet = 0
 var arrayDiet = []
 
-for (var i = 0; i < graph.nodes.length - 1; i++) {
+for (var i = 0; i < graph.nodes.length; i++) {
   arrayDiet.push(Math.round(graph.nodes[i].csv_score_nutrition*10)/10);
   if(graph.nodes[i].csv_score_nutrition > maxDiet){ maxDiet = Math.round(graph.nodes[i].csv_score_nutrition*10)/10}
   if(graph.nodes[i].csv_score_nutrition < minDiet){ minDiet = Math.round(graph.nodes[i].csv_score_nutrition*10)/10}
@@ -432,7 +452,7 @@ var maxActivity = 0
 var averageActivity = 0
 var arrayActivity = []
 
-for (var i = 0; i < graph.nodes.length - 1; i++) {
+for (var i = 0; i < graph.nodes.length; i++) {
   arrayActivity.push(Math.round(graph.nodes[i].csv_score_activity*10)/10);
   if(graph.nodes[i].csv_score_activity > maxActivity){ maxActivity = Math.round(graph.nodes[i].csv_score_activity*10)/10}
   if(graph.nodes[i].csv_score_activity < minActivity){ minActivity = Math.round(graph.nodes[i].csv_score_activity*10)/10}
@@ -450,7 +470,7 @@ var maxSocial = 0
 var averageSocial = 0
 var arraySocial = []
 
-for (var i = 0; i < graph.nodes.length - 1; i++) {
+for (var i = 0; i < graph.nodes.length; i++) {
   arraySocial.push(Math.round(graph.nodes[i].csv_score_social*10)/10);
   if(graph.nodes[i].csv_score_social > maxSocial){ maxSocial = Math.round(graph.nodes[i].csv_score_social*10)/10}
   if(graph.nodes[i].csv_score_social < minSocial){ minSocial = Math.round(graph.nodes[i].csv_score_social*10)/10}
@@ -461,6 +481,3 @@ document.getElementById('minSocial').innerHTML = Math.round(minSocial*10)/10;
 document.getElementById('maxSocial').innerHTML = Math.round(maxSocial*10)/10;
 document.getElementById('averageSocial').innerHTML = Math.round(averageSocial*10)/10;
 document.getElementById('standardesvSocial').innerHTML = desviacion_tipica(arraySocial).toFixed(2);
-
-// Sample size
-document.getElementById('sample_size').innerHTML = sample_size

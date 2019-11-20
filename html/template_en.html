@@ -59,117 +59,119 @@
   <div id="content" class="site-content">
 
     <div id="my-div" class="container">
-      <h1 style="padding: 50px 0px 30px">Wakamola Network Visualicer</h1>
+      <h1 style="padding: 50px 0px 30px">Wakamola Network Visualiser</h1>
       <p>The development carried out in the contexts of Wakamola's project consists of a python file which interprets outputs files from networkX and transforms them into a vectorial image by using the D3 library for the visualization.</p>
-      <div class="cell border-box-sizing code_cell rendered">
-        <div class="output_wrapper" style="align-items: center;">
-          <div class="output">
-            <div class="output_area">
-              <div class="output_html rendered_html output_execute_result">
-                <div class="ui-widget" style="float:left;padding:10px 10px 10px 0px">
-                  <input id="search">
-                  <button class="searchbutton" type="button" onclick="searchNode()">Search</button>
-                </div>
-                <div class="ui-widget" style="float:left;padding:10px 10px 10px 70px">
-                  <label class="switch">
-                    <input type="checkbox" id="togBtn" onclick="cambiarcolor()">
-                    <div class="slider round">
-                      <span class="on">WAKASTATUS</span>
-                      <span class="off">BMI</span>
-                    </div>
-                  </label>
-                </div>
-                <div style="float:right;padding:10px 0px 10px 10px">
-                  <button class="searchbutton" type="button" onclick="relaciones_entre_nodos = particiones(0);">Edges</button>
-                  <button class="searchbutton" type="button" onclick="relaciones_entre_nodos = particiones(1);">Partitions</button>
-                  <button class="searchbutton" type="button" onclick="relaciones_entre_nodos = particiones(2);">Single</button>
-                </div>
-                <div style="position: relative; width: 0; height: 0;float:right;margin-top: 50px;    margin-right: 50px;">
-                  <div id="neighbors">
-                    <div id="select_title">
-                      <p id="select_title_p" style="font-weight: bold;">Select a node</p>
-                    </div>
-                    <div id="inner_neighbors"></div>
-                  </div>
-                </div>
-                <div id="graph-div"></div>
-              </div>
+
+
+      <div class="row">
+        <div class="col-iz">
+          <div class="row">
+            <div class="col-iz1"><div class="column"><input id="search"></div></div>
+            <div class="col-de1"><div class="column"><button class="searchbutton" type="button" onclick="searchNode()">Search</button></div></div>
+          </div>
+        </div>
+
+        <div class="col-ce">
+          <label class="switch">
+            <input type="checkbox" id="togBtn" onclick="cambiarcolor()">
+            <div class="slider round">
+              <span class="on">WAKASTATUS</span>
+              <span class="off">BMI</span>
             </div>
+          </label>
+        </div>
+        <div class="col-de">
+          <div style="float:right;padding:0px">
+            <button class="searchbutton" style="width:auto; padding: 0px 20px;min-width:150px" type="button" onclick="relaciones_entre_nodos = particiones(0);">Edges</button>
+            <button class="searchbutton" style="width:auto; padding: 0px 20px;min-width:150px" type="button" onclick="relaciones_entre_nodos = particiones(1);">Comumnities</button>
+            <!-- <button class="searchbutton" style="width:auto; padding: 0px 20px" type="button" onclick="relaciones_entre_nodos = particiones(2);">Single</button> -->
           </div>
         </div>
       </div>
+
+      <div class="row">
+        <div class="vecinos" style="">
+          <div id="neighbors">
+            <div id="select_title">
+              <p id="select_title_p" style="font-weight: bold;">Select a node</p>
+            </div>
+            <div id="inner_neighbors"></div>
+          </div>
+        </div>
+        <div id="graph-div"></div>
+      </div>
+
+      <div class="container">
+        <table>
+          <caption>Statistical data</caption>
+          <caption class='sample_size'>Total sample: <strong>_ts</strong>; Network individuals: <strong>_ty</strong> <em>(participants with all the questions completed)</em>; Number of Comumnities: <strong>_tc</strong>; Number of relations: <strong>_tr</strong>; </caption>
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Min</th>
+              <th scope="col">Max</th>
+              <th scope="col">Average</th>
+              <th scope="col">Standar deviation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td scope="row" data-label="Account">Wakastatus Score</td>
+              <td id="minWS" data-label="MIN"></td>
+              <td id="maxWS" data-label="MAX"></td>
+              <td id="averageWS"data-label="Average"></td>
+              <td id="standardesvWS"data-label="stddes"></td>
+            </tr>
+            <tr>
+              <td data-label="Account">IBM Score</td>
+              <td id="minBMI" data-label="MIN"></td>
+              <td id="maxBMI" data-label="MAX"></td>
+              <td id="averageBMI"data-label="Average"></td>
+              <td id="standardesvBMI"data-label="stddes"></td>
+            </tr>
+            <tr>
+              <td data-label="Account">Diet Score</td>
+              <td id="minDiet" data-label="MIN"></td>
+              <td id="maxDiet" data-label="MAX"></td>
+              <td id="averageDiet"data-label="Average"></td>
+              <td id="standardesvDiet"data-label="stddes"></td>
+            </tr>
+            <tr>
+              <td scope="row" data-label="Account">Activity Score</td>
+              <td id="minActivity" data-label="MIN"></td>
+              <td id="maxActivity" data-label="MAX"></td>
+              <td id="averageActivity"data-label="Average"></td>
+              <td id="standardesvActivity"data-label="stddes"></td>
+            </tr>
+            <tr>
+              <td scope="row" data-label="Account">Social net Score</td>
+              <td id="minSocial" data-label="MIN"></td>
+              <td id="maxSocial" data-label="MAX"></td>
+              <td id="averageSocial"data-label="Average"></td>
+              <td id="standardesvSocial"data-label="stddes"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-    <div class="container">
-      <table>
-        <caption>Statistical data</caption>
-        <caption class='sample_size'>(Sample size <strong  id='sample_size'></strong> / line_count)</caption>
-        <thead>
-          <tr>
-            <th scope="col"></th>
-            <th scope="col">Min</th>
-            <th scope="col">Max</th>
-            <th scope="col">Average</th>
-            <th scope="col">Standar deviation</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td scope="row" data-label="Account">Wakastatus Score</td>
-            <td id="minWS" data-label="MIN"></td>
-            <td id="maxWS" data-label="MAX"></td>
-            <td id="averageWS"data-label="Average"></td>
-            <td id="standardesvWS"data-label="stddes"></td>
-          </tr>
-          <tr>
-            <td data-label="Account">IBM Score</td>
-            <td id="minBMI" data-label="MIN"></td>
-            <td id="maxBMI" data-label="MAX"></td>
-            <td id="averageBMI"data-label="Average"></td>
-            <td id="standardesvBMI"data-label="stddes"></td>
-          </tr>
-          <tr>
-            <td data-label="Account">Diet Score</td>
-            <td id="minDiet" data-label="MIN"></td>
-            <td id="maxDiet" data-label="MAX"></td>
-            <td id="averageDiet"data-label="Average"></td>
-            <td id="standardesvDiet"data-label="stddes"></td>
-          </tr>
-          <tr>
-            <td scope="row" data-label="Account">Activity Score</td>
-            <td id="minActivity" data-label="MIN"></td>
-            <td id="maxActivity" data-label="MAX"></td>
-            <td id="averageActivity"data-label="Average"></td>
-            <td id="standardesvActivity"data-label="stddes"></td>
-          </tr>
-          <tr>
-            <td scope="row" data-label="Account">Social net Score</td>
-            <td id="minSocial" data-label="MIN"></td>
-            <td id="maxSocial" data-label="MAX"></td>
-            <td id="averageSocial"data-label="Average"></td>
-            <td id="standardesvSocial"data-label="stddes"></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <footer style="margin: 50px 0px 0px" id="footer" itemscope="itemscope" itemtype="http://schema.org/WPFooter">
-    <div class="container">
-      <div class="col-md-6 company-details">
-        <div class="zerif-footer-address">
-          <a>© Universitat Politècnica de València</a>
-          <p>
-            <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licencia de Creative Commons" style="border-width:0" src="./html/wordpress/88x31.png"></a><br>Este página está bajo una <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">licencia de Creative Commons Reconocimiento-NoComercial-CompartirIgual 4.0 Internacional</a>
-          </p>
+    <footer style="margin: 50px 0px 0px" id="footer" itemscope="itemscope" itemtype="http://schema.org/WPFooter">
+      <div class="container">
+        <div class="col-md-6 company-details">
+          <div class="zerif-footer-address">
+            <a>© Universitat Politècnica de València</a>
+            <p>
+              <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licencia de Creative Commons" style="border-width:0" src="./html/wordpress/88x31.png"></a><br>Este página está bajo una <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">licencia de Creative Commons Reconocimiento-NoComercial-CompartirIgual 4.0 Internacional</a>
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6 copyright">
+          <p id="zerif-copyright">Wakamola</p>
+          <div class="zerif-copyright-box"><a class="zerif-copyright" rel="nofollow">Zerif Lite </a>desarrollado por <a class="zerif-copyright" href="https://themeisle.com/" target="_blank" rel="nofollow">ThemeIsle</a></div>
         </div>
       </div>
-      <div class="col-md-6 copyright">
-        <p id="zerif-copyright">Wakamola</p>
-        <div class="zerif-copyright-box"><a class="zerif-copyright" rel="nofollow">Zerif Lite </a>desarrollado por <a class="zerif-copyright" href="https://themeisle.com/" target="_blank" rel="nofollow">ThemeIsle</a></div>
-      </div>
-    </div>
-  </footer>
+    </footer>
 
-</div><!-- mobile-bg-fix-whole-site -->
+  </div><!-- mobile-bg-fix-whole-site -->
 </div><!-- .mobile-bg-fix-wrap -->
 <script type="text/javascript" src="./html/wordpress/bootstrap.min.js"></script>
 <script type="text/javascript" src="./html/wordpress/jquery.knob.js"></script>
@@ -181,7 +183,7 @@
 <script type="application/json" id="mis">
 template_json
 </script>
-<script src="./html/index.js"></script>
+<script src="./html/index_en.js"></script>
 
 </body>
 </html>
