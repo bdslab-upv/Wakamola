@@ -9,12 +9,6 @@ import logging
 
 
 def create_html():
-    logger = logging.getLogger("networker")
-    if os.environ["MODE"] == 'test':
-        logger.setLevel(logging.INFO)
-    else:
-        logger.setLevel(logging.WARNING)
-
     graph_data = {'nodes': [], 'links': []}
 
     # ---------------------------------------------------------------
@@ -173,9 +167,9 @@ def create_html():
                                                                                             json.dumps(graph_data))
         k += 1
 
-    # TODO esto deberia ser parametrizable
-    name_web = 'netweb'
-    with open(name_web + '_es.html', 'w') as file:
+    web_name = 'netweb'
+
+    with open(web_name + '_es.html', 'w') as file:
         file.writelines(template_data)
 
     # ---------------------------------------------------------------
@@ -191,6 +185,5 @@ def create_html():
                                                                                             json.dumps(graph_data))
         k += 1
 
-    with open(name_web + '_en.html', 'w') as file:
+    with open(web_name + '_en.html', 'w') as file:
         file.writelines(template_data)
-

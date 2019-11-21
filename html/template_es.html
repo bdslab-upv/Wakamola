@@ -59,15 +59,15 @@
   <div id="content" class="site-content">
 
     <div id="my-div" class="container">
-      <h1 style="padding: 50px 0px 30px">Visualizador de red Wakamola</h1>
-      <p>El desarrollo llevado a cabo en el contexto del proyecto Wakamola consiste en un fichero python que interpreta los ficheros de salida de NetworkX y los transforma en una imagen vectorial usando la libreria D3 para la visualización.</p>
+      <h1 style="padding: 50px 0px 30px">Visualizador de la Red Social Wakamola</h1>
+      <p style="text-align:left">En la imagen puedes ver la Red Social de Wakamola, cada círculo es un usuario de Wakamola y las conexiones (líneas en gris) son las relaciones que se crean al compartir Wakamola. Los círculos muestran el valor del índice de Masa Corporal (IMC) de los usuarios, los colores indican si es un IMC dentro de los límites aceptables (verdes), con sobrepeso (amarillo), con obesidad (rojo) o con menor peso del aceptable (azul). Puedes cambiar el tipo de visualización con la barra deslizadora (IMC/Wakastatus) para ver los valores del Wakaestado (escala de 0 a 100) de los usuarios, en este caso los colores muestran el nivel de riesgo de obesidad desde verde (sin riesgo) a rojo (con riesgo). Si haces clic en botón comunidades verás los grupos de usuarios que se crean en la red social y que pueden estar influyéndose entre sí.</p>
 
 
       <div class="row">
         <div class="col-iz">
           <div class="row">
             <div class="col-iz1"><div class="column"><input id="search"></div></div>
-            <div class="col-de1"><div class="column"><button class="searchbutton" type="button" onclick="searchNode()">Buscar</button></div></div>
+            <div class="col-de1"><div class="column"><button class="searchbutton" type="button" onclick="searchNode()">Buscar valor</button></div></div>
           </div>
         </div>
 
@@ -82,7 +82,7 @@
         </div>
         <div class="col-de">
           <div style="float:right;padding:0px">
-            <button class="searchbutton" style="width:auto; padding: 0px 20px;min-width:150px" type="button" onclick="relaciones_entre_nodos = particiones(0);">Arcos</button>
+            <button class="searchbutton" style="width:auto; padding: 0px 20px;min-width:150px" type="button" onclick="relaciones_entre_nodos = particiones(0);">Relaciones</button>
             <button class="searchbutton" style="width:auto; padding: 0px 20px;min-width:150px" type="button" onclick="relaciones_entre_nodos = particiones(1);">Comunidades</button>
             <!-- <button class="searchbutton" style="width:auto; padding: 0px 20px" type="button" onclick="relaciones_entre_nodos = particiones(2);">Individuales</button> -->
           </div>
@@ -104,7 +104,7 @@
       <div class="container">
         <table>
           <caption>Datos estadísticos</caption>
-          <caption class='sample_size'>Total de la muestra: <strong>_ts</strong>; Número de nodos: <strong>_ty</strong> <em>(participantes con todas las preguntas contestadas)</em>; Número de comunidades: <strong>_tc</strong>; Número de relaciones: <strong>_tr</strong>; </caption>
+          <caption class='sample_size'>Total de usuarios: <strong>_ts</strong>; Número de completados: <strong>_ty</strong> <em>(usuarios con todas las preguntas contestadas)</em>; Número de relaciones: <strong>_tr</strong>; Número de comunidades: <strong>_tc</strong></caption>
           <thead>
             <tr>
               <th scope="col"></th>
