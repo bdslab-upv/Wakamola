@@ -16,13 +16,21 @@ graph.comunidades = graph.links;
 graphRec = JSON.parse(JSON.stringify(graph));
 
 // Definimos el tamaño del area sobre la que crear el grafo
-var width = window.innerWidth * 0.8;
-if (width > 600) {
-  width = window.innerWidth * 0.6;
-}
+var width = window.innerWidth * 0.6;
 var height = 650;
-var distancia_nodos = 3; // separacion entre nodos
+
+var padding_manu = 0;
 var radio_nodo = 10;
+var distancia_nodos = 3; // separacion entre nodos
+
+if (window.innerWidth < 500) {
+  radio_nodo = 7;
+  distancia_nodos = 10;
+  padding_manu = 75;
+  width = window.innerWidth -200;
+}
+
+
 var listado_vecinos = [];
 var relaciones_entre_nodos = {};
 var color_selected = "BMI";
@@ -31,12 +39,25 @@ var color_selected = "BMI";
 var force = d3.layout.force()
 .linkStrength(0.1)
 .friction(0.9)
-.linkDistance(30)
+.linkDistance(20)
 .charge(-40)
 .gravity(0.05)
-.theta(1.5)
-.alpha(0.9)
+.theta(0)
+.alpha(0)
 .size([width, height]);
+
+if (window.innerWidth < 500) {
+  var force = d3.layout.force()
+  .linkStrength(0.1)
+  .friction(0.9)
+  .linkDistance(5)
+  .charge(-20)
+  .gravity(0.05)
+  .theta(0)
+  .alpha(0)
+  .size([width, height]);
+}
+
 
 // Creamos un objeto vectorial sobre el que pintar el grafo
 var svg = d3.select("#graph-div").append("svg").attr("width", "100%").attr("height", height);
@@ -67,7 +88,7 @@ var link = svg.selectAll(".link").data(graph.links).enter().append("line").attr(
 var node = svg.selectAll(".node").data(graph.nodes).enter().append("g").attr("class", "gruponodo")
 
 node.append("circle")
-.attr("class", "nodeball").attr("r", 10)
+.attr("class", "nodeball").attr("r", radio_nodo)
 .style("fill", function(d) {   return colorBMI(d.color) })
 .call(force.drag)
 .on('click', nodos_conectados)
@@ -88,20 +109,20 @@ var nodetext = svg.selectAll(".nodetext")
 
 force.on("tick", function() {
   link
-  .attr("x1", function(d) { return d.source.x;})
+  .attr("x1", function(d) { return d.source.x + padding_manu;})
   .attr("y1", function(d) { return d.source.y;})
-  .attr("x2", function(d) { return d.target.x;})
+  .attr("x2", function(d) { return d.target.x + padding_manu;})
   .attr("y2", function(d) { return d.target.y;});
   comunidades
-  .attr("x1", function(d) { return d.source.x;})
+  .attr("x1", function(d) { return d.source.x + padding_manu;})
   .attr("y1", function(d) { return d.source.y;})
-  .attr("x2", function(d) { return d.target.x;})
+  .attr("x2", function(d) { return d.target.x + padding_manu;})
   .attr("y2", function(d) { return d.target.y;});
   node
-  .attr("cx", function(d) { return d.x; })
+  .attr("cx", function(d) { return d.x + padding_manu; })
   .attr("cy", function(d) { return d.y;});
   nodetext
-  .attr("x", function(d) { return d.x - 7.5;})
+  .attr("x", function(d) { return d.x + padding_manu - 7.5;})
   .attr("y", function(d) { return d.y + 3.5;})
   node.each(collide(0.5));
 });
@@ -165,9 +186,9 @@ $(function() { $("#search").autocomplete({  source: opciones_buscadorBMI });});
 function searchNode() {
 
   // Encendemos todos los nodos y arcos
-  var node = svg.selectAll(".nodeball").attr("r", 10).style("opacity", "1");
+  var node = svg.selectAll(".nodeball").attr("r", radio_nodo).style("opacity", "1");
   var link = svg.selectAll(".link").style("opacity", "1");
-  d3.selectAll(".node, .link").transition().duration(0).attr("r", 10).style("opacity", 1);
+  d3.selectAll(".node, .link").transition().duration(0).attr("r", radio_nodo).style("opacity", 1);
 
   // Tomamos el valor del buscador
   var search_value = document.getElementById('search').value.toString();
@@ -187,7 +208,7 @@ function searchNode() {
 
   // Apagamos todos los arcos
   svg.selectAll(".link").style("opacity", "0.2");
-  d3.selectAll(".node, .link").transition().duration(1000).attr("r", 10).style("opacity", 1);
+  d3.selectAll(".node, .link").transition().duration(1000).attr("r", radio_nodo).style("opacity", 1);
 }
 
 
@@ -205,7 +226,7 @@ function restart() {
   link.enter().insert("line", ".node").attr("class", "link").style("stroke-width", 1);
 
   node = node.data(graph.nodes);
-  node.enter().insert("circle", ".cursor").attr("class", "node").attr("r", 10).call(force.drag);
+  node.enter().insert("circle", ".cursor").attr("class", "node").attr("r", radio_nodo).call(force.drag);
   force.start();
 
 }
@@ -280,7 +301,7 @@ function nodos_conectados() {
     d = d3.select(this).node().__data__;
 
     listado_vecinos = []
-    var node = svg.selectAll(".nodeball").attr("r", 10).style("opacity", "1");
+    var node = svg.selectAll(".nodeball").attr("r", radio_nodo).style("opacity", "1");
     node.style("opacity", function(o) {     return neighboring(d, o) | neighboring(o, d) ? 1 : 0.2; });
     var link = svg.selectAll(".link").style("opacity", "1");
     link.style("opacity", function(o) {     return d.id == o.source.id | d.id == o.target.id ? 1 : 0.2; });
@@ -293,9 +314,9 @@ function nodos_conectados() {
   } else {
     esta_seleccionado = 0;
 
-    var node = svg.selectAll(".nodeball").attr("r", 10).style("opacity", "1");
+    var node = svg.selectAll(".nodeball").attr("r", radio_nodo).style("opacity", "1");
     var link = svg.selectAll(".link").style("opacity", "1");
-    d3.selectAll(".node").transition().duration(200).attr("r", 10)
+    d3.selectAll(".node").transition().duration(200).attr("r", radio_nodo)
 
     document.getElementById("select_title_p").innerHTML = 'Select a node'
     document.getElementById("inner_neighbors").innerHTML = ''
