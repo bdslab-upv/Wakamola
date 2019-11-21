@@ -23,9 +23,9 @@ def table_1(group, n):
             return 10
         elif n >= 3:
             return 7.5
-        elif n == 2:
+        elif 2 <= n < 3:
             return 5
-        elif n == 1:
+        elif 1 <= n < 2:
             return 2.5
         elif n < 1:
             return 0
@@ -47,9 +47,9 @@ def table_1(group, n):
     def casual_consume(n):
         if n < 1:
             return 10
-        elif n == 1:
+        elif 1 <= n < 2:
             return 7.5
-        elif n == 2:
+        elif 2 <= n < 3:
             return 5
         elif n >= 7:
             return 0
@@ -136,9 +136,9 @@ def risk_nutrition(id_user, comp=False, db=DBHelper()):
         # Item Table Group
         if row['Table'] == 1:
             logger.info('=====')
-            logger.info('Score: '+str(score)+' type '+str(type(score)))
-            logger.info('Group: '+str(row['Group'])+' type '+str(type(row['Group'])))
-            logger.info('Item '+str(row['Item'])+' type '+str(type(row['Item'])))
+            logger.info('Score: ' + str(score) + ' type ' + str(type(score)))
+            logger.info('Group: ' + str(row['Group']) + ' type ' + str(type(row['Group'])))
+            logger.info('Item ' + str(row['Item']) + ' type ' + str(type(row['Item'])))
             logger.info('Answer' + str(table_1(group=row['Group'], n=ans[row['Item']])))
 
             score += table_1(group=row['Group'], n=ans[row['Item']])
@@ -187,8 +187,8 @@ def network_influence(id_user, actual_wakaestado, db, comp):
     # now obtain the wakascore for them
     wakaestados = [get_friend_wakaestado(f) for f in friends]
     # return the value, the number of friends and the mean
-    return min(max(0, mean(wakaestados) - actual_wakaestado)/MAX_NETWORK + log(len(friends), 2), MAX_NETWORK), \
-        len(wakaestados), mean(wakaestados) if len(wakaestados) > 0 else 0
+    return min(max(0, mean(wakaestados) - actual_wakaestado) / MAX_NETWORK + log(len(friends), 2), MAX_NETWORK), \
+           len(wakaestados), mean(wakaestados) if len(wakaestados) > 0 else 0
 
 
 def obesity_risk(id_user, completed, network=True):
