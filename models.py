@@ -136,9 +136,9 @@ def risk_nutrition(id_user, comp=False, db=DBHelper()):
         # Item Table Group
         if row['Table'] == 1:
             logger.info('=====')
-            logger.info('Score: '+str(score))
-            logger.info('Group: '+str(row['Group']))
-            logger.info('Item '+str(row['Item']))
+            logger.info('Score: '+str(score)+' type '+str(type(score)))
+            logger.info('Group: '+str(row['Group'])+' type '+str(type(row['Group'])))
+            logger.info('Item '+str(row['Item'])+' type '+str(type(row['Item'])))
             logger.info('Answer' + str(table_1(group=row['Group'], n=ans[row['Item']])))
 
             score += table_1(group=row['Group'], n=ans[row['Item']])
