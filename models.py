@@ -2,7 +2,6 @@
 This class is meant to have the risk models
 '''
 
-import logging
 from dbhelper import DBHelper
 from statistics import mean
 from math import log, ceil
@@ -127,7 +126,6 @@ def risk_nutrition(id_user, comp=False, db=DBHelper()):
     score = 0
     if not comp:
         return 0
-    logger = logging.getLogger('risk_nutrition')
     # obtain the responses
     ans = db.get_responses_category(id_user=id_user, phase=2)
     # load the rules file
@@ -135,12 +133,6 @@ def risk_nutrition(id_user, comp=False, db=DBHelper()):
     for _, row in table.iterrows():
         # Item Table Group
         if row['Table'] == 1:
-            logger.info('=====')
-            logger.info('Score: ' + str(score) + ' type ' + str(type(score)))
-            logger.info('Group: ' + str(row['Group']) + ' type ' + str(type(row['Group'])))
-            logger.info('Item ' + str(row['Item']) + ' type ' + str(type(row['Item'])))
-            logger.info('Answer' + str(table_1(group=row['Group'], n=ans[row['Item']])))
-
             score += table_1(group=row['Group'], n=ans[row['Item']])
         elif row['Table'] == 2:
             score += table_2(ans[row['Item']])
