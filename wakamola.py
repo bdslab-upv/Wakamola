@@ -404,6 +404,7 @@ def create_shared_link(chat, social_role):
     token = db.create_short_link(id_user=md5(chat), type=social_role)
     return 't.me/{}?start={}'.format(BOT_USERNAME, token)
 
+
 # TODO VERY IMPORTANT TO BREAK FLOW
 def extra_messages(phase, question, chat, lang):
     """
@@ -571,9 +572,8 @@ def handle_updates(updates):
             contacts_counter = len(db.get_user_relationships(md5(chat)))
             msg_share = languages[lang]['share'].format(contacts_counter)
             send_message(emoji.emojize(msg_share), chat)
-            # TODO aquí hay un mensaje mas
             send_message(emoji.emojize(languages[lang]['see_network']), chat)
-            send_message(network_link, chat)
+            send_message(network_link+'?id='+str(chat), chat)
             go_main(chat, lang)
             return
 
