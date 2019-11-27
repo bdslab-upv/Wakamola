@@ -19,9 +19,12 @@ graphRec = JSON.parse(JSON.stringify(graph));
 var width = window.innerWidth * 0.6;
 var height = 650;
 
+// Definimos una serie de constantes a utilizar despues
 var padding_manu = 0;
 var radio_nodo = 10;
 var distancia_nodos = 3; // separacion entre nodos
+var difuminado = 0.6;
+var seleccionado = window.location.search
 
 if (window.innerWidth < 500) {
   radio_nodo = 7;
@@ -154,6 +157,39 @@ function collide(alpha) {
   };
 }
 
+// Marcar seleccionado
+window.onload = function() {
+  if(seleccionado){
+    var seleccionado_aux = seleccionado.replace("?id=","")
+    selected = node.filter(function(d, i) {     return d.p_ID_Variable == seleccionado_aux;});
+    not_selected = node.filter(function(d, i) { return d.p_ID_Variable != seleccionado_aux;});
+    not_selected.style("opacity", difuminado);
+    selected.attr("r", 15)
+
+    svg.selectAll(".link").style("opacity", difuminado);
+    d3.selectAll(".node, .link").transition().duration(1000).attr("r", radio_nodo).style("opacity", 1);
+
+    var lista_ordenada_wakastatus = []
+    var lista_ordenada_p_ID_Variable = []
+    for (var i = 0; i < graphRec.nodes.length; i++) {
+      lista_ordenada_p_ID_Variable.push(graphRec.nodes[i].p_ID_Variable);
+      lista_ordenada_wakastatus.push(graphRec.nodes[i].csv_wakaestado);
+    }
+    var seleccionado_id = lista_ordenada_p_ID_Variable.indexOf(seleccionado_aux)
+    var seleccionado_ws = lista_ordenada_wakastatus[seleccionado_id]
+
+    lista_ordenada_wakastatus.sort().reverse()
+    var ranquing_ws = lista_ordenada_wakastatus.indexOf(seleccionado_ws)
+    document.getElementById("select_title_p").innerHTML = 'Tu wakastatus ocupa la posición ' + ranquing_ws + " de " +  lista_ordenada_wakastatus.length + " en el ranquing de la red"
+    if(ranquing_ws <= 11){
+      document.getElementById("select_title_p").innerHTML = 'Enhorabuena, estas entre los ' + ranquing_ws + " de " +  lista_ordenada_wakastatus.length + " con mejor wakastatus"
+    }
+
+  }else{
+    console.log("No se ha seleccionado ningun nodo en origen")
+  }
+};
+
 
 // -----------------------------------------------------------------------------------------------
 // ------------------------------- LIBRERIA D3 ---------------------------------------------------
@@ -162,7 +198,7 @@ function collide(alpha) {
 
 // Preparamos un listado de valores unicos para el autocompletar
 var opciones_buscadorBMI = [];
-for (var i = 0; i < graph.nodes.length - 1; i++) {
+for (var i = 0; i < graph.nodes.length; i++) {
   var unico = "" + Math.round(graph.nodes[i].csv_BMI)
   if(!opciones_buscadorBMI.includes(unico)){
     opciones_buscadorBMI.push(unico);
@@ -171,7 +207,7 @@ for (var i = 0; i < graph.nodes.length - 1; i++) {
 opciones_buscadorBMI = opciones_buscadorBMI.sort();
 
 var opciones_buscadorWS = [];
-for (var i = 0; i < graph.nodes.length - 1; i++) {
+for (var i = 0; i < graph.nodes.length; i++) {
   var unico = "" + Math.round(graph.nodes[i].csv_wakaestado)
   if(!opciones_buscadorWS.includes(unico)){
     opciones_buscadorWS.push(unico);
@@ -203,11 +239,11 @@ function searchNode() {
   }
 
   //  Apagamos los nodos no seleccionados y resaltamos los seleccionados
-  not_selected.style("opacity", "0.2");
+  not_selected.style("opacity", difuminado);
   selected.attr("r", 15)
 
   // Apagamos todos los arcos
-  svg.selectAll(".link").style("opacity", "0.2");
+  svg.selectAll(".link").style("opacity", difuminado);
   d3.selectAll(".node, .link").transition().duration(1000).attr("r", radio_nodo).style("opacity", 1);
 }
 
@@ -302,9 +338,9 @@ function nodos_conectados() {
 
     listado_vecinos = []
     var node = svg.selectAll(".nodeball").attr("r", radio_nodo).style("opacity", "1");
-    node.style("opacity", function(o) {     return neighboring(d, o) | neighboring(o, d) ? 1 : 0.2; });
+    node.style("opacity", function(o) {     return neighboring(d, o) | neighboring(o, d) ? 1 : difuminado; });
     var link = svg.selectAll(".link").style("opacity", "1");
-    link.style("opacity", function(o) {     return d.id == o.source.id | d.id == o.target.id ? 1 : 0.2; });
+    link.style("opacity", function(o) {     return d.id == o.source.id | d.id == o.target.id ? 1 : difuminado; });
 
     selected = node.filter(function(o) { return o == d; });
     selected.style("opacity", 1);
@@ -318,7 +354,7 @@ function nodos_conectados() {
     var link = svg.selectAll(".link").style("opacity", "1");
     d3.selectAll(".node").transition().duration(200).attr("r", radio_nodo)
 
-    document.getElementById("select_title_p").innerHTML = 'Select a node'
+    document.getElementById("select_title_p").innerHTML = 'Seleccione un nodo'
     document.getElementById("inner_neighbors").innerHTML = ''
 
   }
@@ -334,14 +370,14 @@ function colorBMI(valor) {
   if (valor < 18.5) {    return "#ddf1fa" } // azul
   else if (valor < 25){  return "#a5cd86" } // verde
   else if (valor < 30){  return "#e5dc75" } // amarillo
-  else {                 return "#702220" } // rojo
+  else {                 return "#F47E65" } // rojo
 }
 
 // Color en función del Wakastatus
 function colorWS(valor) {
   if (valor >= 60){        return "#a5cd86" } // verde
   else if (valor > 30){   return "#e5dc75" } // amarillo
-  else {                  return "#702220" } // rojo
+  else {                  return "#F47E65" } // rojo
 }
 
 // Color en función de escalado

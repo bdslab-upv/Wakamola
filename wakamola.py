@@ -35,6 +35,8 @@ global rules
 global god_mode
 global statistics_word
 global init_date
+global network_filename
+global network_link
 
 
 if environ["MODE"] == 'test':
@@ -423,7 +425,7 @@ def avocados(score):
     containing N avocado emojis
     """
     avo_emojis_ = " :avocado: :avocado: :avocado:"
-    for its in range(int(score / 20)):
+    for _ in range(int(score / 20)):
         avo_emojis_ += " :avocado:"
     return avo_emojis_
 
@@ -510,7 +512,7 @@ def create_graph():
     # create the
     create_html()
     # move the file to /var/www
-    subprocess.call(["mv netweb_es.html /var/www/html/index.html"], shell=True)
+    subprocess.call(["mv {}_es.html /var/www/html/index.html".format(network_filename)], shell=True)
     logging.info("moved to apache!")
 
 
@@ -780,6 +782,7 @@ if __name__ == '__main__':
     parser.add_argument('--network', action="store", default="create_graph",
                         help="command to create and set the network in the apache server")
     parser.add_argument('--network_link', action='store', default='https://wakamola.webs.upv.es/WakaSNA/wakamola_local_v6.1/ejemplo.html')
+    parser.add_argument('--network_filename', action='store', default='netweb')
 
     spacename = parser.parse_args()
 
@@ -795,6 +798,7 @@ if __name__ == '__main__':
 
     # link to the network
     network_link = spacename.network_link.replace('_', '\\_')
+    network_filename = spacename.network_filename.lower()
     # god mode
     god_mode = spacename.godmode.lower()
     # hidden statistics message

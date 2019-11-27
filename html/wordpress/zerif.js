@@ -342,7 +342,7 @@ jQuery(
 
 				'bgColor':' #222222 ',
 
-				'fgColor':' #e96656 '
+				'fgColor':' #8aaa78 '
 
 			}
 		);

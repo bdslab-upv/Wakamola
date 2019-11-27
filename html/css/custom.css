@@ -4,12 +4,12 @@
 }
 
 .link {
-  stroke: #666;
+  stroke: #18171c;
   stroke-opacity: .6;
 }
 
 .link2 {
-  stroke: #dedede;
+  stroke: #c3c3c3;
   stroke-opacity: .9;
 }
 
@@ -241,9 +241,11 @@ table caption{
 .col-de1 {width: 33.33%;}
 .col-iz1 {width: 66.66%;}
 
+h1 {font-size: 20px;}
 
 @media (min-width: 768px) {
   .col-iz {width: 33%;}
   .col-ce {width: 33%;}
   .col-de {width: 33%;}
+  h1 {font-size: 30px;}
 }
