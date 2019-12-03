@@ -163,8 +163,7 @@ def create_html(filename='netweb'):
         template_data[k] = line.replace('_ts', str(line_count)).replace('_ty', str(nodos_count)).replace('_tc', str(len(agrupaciones_count))).replace('_tr', str(len(graph_data['links']))).replace('template_json', json.dumps(graph_data))
         k += 1
 
-
-    with open(filename+'_es.html', 'w') as file:
+    with open(filename+'.html', 'w') as file:
         file.writelines( template_data )
 
     # ---------------------------------------------------------------
