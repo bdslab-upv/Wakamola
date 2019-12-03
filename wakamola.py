@@ -575,7 +575,7 @@ def handle_updates(updates):
             msg_share = languages[lang]['share'].format(contacts_counter)
             send_message(emoji.emojize(msg_share), chat)
             send_message(emoji.emojize(languages[lang]['see_network']), chat)
-            send_message(network_link+'?id='+str(chat), chat)
+            send_message(network_link+'?id='+str(md5(chat)), chat)
             go_main(chat, lang)
             return
 
@@ -675,7 +675,7 @@ def handle_updates(updates):
                 # special cases
                 skip_one_ = False
                 # if the users answers 0 in certain question
-                # we have to omit the folowing questions
+                # we have to omit the following questions
                 if (status[0] == 3 and status[1] == 1) or (status[0] == 3 and status[1] == 3) or \
                         (status[0] == 3 and status[1] == 5):
                     if int(text) < 1:
