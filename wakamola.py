@@ -781,7 +781,7 @@ if __name__ == '__main__':
                         help="password for getting statistics")
     parser.add_argument('--network', action="store", default="create_graph",
                         help="command to create and set the network in the apache server")
-    parser.add_argument('--network_link', action='store', default='https://wakamola.webs.upv.es/WakaSNA/wakamola_local_v6.1/ejemplo.html')
+    parser.add_argument('--network_link', action='store', default='158.42.166.224/wakamolaupv/index.html')
     parser.add_argument('--network_filename', action='store', default='netweb')
 
     spacename = parser.parse_args()

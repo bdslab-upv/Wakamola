@@ -180,12 +180,16 @@ window.onload = function() {
 
     lista_ordenada_wakastatus.sort().reverse()
     var ranquing_ws = lista_ordenada_wakastatus.indexOf(seleccionado_ws)
-    document.getElementById("select_title_p").innerHTML = 'Tu wakastatus ocupa la posición ' + ranquing_ws + " de " +  lista_ordenada_wakastatus.length + " en el ranquing de la red"
+    document.getElementById("ranquing_p").innerHTML = 'Tu wakastatus ocupa la posición ' + ranquing_ws + " de " +  lista_ordenada_wakastatus.length + " usuarios. Sigue mejorando tus habitos saludables para llegar a estar entre los 10 primeros"
     if(ranquing_ws <= 11){
-      document.getElementById("select_title_p").innerHTML = 'Enhorabuena, estas entre los ' + ranquing_ws + " de " +  lista_ordenada_wakastatus.length + " con mejor wakastatus"
+      document.getElementById("ranquing_p").innerHTML = 'Tu wakastatus ocupa la posición ' + ranquing_ws + " de " +  lista_ordenada_wakastatus.length + " usuarios. Enhorabuena, ¡estas entre los 10 primeros!"
+    }
+    if(ranquing_ws <= -1){
+      document.getElementById("ranquing_p").style.display = "none";
     }
 
   }else{
+    document.getElementById("ranquing_p").style.display = "none";
     console.log("No se ha seleccionado ningun nodo en origen")
   }
 };
