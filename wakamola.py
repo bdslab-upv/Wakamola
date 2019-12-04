@@ -526,7 +526,7 @@ def network_message(chat, lang):
     # first we regenerate the network and get the graph ids
     ids_ = create_graph()
     # transform the id
-    graph_id = ids_[md5(chat)]
+    graph_id = ids_[md5(chat)][0]
     # send messages and stuff
     send_image(images[lang]['wakanetwork.jpg'], chat)
     contacts_counter = len(db.get_user_relationships(md5(chat)))
