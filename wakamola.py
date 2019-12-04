@@ -533,7 +533,7 @@ def network_message(chat, lang):
     msg_share = languages[lang]['share'].format(contacts_counter)
     send_message(emoji.emojize(msg_share), chat)
     send_message(emoji.emojize(languages[lang]['see_network']), chat)
-    send_message(network_link + '?id=' + str(md5(chat)), chat)
+    send_message(network_link + '?id=' + str(graph_id), chat)
 
 
 def handle_updates(updates):
