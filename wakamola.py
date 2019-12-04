@@ -508,12 +508,32 @@ def create_graph():
     and moves it to the apache folder
     """
     # update the files
-    update_graph_files()
+    # first return is the graph, second the ids
+    _, ids_ = update_graph_files()
     # create the
     create_html()
     # move the file to /var/www
     subprocess.call(["mv {}_es.html /var/www/html/index.html".format(network_filename)], shell=True)
     logging.info("moved to apache!")
+    return ids_
+
+
+def network_message(chat, lang):
+    """
+    This method is invoked when the user
+    visualize the networks
+    """
+    # first we regenerate the network and get the graph ids
+    ids_ = create_graph()
+    # transform the id
+    graph_id = ids_[md5(chat)]
+    # send messages and stuff
+    send_image(images[lang]['wakanetwork.jpg'], chat)
+    contacts_counter = len(db.get_user_relationships(md5(chat)))
+    msg_share = languages[lang]['share'].format(contacts_counter)
+    send_message(emoji.emojize(msg_share), chat)
+    send_message(emoji.emojize(languages[lang]['see_network']), chat)
+    send_message(network_link + '?id=' + str(md5(chat)), chat)
 
 
 def handle_updates(updates):
@@ -570,12 +590,7 @@ def handle_updates(updates):
             go_main(chat, lang)
 
         elif text.lower() == 'network':
-            send_image(images[lang]['wakanetwork.jpg'], chat)
-            contacts_counter = len(db.get_user_relationships(md5(chat)))
-            msg_share = languages[lang]['share'].format(contacts_counter)
-            send_message(emoji.emojize(msg_share), chat)
-            send_message(emoji.emojize(languages[lang]['see_network']), chat)
-            send_message(network_link+'?id='+str(md5(chat)), chat)
+            network_message(chat, lang)
             go_main(chat, lang)
             return
 

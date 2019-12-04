@@ -164,7 +164,7 @@ def create_html(filename='netweb'):
         k += 1
 
     with open(filename+'_es.html', 'w') as file:
-        file.writelines( template_data )
+        file.writelines(template_data)
 
     # ---------------------------------------------------------------
     # ------------- GUARDADO ----------------------------------------
@@ -178,4 +178,4 @@ def create_html(filename='netweb'):
         k += 1
 
     with open(filename+'_en.html', 'w') as file:
-        file.writelines( template_data )
+        file.writelines(template_data)
