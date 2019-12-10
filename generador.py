@@ -2,11 +2,9 @@
 # -*- coding: utf-8 -*-
 # Code created by Manuel Portoles
 
-import sys
 import json
 import networkx as nx
-import pandas as pd
-import numpy as np
+import csv
 
 
 def create_html(filename='netweb'):
@@ -27,11 +25,25 @@ def create_html(filename='netweb'):
     # ---------------------------------------------------------------
     # -------------VALORES DE ENTRADA (csv)--------------------------
     # ---------------------------------------------------------------
+    csv_BMI = []
+    csv_score_activity = []
+    csv_score_nutrition = []
+    csv_id_telegram = []
+    csv_wakaestado = []
+    csv_score_social = []
 
-    desglose_ = pd.read_csv('ficheros_p/desglose.csv', delimiter=';')
-    print(desglose_['BMI'])
-    line_count = desglose_.shape[0]
-    main_headers = ['BMI', 'score_activity', 'score_nutrition', 'wakaestado', 'social']
+    with open('ficheros_p/desglose.csv', mode='r') as csv_file:
+        csv_reader = csv.DictReader(csv_file, delimiter=';')
+        line_count = 0
+        for row in csv_reader:
+            if line_count > 0:
+                csv_BMI.append(row["BMI"])
+                csv_score_activity.append(row["score_activity"])
+                csv_score_nutrition.append(row["score_nutrition"])
+                csv_id_telegram.append(row["user"])
+                csv_wakaestado.append(row["wakaestado"])
+                csv_score_social.append(row["social"])
+            line_count += 1
 
     # ---------------------------------------------------------------
     # ------------- CARACTERIZACIÓN DE LOS NODOS---------------------
@@ -48,55 +60,64 @@ def create_html(filename='netweb'):
 
         # Cruce de idnodo con tabla CSV
         value_index = 0
-        actual_id_ = str(ids[node][1])
-        selected_row = None
-        if actual_id_ in np.array(desglose_['user']):
-            # pick the row of that id
-            selected_row = desglose_[desglose_['user'] == actual_id_]
-        else:
-            continue
+        if str(ids[node][1]) in csv_id_telegram:
+            value_index = csv_id_telegram.index(str(ids[node][1]))
 
-        txtstr_en = ["ID_Node: " + str(node), "ID_Telegram: " + actual_id_, "ID_Variable: " + str(ids[node][0][1])]
-        # TODO this can be in a multilanguage file!!!
-        headers_ = ["Comunity", "BMI", "Activity Score", "Diet Score", "Social Score", "Wakastatus Score"]
-        for h in headers_:
-            for mh in main_headers:
-                txtstr_en.append(h + ": " + str(round(float(selected_row[mh].replace(",", ".")), 2)))
-        txtstr_en = ' / '.join(txtstr_en)
+        txtstr_en = "ID_Node: " + str(node) + " / "
+        txtstr_en = txtstr_en + "ID_Telegram: " + str(ids[node][1]) + " / "
+        txtstr_en = txtstr_en + "ID_Variable: " + str(ids[node][0][1]) + " / "
+        txtstr_en = txtstr_en + "Comunity: " + str(agrupaciones[node]) + " / "
+        txtstr_en = txtstr_en + "BMI: " + str(round(float(csv_BMI[value_index].replace(",", ".")), 2)) + " / "
+        txtstr_en = txtstr_en + "Activity Score: " + str(
+            round(float(csv_score_activity[value_index].replace(",", ".")), 2)) + " / "
+        txtstr_en = txtstr_en + "Diet Score: " + str(
+            round(float(csv_score_nutrition[value_index].replace(",", ".")), 2)) + " / "
+        txtstr_en = txtstr_en + "Social Score: " + str(
+            round(float(csv_score_social[value_index].replace(",", ".")), 2)) + " / "
+        txtstr_en = txtstr_en + "Wakastatus Score: " + str(round(float(csv_wakaestado[value_index].replace(",", "."))))
 
-        # TODO, same for spanish, this can be comprehended in only one loop
-        txtstr_es = ["ID_Node: " + str(node), "ID_Telegram: " + actual_id_, "ID_Variable: " + str(ids[node][0][1])]
-        headers_ = ["Comunidad", "IMC", "Puntuación de actividad", "Puntuación nutritional", "Puntuación red social",
-                    "Puntuación Wakaestado"]
-        for h in headers_:
-            for mh in main_headers:
-                txtstr_es.append(h + ": " + str(round(float(selected_row[mh].replace(",", ".")), 2)))
-        txtstr_es = ' / '.join(txtstr_es)
+        txtstr_es = "ID_Node: " + str(node) + " / "
+        txtstr_es = txtstr_es + "ID_Telegram: " + str(ids[node][1]) + " / "
+        txtstr_es = txtstr_es + "ID_Variable: " + str(ids[node][0][1]) + " / "
+        txtstr_es = txtstr_es + "Comunidad: " + str(agrupaciones[node]) + " / "
+        txtstr_es = txtstr_es + "IMC: " + str(round(float(csv_BMI[value_index].replace(",", ".")), 2)) + " / "
+        txtstr_es = txtstr_es + "Puntuación de actividad: " + str(
+            round(float(csv_score_activity[value_index].replace(",", ".")), 2)) + " / "
+        txtstr_es = txtstr_es + "Puntuación nutritional : " + str(
+            round(float(csv_score_nutrition[value_index].replace(",", ".")), 2)) + " / "
+        txtstr_es = txtstr_es + "Puntuación red social: " + str(
+            round(float(csv_score_social[value_index].replace(",", ".")), 2)) + " / "
+        txtstr_es = txtstr_es + "Puntuación Wakaestado : " + str(
+            round(float(csv_wakaestado[value_index].replace(",", "."))))
 
         listado_nodos.append(-1)
-        if float(selected_row['BMI']) > 0 and float(selected_row['score_activity']) > 0 \
-                and float(selected_row['wakaestado']) > 0 and float(selected_row['score_nutrition']) > 0:
-            nodos_validos.append(node)
-            graph_data['nodes'].append({
-                "id": node,
-                "name": str(selected_row['wakaestado']),
-                "color": str(selected_row['BMI']),
-                "grupo": str(agrupaciones[node]),
-                "p_ID": str(node),
-                "p_ID_Telegram": str(ids[node][1]),
-                "p_ID_Variable": str(ids[node][0][1]),
-                "p_Particion": str(agrupaciones[node]),
-                "csv_id_telegram": str(selected_row['user']),
-                "csv_BMI": str(round(float(selected_row['BMI']), 2)),
-                "csv_score_activity": str(round(float(selected_row['score_activity']), 2)),
-                "csv_score_nutrition": str(round(float(selected_row['score_nutrition']), 2)),
-                "csv_score_social": str(round(float(selected_row['social']), 2)),
-                "csv_wakaestado": str(round(float(selected_row['wakaestado']))),
-                "texto_en": txtstr_en,
-                "texto_es": txtstr_es,
-            })
-            listado_nodos[node] = contador
-            contador = contador + 1
+        if round(float(csv_BMI[value_index].replace(",", "."))) > 0:
+            if round(float(csv_score_activity[value_index].replace(",", "."))) > 0:
+                if round(float(csv_wakaestado[value_index].replace(",", "."))) > 0:
+                    if round(float(csv_score_nutrition[value_index].replace(",", "."))) > 0:
+                        nodos_validos.append(node)
+                        graph_data['nodes'].append({
+                            "id": node,
+                            "name": str(round(float(csv_wakaestado[value_index].replace(",", ".")))),
+                            "color": str(round(float(csv_BMI[value_index].replace(",", ".")), 2)),
+                            "grupo": str(agrupaciones[node]),
+                            "p_ID": str(node),
+                            "p_ID_Telegram": str(ids[node][1]),
+                            "p_ID_Variable": str(ids[node][0][1]),
+                            "p_Particion": str(agrupaciones[node]),
+                            "csv_id_telegram": str(csv_id_telegram[value_index]),
+                            "csv_BMI": str(round(float(csv_BMI[value_index].replace(",", ".")), 2)),
+                            "csv_score_activity": str(
+                                round(float(csv_score_activity[value_index].replace(",", ".")), 2)),
+                            "csv_score_nutrition": str(
+                                round(float(csv_score_nutrition[value_index].replace(",", ".")), 2)),
+                            "csv_score_social": str(round(float(csv_score_social[value_index].replace(",", ".")), 2)),
+                            "csv_wakaestado": str(round(float(csv_wakaestado[value_index].replace(",", ".")))),
+                            "texto_en": txtstr_en,
+                            "texto_es": txtstr_es,
+                        })
+                        listado_nodos[node] = contador
+                        contador = contador + 1
 
     agrupaciones_count = []
     nodos_count = line_count
@@ -140,11 +161,9 @@ def create_html(filename='netweb'):
 
     k = 0
     for line in template_data:
-        template_data[k] = line.replace('_ts', str(line_count)) \
-            .replace('_ty', str(nodos_count)) \
-            .replace('_tc', str(len(agrupaciones_count))) \
-            .replace('_tr', str(len(graph_data['links']))) \
-            .replace('template_json', json.dumps(graph_data))
+        template_data[k] = line.replace('_ts', str(line_count)).replace('_ty', str(nodos_count)).replace('_tc', str(
+            len(agrupaciones_count))).replace('_tr', str(len(graph_data['links']))).replace('template_json',
+                                                                                            json.dumps(graph_data))
         k += 1
 
     with open(filename + '_es.html', 'w') as file:
@@ -158,11 +177,9 @@ def create_html(filename='netweb'):
 
     k = 0
     for line in template_data:
-        template_data[k] = line.replace('_ts', str(line_count)) \
-            .replace('_ty', str(nodos_count)) \
-            .replace('_tc', str(len(agrupaciones_count))) \
-            .replace('_tr', str(len(graph_data['links']))) \
-            .replace('template_json', json.dumps(graph_data))
+        template_data[k] = line.replace('_ts', str(line_count)).replace('_ty', str(nodos_count)).replace('_tc', str(
+            len(agrupaciones_count))).replace('_tr', str(len(graph_data['links']))).replace('template_json',
+                                                                                            json.dumps(graph_data))
         k += 1
 
     with open(filename + '_en.html', 'w') as file:
