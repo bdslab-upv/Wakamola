@@ -167,3 +167,4 @@ def create_html(filename='netweb'):
 
     with open(filename + '_en.html', 'w') as file:
         file.writelines(template_data)
+
