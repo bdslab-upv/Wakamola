@@ -159,10 +159,11 @@ function collide(alpha) {
 
 // Marcar seleccionado
 window.onload = function() {
+  cambiarcolor()
   if(seleccionado){
     var seleccionado_aux = seleccionado.replace("?id=","")
-    selected = node.filter(function(d, i) {     return d.p_ID_Variable == seleccionado_aux;});
-    not_selected = node.filter(function(d, i) { return d.p_ID_Variable != seleccionado_aux;});
+    selected = node.filter(function(d, i) {     return d.id == seleccionado_aux;});
+    not_selected = node.filter(function(d, i) { return d.id != seleccionado_aux;});
     not_selected.style("opacity", difuminado);
     selected.attr("r", 15)
 
