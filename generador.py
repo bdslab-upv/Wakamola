@@ -64,7 +64,6 @@ def create_html(filename='netweb'):
             value_index = csv_id_telegram.index(str(ids[node][1]))
 
         txtstr_en = "ID_Node: " + str(node) + " / "
-        txtstr_en = txtstr_en + "ID_Telegram: " + str(ids[node][1]) + " / "
         txtstr_en = txtstr_en + "ID_Variable: " + str(ids[node][0][1]) + " / "
         txtstr_en = txtstr_en + "Comunity: " + str(agrupaciones[node]) + " / "
         txtstr_en = txtstr_en + "BMI: " + str(round(float(csv_BMI[value_index].replace(",", ".")), 2)) + " / "
@@ -77,7 +76,6 @@ def create_html(filename='netweb'):
         txtstr_en = txtstr_en + "Wakastatus Score: " + str(round(float(csv_wakaestado[value_index].replace(",", "."))))
 
         txtstr_es = "ID_Node: " + str(node) + " / "
-        txtstr_es = txtstr_es + "ID_Telegram: " + str(ids[node][1]) + " / "
         txtstr_es = txtstr_es + "ID_Variable: " + str(ids[node][0][1]) + " / "
         txtstr_es = txtstr_es + "Comunidad: " + str(agrupaciones[node]) + " / "
         txtstr_es = txtstr_es + "IMC: " + str(round(float(csv_BMI[value_index].replace(",", ".")), 2)) + " / "
