@@ -181,9 +181,9 @@ window.onload = function() {
 
     lista_ordenada_wakastatus.sort().reverse()
     var ranquing_ws = lista_ordenada_wakastatus.indexOf(seleccionado_ws)
-    document.getElementById("ranquing_p").innerHTML = 'Tu wakastatus ocupa la posición ' + ranquing_ws + " de " +  lista_ordenada_wakastatus.length + " usuarios. Sigue mejorando tus habitos saludables para llegar a estar entre los 10 primeros"
+    document.getElementById("ranquing_p").innerHTML = 'Tu Wakaestado ocupa la posición ' + ranquing_ws + " de " +  lista_ordenada_wakastatus.length + " usuarios. ¡Sigue mejorando tus hábitos saludables para llegar a estar entre los 10 primeros!"
     if(ranquing_ws <= 11){
-      document.getElementById("ranquing_p").innerHTML = 'Tu wakastatus ocupa la posición ' + ranquing_ws + " de " +  lista_ordenada_wakastatus.length + " usuarios. Enhorabuena, ¡estas entre los 10 primeros!"
+      document.getElementById("ranquing_p").innerHTML = 'Tu Wakaestado ocupa la posición ' + ranquing_ws + " de " +  lista_ordenada_wakastatus.length + " usuarios. Enhorabuena, ¡estas entre los 10 primeros!"
     }
     if(ranquing_ws <= -1){
       document.getElementById("ranquing_p").style.display = "none";
