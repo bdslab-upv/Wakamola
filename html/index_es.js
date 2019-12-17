@@ -17,7 +17,7 @@ graphRec = JSON.parse(JSON.stringify(graph));
 
 // Definimos el tamaño del area sobre la que crear el grafo
 var width = window.innerWidth * 0.6;
-var height = 650;
+var height = 1000;
 
 // Definimos una serie de constantes a utilizar despues
 var padding_manu = 0;
