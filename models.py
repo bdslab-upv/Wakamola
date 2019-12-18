@@ -6,6 +6,7 @@ from dbhelper import DBHelper
 from statistics import mean
 from math import log, ceil
 from pandas import read_csv
+import logging
 
 MAX_NETWORK = 10
 
@@ -16,6 +17,9 @@ MAX_NETWORK = 10
 #
 ######################
 def table_1(group, n):
+    logging.WARNING(group)
+    logging.WARNING(n)
+
     # daily consume subtables
     def daily_consume(n):
         if n >= 7:
