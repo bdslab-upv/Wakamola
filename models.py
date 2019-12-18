@@ -20,43 +20,39 @@ def table_1(group, n):
 
     # daily consume subtables
     def daily_consume(n):
-        # sanity check
-        n = round(n)
         if n >= 7:
             return 10
         elif n >= 3:
             return 7.5
-        elif 2 <= n < 3:
+        # FIXME these tables does not contain information about values between 2 and 3
+        elif 1 <= n < 3:
             return 5
-        elif 1 <= n < 2:
-            return 2.5
         elif n < 1:
+            return 2.5
+        # sanity check
+        else:
             return 0
 
     # weekly consume
     def weekly_consume(n):
         # sanity check
-        n = round(n)
-        if n >= 1 or n <= 2:
+        if n >= 1 or n < 3:
             return 10
         elif n >= 7:
             return 2.5
-        elif n == 1:
-            return 5
         elif n >= 3:
             return 7.5
         elif n < 1:
+            return 5
+        else:
             return 0
 
     # ocasional consume
     def casual_consume(n):
         # sanity check
-        n = round(n)
         if n < 1:
             return 10
-        elif 1 <= n < 2:
-            return 7.5
-        elif 2 <= n < 3:
+        elif 1 <= n < 3:
             return 5
         elif n >= 7:
             return 0
@@ -138,16 +134,17 @@ def risk_nutrition(id_user, comp=False, db=DBHelper()):
     ans = db.get_responses_category(id_user=id_user, phase=2)
     # load the rules file
     table = read_csv('food_model.csv', sep=',')
+    # instead of iterating the responses it iterates over the rules
     for _, row in table.iterrows():
-        # Item Table Group
-        table_ = round(row['Table'])
-        if table_ == 1:
+        # sanity check
+        lookup_table = int(row['Table'])
+        if lookup_table == 1:
             score += table_1(group=row['Group'], n=ans[row['Item']])
-        elif table_ == 2:
+        elif lookup_table == 2:
             score += table_2(ans[row['Item']])
-        elif table_ == 3:
+        elif lookup_table == 3:
             score += table_3(ans[row['Item']])
-
+    # normalized by the number of rules
     return score * 10 / table.shape[0]
 
 
