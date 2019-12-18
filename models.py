@@ -17,8 +17,8 @@ MAX_NETWORK = 10
 #
 ######################
 def table_1(group, n):
-    logging.WARNING(group)
-    logging.WARNING(n)
+    logging.warning(group)
+    logging.warning(n)
 
     # daily consume subtables
     def daily_consume(n):
