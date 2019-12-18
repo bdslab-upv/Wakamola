@@ -17,11 +17,11 @@ MAX_NETWORK = 10
 #
 ######################
 def table_1(group, n):
-    logging.warning(group)
-    logging.warning(n)
 
     # daily consume subtables
     def daily_consume(n):
+        # sanity check
+        n = round(n)
         if n >= 7:
             return 10
         elif n >= 3:
@@ -35,7 +35,9 @@ def table_1(group, n):
 
     # weekly consume
     def weekly_consume(n):
-        if n == 1 or n == 2:
+        # sanity check
+        n = round(n)
+        if n >= 1 or n <= 2:
             return 10
         elif n >= 7:
             return 2.5
@@ -48,6 +50,8 @@ def table_1(group, n):
 
     # ocasional consume
     def casual_consume(n):
+        # sanity check
+        n = round(n)
         if n < 1:
             return 10
         elif 1 <= n < 2:
