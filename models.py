@@ -138,12 +138,16 @@ def risk_nutrition(id_user, comp=False, db=DBHelper()):
     for _, row in table.iterrows():
         # sanity check
         lookup_table = int(row['Table'])
+        # multiply by 7 the daily aliments
+        value = ans[row['Item']]
+        if int(row['Item']) <= 8:
+            value *= 7
         if lookup_table == 1:
-            score += table_1(group=row['Group'], n=ans[row['Item']])
+            score += table_1(group=row['Group'], n=value)
         elif lookup_table == 2:
-            score += table_2(ans[row['Item']])
+            score += table_2(value)
         elif lookup_table == 3:
-            score += table_3(ans[row['Item']])
+            score += table_3(value)
     # normalized by the number of rules
     return score * 10 / table.shape[0]
 
