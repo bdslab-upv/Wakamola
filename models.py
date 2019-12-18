@@ -139,6 +139,9 @@ def risk_nutrition(id_user, comp=False, db=DBHelper()):
             score += table_2(ans[row['Item']])
         elif table_ == 3:
             score += table_3(ans[row['Item']])
+        #TO BE FIXED!!!!!
+        else:
+            score += 25
 
     return score * 10 / table.shape[0]
 
