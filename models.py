@@ -132,11 +132,12 @@ def risk_nutrition(id_user, comp=False, db=DBHelper()):
     table = read_csv('food_model.csv', sep=',')
     for _, row in table.iterrows():
         # Item Table Group
-        if row['Table'] == 1:
+        table_ = round(row['Table'])
+        if table_ == 1:
             score += table_1(group=row['Group'], n=ans[row['Item']])
-        elif row['Table'] == 2:
+        elif table_ == 2:
             score += table_2(ans[row['Item']])
-        elif row['Table'] == 3:
+        elif table_ == 3:
             score += table_3(ans[row['Item']])
 
     return score * 10 / table.shape[0]
