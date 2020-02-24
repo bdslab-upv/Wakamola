@@ -203,7 +203,6 @@ def obesity_risk(id_user, completed, network=True):
     '''
     # make connection
     db = DBHelper()
-    print('Completed', completed)
     if completed is None:
         completed = db.check_completed(id_user)
 
