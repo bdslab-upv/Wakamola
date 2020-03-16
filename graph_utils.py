@@ -13,7 +13,8 @@ import pandas as pd
 import scipy.stats as stats
 from models import obesity_risk
 import logging
-from os import environ
+from os import environ, path
+
 
 
 def create_graph(store=False):
@@ -138,3 +139,8 @@ def update_graph_files(path_graphs='ficheros_p/'):
     answers.to_csv(path_graphs+"desglose.csv", sep=";")
     # checkme
     return G, in_
+
+
+def get_path_desglose(path_graphs='ficheros_p/'):
+    return path.abspath(path_graphs+"desglose.csv")
+    

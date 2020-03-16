@@ -16,7 +16,7 @@ from math import ceil
 import datetime
 import logging
 # implementation of pipeline w/ graph visualization
-from graph_utils import update_graph_files
+from graph_utils import update_graph_files, get_path_desglose
 from generador import create_html
 import subprocess
 
@@ -37,6 +37,7 @@ global statistics_word
 global init_date
 global network_filename
 global network_link
+global password_data
 
 
 if environ["MODE"] == 'test':
@@ -638,6 +639,7 @@ def handle_updates(updates):
         elif text.lower() == god_mode:
             h4ck(md5(chat))
             go_main(chat=chat, lang=lang)
+            return
 
         # hardcoded statistics
         elif text.lower() == statistics_word:
@@ -659,6 +661,17 @@ def handle_updates(updates):
             )
             send_message(txt_, chat)
             go_main(chat=chat, lang=lang)
+            return
+
+        # just before default option, check if the its the password to protect the data
+        elif text == password_data:
+            # generate (if not exists) the file with the data
+            update_graph_files()
+            path_desglose = get_path_desglose()
+            # send it to the user
+            send_file(chat_id=chat, localpath=path_desglose)
+            go_main(chat=chat, lang=lang)
+            return
 
         else:
             # rescata a que responde
@@ -796,7 +809,6 @@ if __name__ == '__main__':
                         help="password for getting statistics")
     parser.add_argument('--network', action="store", default="create_graph",
                         help="command to create and set the network in the apache server")
-    parser.add_argument('--network_link', action='store', default='158.42.166.224/wakamolaupv/index.html')
     parser.add_argument('--network_filename', action='store', default='netweb')
 
     spacename = parser.parse_args()
@@ -808,11 +820,14 @@ if __name__ == '__main__':
     # caching the number of questions
     nq_category = db.n_questions()
 
+    # very important, this password is used to serve the data as file
+    password_data = os.environ['PASSWORD_DATA']
+
     # default language
     def_lang_ = spacename.l
 
     # link to the network
-    network_link = spacename.network_link.replace('_', '\\_')
+    network_link = os.environ['NETWORK_LINK'].replace('_', '\\_')
     network_filename = spacename.network_filename.lower()
     # god mode
     god_mode = spacename.godmode.lower()
