@@ -821,13 +821,13 @@ if __name__ == '__main__':
     nq_category = db.n_questions()
 
     # very important, this password is used to serve the data as file
-    password_data = os.environ['PASSWORD_DATA']
+    password_data = environ['PASSWORD_DATA']
 
     # default language
     def_lang_ = spacename.l
 
     # link to the network
-    network_link = os.environ['NETWORK_LINK'].replace('_', '\\_')
+    network_link = environ['NETWORK_LINK'].replace('_', '\\_')
     network_filename = spacename.network_filename.lower()
     # god mode
     god_mode = spacename.godmode.lower()
