@@ -7,6 +7,7 @@ from statistics import mean
 from math import log, ceil
 from pandas import read_csv
 import logging
+import time
 
 MAX_NETWORK = 10
 
@@ -103,12 +104,17 @@ def table_3(n):
         return 0
 
 
-def risk_bmi(id_user, db=DBHelper()):
+def risk_bmi(id_user, db=None):
     '''
     Gives a risk score
     this is a modular function in order be easier to update
     '''
-
+    while db is None:
+        try:
+            db = DBHelper()
+        except:
+            time.sleep(20)
+            db = None
     bmi = db.getBMI(id_user)
     if bmi == 0:  # sanity check
         return 0, 0
