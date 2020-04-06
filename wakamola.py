@@ -1,13 +1,12 @@
 import json
 import requests
 import time
-from utils import create_database_connection
 from urllib.parse import quote_plus
 from os import listdir, environ
 import emoji
 from models import obesity_risk
 import csv
-from utils import md5, send_mail
+from utils import md5, send_mail, create_database_connection
 from g0d_m0d3 import h4ck
 import argparse
 from pandas import read_csv
@@ -813,7 +812,7 @@ if __name__ == '__main__':
 
     spacename = parser.parse_args()
 
-    db = create_database_conection()
+    db = create_database_connection()
 
     # caching the number of questions
     nq_category = db.n_questions()

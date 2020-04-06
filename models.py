@@ -1,23 +1,24 @@
-'''
+"""
 This class is meant to have the risk models
-'''
+"""
 
 from utils import create_database_connection
 from statistics import mean
 from math import log, ceil
 from pandas import read_csv
 import logging
-import time
 
 MAX_NETWORK = 10
+
 
 ######################
 #
 # IMPLEMENTACION TABLAS ALIMENTACION
 #
 ######################
-def table_1(group, n):
 
+
+def table_1(group, n):
     # daily consume subtables
     def daily_consume(n):
         # sanity check
@@ -72,9 +73,9 @@ def table_1(group, n):
 
 
 def table_2(n):
-    '''
+    """
     Scores for oil and fats by Ana Frigola
-    '''
+    """
     if n <= 3:
         return 10
     elif n == 4:
@@ -88,9 +89,9 @@ def table_2(n):
 
 
 def table_3(n):
-    '''
+    """
     Scores for nuts by Ana Frigola
-    '''
+    """
     if n <= 7:
         return 10
     elif n == 8:
@@ -104,17 +105,16 @@ def table_3(n):
 
 
 def risk_bmi(id_user, db=None):
-    '''
+    """
     Gives a risk score
     this is a modular function in order be easier to update
-    '''
+    """
     if db is None:
         db = create_database_connection()
     bmi = db.getBMI(id_user)
     if bmi == 0:  # sanity check
         return 0, 0
 
-    # TODO REVIEW
     if bmi >= 40:
         return 0, bmi
     elif 35 <= bmi < 40:
@@ -128,10 +128,10 @@ def risk_bmi(id_user, db=None):
 
 
 def risk_nutrition(id_user, comp=False, db=None):
-    '''
+    """
     Give a risk using nutrition information
     WARNING: untested rules
-    '''
+    """
     logger = logging.getLogger('risk_nutrition')
     if db is None:
         db = create_database_connection()
@@ -150,7 +150,7 @@ def risk_nutrition(id_user, comp=False, db=None):
         answer = ans[row['Item']]
         if row['Daily'].strip().lower() == 'yes':
             logger.info('Correct!')
-            answer * 7
+            answer *= 7
 
         if table_ == 1:
             score += table_1(group=row['Group'], n=answer)
@@ -163,7 +163,6 @@ def risk_nutrition(id_user, comp=False, db=None):
 
 
 def risk_activity(id_user, comp=False, db=None):
-
     if db is None:
         db = create_database_connection()
 
@@ -184,8 +183,8 @@ def network_influence(id_user, actual_wakaestado, db, comp):
         # try to get the last friends wakaestado
         last_wakaestado_ = db.get_last_wakaestado(id_friend)
         if last_wakaestado_ is None:
-            # if no last wakaestado was recorded previously
-            aux_, _ = obesity_risk(id_friend, None, False)
+            # network if false to avoid recursive trap
+            aux_, _ = obesity_risk(id_friend, network=False)
             return aux_
         else:
             # sanity check
@@ -207,14 +206,14 @@ def network_influence(id_user, actual_wakaestado, db, comp):
            len(wakaestados), mean(wakaestados) if len(wakaestados) > 0 else 0
 
 
-def obesity_risk(id_user, completed, network=True):
-    '''
+def obesity_risk(id_user, completed=None, network=True):
+    """
     Update for "explained version"
     :param network:
     :param id_user:
     :param completed:
     :return: score, dict with the subscores
-    '''
+    """
     # make connection
     db = create_database_connection()
     print('Completed', completed)
@@ -233,7 +232,6 @@ def obesity_risk(id_user, completed, network=True):
 
     raw_wakaestado = min(part_1 + part_2 + part_3, 100)
     if network:
-        # TODO EDIT THIS ON NETWORK IMPLEMENTATION
         network_correction, n_contacts, mean_contacts = network_influence(id_user, raw_wakaestado, db, all(completed))
 
     final_wakaestado = min(raw_wakaestado + network_correction, 100)
