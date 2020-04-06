@@ -1,5 +1,5 @@
-from utils import create_database_connection
-from models import obesity_risk
+from ..utils import create_database_connection
+from ..models import obesity_risk
 import logging
 
 

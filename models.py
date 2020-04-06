@@ -6,7 +6,6 @@ from utils import create_database_connection
 from statistics import mean
 from math import log, ceil
 from pandas import read_csv
-import logging
 
 MAX_NETWORK = 10
 
@@ -132,7 +131,6 @@ def risk_nutrition(id_user, comp=False, db=None):
     Give a risk using nutrition information
     WARNING: untested rules
     """
-    logger = logging.getLogger('risk_nutrition')
     if db is None:
         db = create_database_connection()
 
@@ -149,7 +147,6 @@ def risk_nutrition(id_user, comp=False, db=None):
 
         answer = ans[row['Item']]
         if row['Daily'].strip().lower() == 'yes':
-            logger.info('Correct!')
             answer *= 7
 
         if table_ == 1:
