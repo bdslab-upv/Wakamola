@@ -2,8 +2,10 @@ import hashlib
 import logging
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from dbhelper import DBHelper
 import smtplib
 import ssl
+import time
 
 logging.basicConfig(level=logging.INFO)
 
@@ -11,6 +13,7 @@ logging.basicConfig(level=logging.INFO)
 Refactored to be a general utils class
 MD5 was moved here in order to be more general
 '''
+
 
 def create_database_connection():
     db = None
@@ -20,6 +23,7 @@ def create_database_connection():
             return db
         except:
             time.sleep(20)
+
 
 def md5(id_user):
     """
