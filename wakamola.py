@@ -1,7 +1,7 @@
 import json
 import requests
 import time
-from dbhelper import DBHelper
+from utils import create_database_connection
 from urllib.parse import quote_plus
 from os import listdir, environ
 import emoji
@@ -798,15 +798,6 @@ def main():
             time.sleep(20)
 
 
-def create_database_conection():
-    try:
-        db = DBHelper()
-        # set up
-        db.setup()
-        return db
-    except:
-        return None
-
 if __name__ == '__main__':
     # TODO QUESTIONS ON CACHE FOR NEXT VERSION
     init_date = datetime.datetime.now()
@@ -822,12 +813,7 @@ if __name__ == '__main__':
 
     spacename = parser.parse_args()
 
-    # database deployment is not well handled in docker
-    # so we wait until a valid connection
     db = create_database_conection()
-    while db is None:
-        time.sleep(20)
-        db = create_database_conection()
 
     # caching the number of questions
     nq_category = db.n_questions()

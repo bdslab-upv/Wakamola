@@ -12,6 +12,14 @@ Refactored to be a general utils class
 MD5 was moved here in order to be more general
 '''
 
+def create_database_connection():
+    db = None
+    while db is None:
+        try:
+            db = DBHelper()
+            return db
+        except:
+            time.sleep(20)
 
 def md5(id_user):
     """

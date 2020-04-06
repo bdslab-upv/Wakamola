@@ -2,7 +2,7 @@
 This class is meant to have the risk models
 '''
 
-from dbhelper import DBHelper
+from utils import create_database_connection
 from statistics import mean
 from math import log, ceil
 from pandas import read_csv
@@ -10,7 +10,6 @@ import logging
 import time
 
 MAX_NETWORK = 10
-
 
 ######################
 #
@@ -109,12 +108,8 @@ def risk_bmi(id_user, db=None):
     Gives a risk score
     this is a modular function in order be easier to update
     '''
-    while db is None:
-        try:
-            db = DBHelper()
-        except:
-            time.sleep(20)
-            db = None
+    if db is None:
+        db = create_database_connection()
     bmi = db.getBMI(id_user)
     if bmi == 0:  # sanity check
         return 0, 0
@@ -132,11 +127,14 @@ def risk_bmi(id_user, db=None):
         return 100, bmi
 
 
-def risk_nutrition(id_user, comp=False, db=DBHelper()):
+def risk_nutrition(id_user, comp=False, db=None):
     '''
     Give a risk using nutrition information
     WARNING: untested rules
     '''
+    if db is None:
+        db = create_database_connection()
+
     score = 0
     if not comp:
         return 0
@@ -157,7 +155,11 @@ def risk_nutrition(id_user, comp=False, db=DBHelper()):
     return score * 10 / table.shape[0]
 
 
-def risk_activity(id_user, comp=False, db=DBHelper()):
+def risk_activity(id_user, comp=False, db=None):
+
+    if db is None:
+        db = create_database_connection()
+
     if not comp:
         return 0
 
@@ -207,7 +209,7 @@ def obesity_risk(id_user, completed, network=True):
     :return: score, dict with the subscores
     '''
     # make connection
-    db = DBHelper()
+    db = create_database_connection()
     print('Completed', completed)
     if completed is None:
         completed = db.check_completed(id_user)
