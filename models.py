@@ -132,6 +132,7 @@ def risk_nutrition(id_user, comp=False, db=None):
     Give a risk using nutrition information
     WARNING: untested rules
     '''
+    logger = logging.getLogger('risk_nutrition')
     if db is None:
         db = create_database_connection()
 
@@ -141,16 +142,22 @@ def risk_nutrition(id_user, comp=False, db=None):
     # obtain the responses
     ans = db.get_responses_category(id_user=id_user, phase=2)
     # load the rules file
-    table = read_csv('food_model.csv', sep=',')
+    table = read_csv('food_model.csv', sep=';')
     for _, row in table.iterrows():
         # Item Table Group
         table_ = round(row['Table'])
+
+        answer = ans[row['Item']]
+        if row['Daily'].strip().lower() == 'yes':
+            logger.info('Correct!')
+            answer * 7
+
         if table_ == 1:
-            score += table_1(group=row['Group'], n=ans[row['Item']])
+            score += table_1(group=row['Group'], n=answer)
         elif table_ == 2:
-            score += table_2(ans[row['Item']])
+            score += table_2(answer)
         elif table_ == 3:
-            score += table_3(ans[row['Item']])
+            score += table_3(answer)
 
     return score * 10 / table.shape[0]
 
