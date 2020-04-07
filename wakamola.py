@@ -813,7 +813,7 @@ if __name__ == '__main__':
     spacename = parser.parse_args()
 
     db = create_database_connection()
-
+    db.setup()
     # caching the number of questions
     nq_category = db.n_questions()
 
