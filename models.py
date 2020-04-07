@@ -208,12 +208,8 @@ def obesity_risk(id_user, completed=None, network=True):
     :return: score, dict with the subscores
     """
     # make connection
-<<<<<<< HEAD
     db = create_database_connection()
     print('Completed', completed)
-=======
-    db = DBHelper()
->>>>>>> 019a4c7c39df00863b43832d5c32f57ebafe05a6
     if completed is None:
         completed = db.check_completed(id_user)
 
