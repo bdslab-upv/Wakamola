@@ -20,43 +20,39 @@ MAX_NETWORK = 10
 def table_1(group, n):
     # daily consume subtables
     def daily_consume(n):
-        # sanity check
-        n = round(n)
         if n >= 7:
             return 10
         elif n >= 3:
             return 7.5
-        elif 2 <= n < 3:
+        # FIXME these tables does not contain information about values between 2 and 3
+        elif 1 <= n < 3:
             return 5
-        elif 1 <= n < 2:
-            return 2.5
         elif n < 1:
+            return 2.5
+        # sanity check
+        else:
             return 0
 
     # weekly consume
     def weekly_consume(n):
         # sanity check
-        n = round(n)
-        if n >= 1 or n <= 2:
+        if n >= 1 or n < 3:
             return 10
         elif n >= 7:
             return 2.5
-        elif n == 1:
-            return 5
         elif n >= 3:
             return 7.5
         elif n < 1:
+            return 5
+        else:
             return 0
 
     # ocasional consume
     def casual_consume(n):
         # sanity check
-        n = round(n)
         if n < 1:
             return 10
-        elif 1 <= n < 2:
-            return 7.5
-        elif 2 <= n < 3:
+        elif 1 <= n < 3:
             return 5
         elif n >= 7:
             return 0
@@ -212,8 +208,12 @@ def obesity_risk(id_user, completed=None, network=True):
     :return: score, dict with the subscores
     """
     # make connection
+<<<<<<< HEAD
     db = create_database_connection()
     print('Completed', completed)
+=======
+    db = DBHelper()
+>>>>>>> 019a4c7c39df00863b43832d5c32f57ebafe05a6
     if completed is None:
         completed = db.check_completed(id_user)
 
