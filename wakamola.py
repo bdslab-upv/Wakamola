@@ -39,7 +39,7 @@ global network_link
 global password_data
 
 
-if environ["MODE"] == 'test':
+if environ.get('MODE', 'test') == 'test':
     logging.basicConfig(level=logging.INFO)
 else:
     logging.basicConfig(level=logging.WARNING)
