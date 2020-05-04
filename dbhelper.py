@@ -5,6 +5,7 @@ import logging
 from base64 import b64encode, b64decode
 from deprecated import deprecated
 
+
 class DBHelper:
 
     def __init__(self):
@@ -16,6 +17,11 @@ class DBHelper:
                                     buffered=True)
         self.cursor = self.conn.cursor()
         self.logger = logging.getLogger("dbhelper")
+
+        if environ.get('MODE', 'test') == 'test':
+            self.logger.setLevel(level=logging.INFO)
+        else:
+            self.logger.setLevel(level=logging.WARNING)
 
     def load_questions(self):
         self.conn.commit()
