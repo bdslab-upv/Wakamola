@@ -15,7 +15,7 @@ class DBHelper:
                                     database=environ['DATABASE'],
                                     buffered=True)
         self.cursor = self.conn.cursor()
-        logger = logging.getLogger("dbhelper")
+        self.logger = logging.getLogger("dbhelper")
 
     def load_questions(self):
         self.conn.commit()
