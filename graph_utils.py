@@ -71,6 +71,7 @@ def read_wakamola_answers(in_):
     including the row of the df
     '''
     db = create_database_connection()
+    # now df should have a 'date' column
     df = db.complete_table()
     new_df = []
     for index, row in df.iterrows():

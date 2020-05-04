@@ -23,7 +23,7 @@ def create_database_connection():
             db = DBHelper()
             return db
         except:
-            time.sleep(int(environ.get('ERROR_TIME', 2))
+            time.sleep(int(environ.get('ERROR_TIME', 2)))
 
 
 def md5(id_user):
