@@ -505,6 +505,7 @@ class DBHelper:
             self.cursor.close()
             matrix.append(row)
         df = pd.DataFrame(matrix)
+        df = df.assign(**{'date':dates})
         df = df.reindex(sorted(df.columns), axis=1)
         return df
 

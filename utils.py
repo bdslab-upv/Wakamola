@@ -1,5 +1,6 @@
 import hashlib
 import logging
+from os import environ
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from dbhelper import DBHelper
@@ -22,7 +23,7 @@ def create_database_connection():
             db = DBHelper()
             return db
         except:
-            time.sleep(20)
+            time.sleep(int(environ.get('ERROR_TIME', 2))
 
 
 def md5(id_user):

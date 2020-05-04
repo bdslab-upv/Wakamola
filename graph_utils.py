@@ -5,7 +5,7 @@ for the sake of order, everything will ne encapsulated as methods
 
 import pickle
 import networkx as nx
-from dbhelper import DBHelper
+from utils import create_database_connection
 import collections
 import community
 import numpy as np
@@ -24,7 +24,7 @@ def create_graph(store=False):
     else:
         logger.setLevel(logging.WARNING)
 
-    db = DBHelper()
+    db = create_database_connection()
     # query the relationships
     relationships = db.get_relationships()
 
@@ -60,7 +60,6 @@ def create_graph(store=False):
     if store:
         pickle.dump(G, open("pickled_graph.p", "wb"))
         pickle.dump(in_, open("ids_graph_ids_telegram.p", "wb"))
-    # return the graph for the TODO future methods
     return G, in_
 
 
@@ -68,10 +67,10 @@ def read_wakamola_answers(in_):
     '''
     This method is adapted from the original
     df is all the answers with scores
-    in_ is a modified version of the orignal in_
+    in_ is the dictionary hashes_id -> graph_id correspondence
     including the row of the df
     '''
-    db = DBHelper()
+    db = create_database_connection()
     df = db.complete_table()
     new_df = []
     for index, row in df.iterrows():
@@ -127,6 +126,10 @@ def fisher_exact_test(labels, values):
     return oddsratio, pvalue
 
 
+def get_path_desglose(path_graphs='ficheros_p/'):
+    return path.abspath(path_graphs+"desglose.csv")
+
+
 def update_graph_files(path_graphs='ficheros_p/'):
     
     G, in_ = create_graph()
@@ -141,6 +144,5 @@ def update_graph_files(path_graphs='ficheros_p/'):
     return G, in_
 
 
-def get_path_desglose(path_graphs='ficheros_p/'):
-    return path.abspath(path_graphs+"desglose.csv")
+
     

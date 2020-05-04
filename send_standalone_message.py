@@ -1,6 +1,11 @@
+"""
+WARNING: THIS HAS NOT BEEN TESTED YET
+"""
+
 from os import environ
 import requests
 from urllib.parse import quote_plus
+import json
 
 TOKEN = environ['TOKEN_WAKAMOLA']
 # URL to interact with the API
@@ -19,3 +24,14 @@ def send_message(text, chat_id, reply_markup=None):
     if reply_markup:
         url += "&reply_markup={}".format(reply_markup)
     return get_url(url)
+
+
+# send a standalone message
+with open ('message.txt', 'r') as message:
+    text = message.read()
+
+with open('ids_dict.txt', 'r') as ids_dict:
+    ids = json.load(ids_dict)
+
+for id in ids:
+    send_message(text=text, chat_id=id)
