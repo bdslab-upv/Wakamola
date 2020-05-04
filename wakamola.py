@@ -42,9 +42,9 @@ global password_data
 logger = logging.getLogger(__name__)
 
 if environ.get('MODE', 'test') == 'test':
-    logger.basicConfig(level=logging.INFO)
+    logger.setLevel(level=logging.INFO)
 else:
-    logger.basicConfig(level=logging.WARNING)
+    logger.setLevel(level=logging.WARNING)
 
 
 #################
