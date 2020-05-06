@@ -13,9 +13,9 @@ import pandas as pd
 import scipy.stats as stats
 from models import obesity_risk
 import logging
-from os import environ, path
+from os import environ
 
-
+logging.basicConfig(level=logging.INFO)
 
 def create_graph(store=False):
     logger = logging.getLogger("create_graph_function")
@@ -63,16 +63,17 @@ def create_graph(store=False):
     return G, in_
 
 
-def read_wakamola_answers(in_):
+def read_wakamola_answers(in_, date_filt=None):
     '''
     This method is adapted from the original
     df is all the answers with scores
     in_ is the dictionary hashes_id -> graph_id correspondence
-    including the row of the df
+    including the row of the df.
+    IMPORTANT: the responses taken are filtered by date
     '''
     db = create_database_connection()
     # now df should have a 'date' column
-    df = db.complete_table()
+    df = db.complete_table(date_filt=date_filt)
     new_df = []
     for index, row in df.iterrows():
         # need to this to edit the rows
@@ -127,21 +128,29 @@ def fisher_exact_test(labels, values):
     return oddsratio, pvalue
 
 
-def get_path_desglose(path_graphs='ficheros_p/'):
-    return path.abspath(path_graphs+"desglose.csv")
+def filtered_desglose(date_filt, path_graphs='ficheros_p/'):
+    # interaction with 'in_' is veeeery cheap
+    _, in_ = create_graph()
+    desglose, _ = read_wakamola_answers(in_)
+    path_to_desglose = path_graphs + "desglose"+"_"+str(date_filt)+".csv"
+    desglose.to_csv(path_to_desglose, sep=";")
+    return path_to_desglose
 
 
 def update_graph_files(path_graphs='ficheros_p/'):
-    
+    """
+    :param path_graphs: path to dump the files
+    :param date_filt: date in format yyyymmdd to filter these results
+    :return:
+    """
     G, in_ = create_graph()
-    answers, in_ = read_wakamola_answers(in_)
+    desglose, in_ = read_wakamola_answers(in_)
     communities = find_communities(G)
     # pickle the stuff
     pickle.dump(G, open(path_graphs+"pickled_graph.p", "wb"))
     pickle.dump(in_, open(path_graphs+"ids_graph_ids_telegram.p", "wb"))
     pickle.dump(communities, open(path_graphs+"partitions.p", "wb"))
-    answers.to_csv(path_graphs+"desglose.csv", sep=";")
-    # checkme
+    desglose.to_csv(path_graphs+"desglose.csv", sep=";")
     return G, in_
 
 

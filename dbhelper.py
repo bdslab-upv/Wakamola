@@ -4,6 +4,7 @@ import mysql.connector as mariadb
 import logging
 from base64 import b64encode, b64decode
 from deprecated import deprecated
+import datetime
 
 
 class DBHelper:
@@ -16,12 +17,10 @@ class DBHelper:
                                     database=environ['DATABASE'],
                                     buffered=True)
         self.cursor = self.conn.cursor()
+        # logger conf
+        logging.basicConfig(level=logging.INFO)
         self.logger = logging.getLogger("dbhelper")
-
-        if environ.get('MODE', 'test') == 'test':
-            self.logger.setLevel(level=logging.INFO)
-        else:
-            self.logger.setLevel(level=logging.WARNING)
+        self.logger.setLevel(level=logging.INFO)
 
     def load_questions(self):
         self.conn.commit()
@@ -231,12 +230,10 @@ class DBHelper:
             if len(rs) > 0:
                 return rs[0][0], rs[0][1], rs[0][2]
             else:
-                return False, False, False
-            # TODO remove if test is okay
-            # return [(el[0], el[1], el[2]) for el in rs][0]
+                return (0, 0, 0)
         except Exception as e:
             self.logger.error(e)
-            return False, False, False
+            return (0, 0, 0)
 
     def n_questions(self):
         """
@@ -372,24 +369,6 @@ class DBHelper:
             self.reconnect()
             return None
 
-    @deprecated(version='4', reason='no more categories')
-    def get_contacts_by_category(self, id_user):
-        try:
-            res = {'home': 0, 'family': 0, 'friend': 0, 'coworker': 0}
-            self.conn.commit()
-            self.cursor = self.conn.cursor()
-            stmt = 'select count(*), type from RELATIONSHIPS where active = %s or passive = %s group by type'
-            args = (id_user, id_user)
-            self.cursor.execute(stmt, args)
-            rs = self.cursor.fetchall()
-            self.cursor.close()
-            for line in rs:
-                res[line[1]] = line[0]
-            return res
-        except:
-            self.reconnect()
-            return None
-
     def create_short_link(self, id_user, type):
         try:
             self.conn.commit()
@@ -482,11 +461,27 @@ class DBHelper:
             self.logger.error(e)
             self.reconnect()
 
-    def complete_table(self):
+    def complete_table(self, date_filt=None):
+        """
+        Returns a table of information with the last answers from a person
+        with a maximum date
+        :param date_filt: date in format yyyymmdd
+        :return: DataFrame with all responses
+        """
         self.conn.commit()
         users = list(self.get_users())
         # for each user get all the info
         matrix = []
+
+        # Creates a set with the questions numbers of phase 2
+        # which need daility multiplication
+        daily_set = set()
+        table = pd.read_csv('food_model.csv', sep=';')
+        for _, row in table.iterrows():
+            question_number = int(row['Item']) + 1
+            if row['Daily'].strip().lower() == 'yes':
+                daily_set.add(question_number)
+
         for _, user in enumerate(users):
             u = user[0]
             self.cursor = self.conn.cursor()
@@ -494,23 +489,33 @@ class DBHelper:
             stmt = 'select phase, question, answer, Timestamp from RESPONSES \
             where id_user = %s and Timestamp in (select max(Timestamp)\
             from RESPONSES where id_user = %s group by question, phase)'
-            args = (u, u)
+
+            if not date_filt is None:
+                stmt += " and Timestamp <= '%s'"
+                args = (u, u, date_filt)
+            else:
+                args = (u, u)
+
             self.cursor.execute(stmt, args)
             rs = self.cursor.fetchall()
             # iterate over each question
             dates = []
             for register in rs:
                 # store all the answers
-                row["phase_" + str(register[0]) + "_question_" + str("{:02d}".format(register[1]))] = register[2]
+                question_text = self.get_question(phase=register[0], question=register[1], lang='es')
+                #row["phase_" + str(register[0]) + "_question_" + str("{:02d}".format(register[1]))] = register[2]
+                value = register[2]
+                # second phase: food, and a daily item
+                if register[0] == 2 and register[1] in daily_set:
+                    value *= 7
+                row[question_text] = value
                 # pick all the dates to pick the maximum later
-                #TODO ESTA MAL
-                #dates.append(register[3])
-                self.logger.info(register[0], type(register[0]))
+                dates.append(register[3].date())
 
             self.cursor.close()
+            row['date'] = max(dates) if len(dates) > 0 else None
             matrix.append(row)
         df = pd.DataFrame(matrix)
-        df = df.assign(**{'date':dates})
         df = df.reindex(sorted(df.columns), axis=1)
         return df
 

@@ -15,7 +15,7 @@ from math import ceil
 import datetime
 import logging
 # implementation of pipeline w/ graph visualization
-from graph_utils import update_graph_files, get_path_desglose
+from graph_utils import update_graph_files, filtered_desglose
 from generador import create_html
 import subprocess
 
@@ -38,7 +38,7 @@ global network_filename
 global network_link
 global password_data
 
-# creates logger object instead of calling the librery directly
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 if environ.get('MODE', 'test') == 'test':
@@ -665,14 +665,17 @@ def handle_updates(updates):
             return
 
         # just before default option, check if the its the password to protect the data
-        elif text == password_data:
-            # generate (if not exists) the file with the data
-            update_graph_files()
-            path_desglose = get_path_desglose()
-            # send it to the user
-            send_file(chat_id=chat, localpath=path_desglose)
-            go_main(chat=chat, lang=lang)
-            return
+        # <PASSWORD_DATA> yyyymmdd date
+        elif text.startswith(password_data):
+            try:
+                date_filt = text.split()[1]
+                # generate the new filtered data
+                path_desglose = filtered_desglose(date_filt=date_filt)
+                # send it to the user
+                send_file(chat_id=chat, localpath=path_desglose)
+                go_main(chat=chat, lang=lang)
+            finally:
+                return
 
         else:
             # rescata a que responde
