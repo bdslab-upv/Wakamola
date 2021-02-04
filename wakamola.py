@@ -786,15 +786,15 @@ def main():
                     t.start()
 
                 # have to be gentle with the telegram server
-                time.sleep(int(environ.get('CONSULTING_TIME', 0.4)))
+                time.sleep(float(environ.get('CONSULTING_TIME', 0.4)))
             else:
                 # if no messages lets be *more* gentle with telegram servers
-                time.sleep(int(environ.get('NO_MESSAGE_TIME', 0.8)))
+                time.sleep(float(environ.get('NO_MESSAGE_TIME', 0.8)))
 
         except Exception as e:
             logger.error(e)
             logger.error('Bot to sleep!')
-            time.sleep(int(environ.get('ERROR_TIME', 2)))
+            time.sleep(float(environ.get('ERROR_TIME', 2)))
 
 
 if __name__ == '__main__':
