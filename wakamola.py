@@ -1,13 +1,12 @@
 import json
 import requests
 import time
-from dbhelper import DBHelper
 from urllib.parse import quote_plus
 from os import listdir, environ
 import emoji
 from models import obesity_risk
 import csv
-from utils import md5, send_mail
+from utils import md5, send_mail, create_database_connection
 from g0d_m0d3 import h4ck
 from pandas import read_csv
 from threading import Thread
@@ -15,7 +14,7 @@ from math import ceil
 import datetime
 import logging
 # implementation of pipeline w/ graph visualization
-from graph_utils import update_graph_files
+from graph_utils import update_graph_files, filtered_desglose
 from generador import create_html
 import subprocess
 
@@ -36,12 +35,15 @@ global statistics_word
 global init_date
 global network_filename
 global network_link
+global password_data
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-if environ["MODE"] == 'test':
-    logging.basicConfig(level=logging.INFO)
+if environ.get('MODE', 'test') == 'test':
+    logger.setLevel(level=logging.INFO)
 else:
-    logging.basicConfig(level=logging.WARNING)
+    logger.setLevel(level=logging.WARNING)
 
 
 #################
@@ -113,7 +115,7 @@ def get_last_update_id(updates):
 def get_me():
     # Check API method
     getme = URL + "getMe"
-    logging.info(get_url(getme))
+    logger.info(get_url(getme))
 
 
 def send_message(text, chat_id, reply_markup=None):
@@ -159,7 +161,7 @@ def send_file(localpath, chat_id):
     # atributtes
     files = {'document': open(localpath, 'rb')}
     data = {'chat_id': chat_id}
-    logging.info(requests.post(url, files=files, data=data))
+    logger.info(requests.post(url, files=files, data=data))
 
 
 ###############################
@@ -266,7 +268,7 @@ def load_languages():
                     dict_[row[0]] = row[1]
             langs_[f.split('.')[0]] = dict_
         except Exception as e:
-            logging.error(e)
+            logger.error(e)
             continue  # sanity check
     return langs_
 
@@ -317,7 +319,7 @@ def process_edit(update):
         if flag:
             db.update_response_edited(message_id, text)
     except:
-        logging.error('Captured error at editing message.')
+        logger.error('Captured error at editing message.')
 
 
 def go_main(chat, lang):
@@ -513,7 +515,7 @@ def create_graph():
     create_html()
     # move the file to /var/www
     subprocess.call(["mv {}_es.html /var/www/html/index.html".format(network_filename)], shell=True)
-    logging.info("moved to apache!")
+    logger.info("moved to apache!")
     return ids_
 
 
@@ -536,13 +538,14 @@ def network_message(chat, lang):
 
 
 def handle_updates(updates):
+    # updates is a list
     for update in updates:
         chat = get_chat(update)
         text, message_id = filter_update(update)
         # get user language
         lang = get_language(chat)
 
-        logging.info(str(chat) + " - " + str(text))
+        logger.info(str(chat) + " - " + str(text))
 
         # no valid text
         if text is False:
@@ -574,7 +577,7 @@ def handle_updates(updates):
                         # friend token already in md5 -> after next code block
                         db.add_relationship(md5(chat), friend_token, role)
                     except Exception as e:
-                        logging.error("Error occurred on relationship add" + str(e))
+                        logger.error("Error occurred on relationship add" + str(e))
 
         # Check if the user have done the start command
         elif db.check_user(md5(chat)):
@@ -604,7 +607,6 @@ def handle_updates(updates):
             return
 
         elif text.lower() == network_pass:
-            logging.info("Network password")
             create_graph()
             go_main(chat, lang)
             return
@@ -637,6 +639,7 @@ def handle_updates(updates):
         elif text.lower() == god_mode:
             h4ck(md5(chat))
             go_main(chat=chat, lang=lang)
+            return
 
         # hardcoded statistics
         elif text.lower() == statistics_word:
@@ -658,6 +661,20 @@ def handle_updates(updates):
             )
             send_message(txt_, chat)
             go_main(chat=chat, lang=lang)
+            return
+
+        # just before default option, check if the its the password to protect the data
+        # <PASSWORD_DATA> yyyymmdd date
+        elif text.startswith(password_data):
+            try:
+                date_filt = text.split()[1]
+                # generate the new filtered data
+                path_desglose = filtered_desglose(date_filt=date_filt)
+                # send it to the user
+                send_file(chat_id=chat, localpath=path_desglose)
+                go_main(chat=chat, lang=lang)
+            finally:
+                return
 
         else:
             # rescata a que responde
@@ -715,13 +732,13 @@ def handle_updates(updates):
 
                 if status[0] == 1 and status[1] == 8:  # genero
 
-                    logging.info(send_message(emoji.emojize(q), chat, dynamic_keyboard('generos', lang)))
+                    logger.info(send_message(emoji.emojize(q), chat, dynamic_keyboard('generos', lang)))
 
                 elif status[0] == 1 and status[1] == 10:  # nivel estudios
-                    logging.info(send_message(emoji.emojize(q), chat, dynamic_keyboard('estudios', lang)))
+                    logger.info(send_message(emoji.emojize(q), chat, dynamic_keyboard('estudios', lang)))
 
                 elif status[0] == 1 and status[1] == 11:  # estado civil
-                    logging.info(send_message(emoji.emojize(q), chat, dynamic_keyboard('estado_civil', lang)))
+                    logger.info(send_message(emoji.emojize(q), chat, dynamic_keyboard('estado_civil', lang)))
 
                 else:
                     send_message(emoji.emojize(q), chat)
@@ -745,13 +762,10 @@ def main():
     get_me()
     # force bd to stay clean
     db.conn.commit()
-    # bucle infinito
+    # main loop
     while True:
         # obten los mensajes no vistos
         updates = get_updates(last_update_id)
-        # sanity check for maxRetryErrors TODO best solution
-        if updates is None:
-            continue
         # si hay algun mensaje do work
         try:
             if 'result' in updates and len(updates['result']) > 0:
@@ -770,30 +784,30 @@ def main():
                 for update in joint_updates.values():
                     t = Thread(target=handle_updates, args=(update,))
                     t.start()
-                    t.join()
 
                 # have to be gentle with the telegram server
-                time.sleep(0.5)
+                time.sleep(int(environ.get('CONSULTING_TIME', 0.4)))
             else:
                 # if no messages lets be *more* gentle with telegram servers
-                time.sleep(1)
+                time.sleep(int(environ.get('NO_MESSAGE_TIME', 0.8)))
 
         except Exception as e:
-            logging.error(e)
-            # sleep 20 seconds so the problem may solve
-            time.sleep(20)
+            logger.error(e)
+            logger.error('Bot to sleep!')
+            time.sleep(int(environ.get('ERROR_TIME', 2)))
 
 
 if __name__ == '__main__':
     # TODO QUESTIONS ON CACHE FOR NEXT VERSION
     init_date = datetime.datetime.now()
 
-    # handler to the database
-    db = DBHelper()
-    # set up
+    db = create_database_connection()
     db.setup()
     # caching the number of questions
     nq_category = db.n_questions()
+
+    # very important, this password is used to serve the data as file
+    password_data = environ['PASSWORD_DATA']
 
     # default language
     def_lang_ = environ.get('DEFAULT_LANG', 'es')

@@ -1,49 +1,49 @@
-Item,Table,Group,Comment
-0,1,4,
-1,1,4,
-2,1,1,
-3,1,8,
-4,1,1,
-5,1,1,Pan Integral
-6,2,,
-7,2,,
-8,2,,Mantequilla
-9,1,8,
-10,1,8,
-11,1,8,
-12,1,8,Ensaimada
-13,1,2,
-14,1,2,
-15,1,2,Verduras
-16,1,1,
-17,1,6,
-18,1,1,
-19,1,1,
-20,1,1,Sopa de fideos
-21,1,5,
-22,1,5,
-23,1,5,
-24,1,7,
-25,1,5,
-26,1,5,
-27,1,5,Marisco
-28,1,8,Croquetas
-29,1,7,Patatas fritas
-30,1,7,
-31,1,4,
-32,1,4,
-33,1,5,Otros curado
-34,1,3,Frutas citricas
-35,1,3,Otras frutas
-36,1,8,
-37,1,3,
-38,1,3,
-39,3,,Frutos secos
-40,1,8,postres lacteos
-41,1,8,pasteles de crema
-42,1,8,chips
-43,1,8,golosinas
-44,1,8,Helados
-45,1,7,bajas en calorias
-46,1,9,bebidas azucarasas
-48,1,7,Cerveza sin alcohol
+Item;Table;Group;Daily;Comment
+0;1;4;Yes;Leche
+1;1;4;Yes;Yogur
+2;1;1;Yes;Cereales desayuno
+3;1;8;Yes;Galletas sin relleno o cobertura
+4;1;1;Yes;Pan 
+5;1;1;Yes;Pan Integral
+6;2;;Yes;Aceite de oliva
+7;2;;Yes;Otros aceites
+8;2;;Yes;Mantequilla
+9;1;8;No;Chocolate
+10;1;8;No;Galletas con
+11;1;8;No;Magdalenas
+12;1;8;No;Ensaimada
+13;1;2;No;Ensalada
+14;1;2;No;Judias verdes
+15;1;2;No;Verduras
+16;1;1;No;Patatas
+17;1;6;No;Legumbres
+18;1;1;No;Arroz blanco
+19;1;1;No;Pasta
+20;1;1;No;Sopa de fideos
+21;1;5;No;Huevos
+22;1;5;No;Pollo o pavo
+23;1;5;No;Cerdo
+24;1;7;No;Hamburguesa
+25;1;5;No;Pescado blanco
+26;1;5;No;Pescado azul
+27;1;5;No;Marisco
+28;1;8;No;Croquetas
+29;1;7;No;Patatas fritas
+30;1;7;No;Jamon serrano
+31;1;4;No;Jamon york
+32;1;4;No;Queso blanco
+33;1;5;No;Otros curado
+34;1;3;No;Frutas citricas
+35;1;3;No;Otras frutas
+36;1;8;No;frutas en conserva
+37;1;3;No;zumo natural
+38;1;3;No;zumo comercial
+39;3;;No;Frutos secos
+40;1;8;No;postres lacteos
+41;1;8;No;pasteles de crema
+42;1;8;No;chips
+43;1;8;No;golosinas
+44;1;8;No;Helados
+45;1;7;No;bajas en calorias
+46;1;9;No;bebidas azucarasas
+48;1;7;No;Cerveza sin alcohol

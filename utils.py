@@ -1,16 +1,22 @@
 import hashlib
 import logging
+from os import environ
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from dbhelper import DBHelper
 import smtplib
 import ssl
+import time
 
-logging.basicConfig(level=logging.INFO)
 
-'''
-Refactored to be a general utils class
-MD5 was moved here in order to be more general
-'''
+def create_database_connection():
+    db = None
+    while db is None:
+        try:
+            db = DBHelper()
+            return db
+        except:
+            time.sleep(int(environ.get('ERROR_TIME', 2)))
 
 
 def md5(id_user):
@@ -21,6 +27,7 @@ def md5(id_user):
 
 
 def send_mail(sender, receivers, subject, body, smtp_server, smtp_port, password):
+    logger = logging.getLogger("send_mail_func")
     # Create the container (outer) email message.
     msg = MIMEMultipart()
     msg['Subject'] = subject
@@ -43,5 +50,5 @@ def send_mail(sender, receivers, subject, body, smtp_server, smtp_port, password
         server.sendmail(sender, receivers, msg.as_string())
         server.quit()
     except Exception as e:
-        logging.error(e)
-        logging.error('Error sending mail')
+        logger.error(e)
+        logger.error('Error sending mail')
