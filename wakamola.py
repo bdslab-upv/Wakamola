@@ -807,7 +807,7 @@ if __name__ == '__main__':
     nq_category = db.n_questions()
 
     # very important, this password is used to serve the data as file
-    password_data = environ['PASSWORD_DATA']
+    password_data = environ.get('PASSWORD_DATA')
 
     # default language
     def_lang_ = environ.get('DEFAULT_LANG', 'es')
@@ -836,8 +836,8 @@ if __name__ == '__main__':
     # role calls -> avoid hardcodding them in different places
     roles = ['home', 'family', 'friend', 'coworker']
 
-    TOKEN = environ['TOKEN_WAKAMOLA']
-    BOT_USERNAME = environ['BOT_USERNAME_WAKAMOLA']
+    TOKEN = environ.get('TOKEN_WAKAMOLA')
+    BOT_USERNAME = environ.get('BOT_USERNAME_WAKAMOLA')
     # URL to interact with the API
     URL = "https://api.telegram.org/bot{}/".format(TOKEN)
 
