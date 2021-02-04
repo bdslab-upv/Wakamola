@@ -9,7 +9,6 @@ from models import obesity_risk
 import csv
 from utils import md5, send_mail
 from g0d_m0d3 import h4ck
-import argparse
 from pandas import read_csv
 from threading import Thread
 from math import ceil
@@ -788,18 +787,6 @@ def main():
 if __name__ == '__main__':
     # TODO QUESTIONS ON CACHE FOR NEXT VERSION
     init_date = datetime.datetime.now()
-    # argument parser
-    parser = argparse.ArgumentParser(description="Telegram BOT")
-    parser.add_argument('-l', action="store", default='es', help="Default languages")
-    parser.add_argument('--godmode', action="store", default="wakafill", help="god mode password")
-    parser.add_argument('--statistics', action="store", default="tell me your secrets",
-                        help="password for getting statistics")
-    parser.add_argument('--network', action="store", default="create_graph",
-                        help="command to create and set the network in the apache server")
-    parser.add_argument('--network_link', action='store', default='158.42.166.224/wakamolaupv/index.html')
-    parser.add_argument('--network_filename', action='store', default='netweb')
-
-    spacename = parser.parse_args()
 
     # handler to the database
     db = DBHelper()
@@ -809,17 +796,19 @@ if __name__ == '__main__':
     nq_category = db.n_questions()
 
     # default language
-    def_lang_ = spacename.l
-
+    def_lang_ = environ.get('DEFAULT_LANG', 'es')
+    
     # link to the network
-    network_link = spacename.network_link.replace('_', '\\_')
-    network_filename = spacename.network_filename.lower()
+    network_link = environ.get('NETWORK_LINK').replace('_', '\\_')
+    network_filename = environ.get('NETWORK_FILENAME', 'netweb').lower()
     # god mode
-    god_mode = spacename.godmode.lower()
+    god_mode = environ.get('GOD_MODE').lower()
     # hidden statistics message
-    statistics_word = spacename.statistics.lower()
+    statistics_word = environ.get('STATISTICS').lower()
     # network
-    network_pass = spacename.network.lower()
+    network_pass = environ.get('NETWORK_PASSWORD').lower()
+    
+    
     # languages
     languages = load_languages()
     # images

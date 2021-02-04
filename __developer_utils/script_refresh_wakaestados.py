@@ -21,6 +21,5 @@ if __name__ == '__main__':
     for us in all_users:
         # this function also update the last wakaestado
         final, _ = obesity_risk(us[0], completed = None)
-        # check for javi values
         if final < 0 or final > 100:
             print(final)
