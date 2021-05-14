@@ -150,7 +150,7 @@ def update_graph_files(path_graphs='ficheros_p/'):
     pickle.dump(G, open(path_graphs+"pickled_graph.p", "wb"))
     pickle.dump(in_, open(path_graphs+"ids_graph_ids_telegram.p", "wb"))
     pickle.dump(communities, open(path_graphs+"partitions.p", "wb"))
-    desglose.to_csv(path_graphs+"desglose.csv", sep=";")
+    desglose.to_csv(path_graphs+"desglose.csv", sep=";", index=False)
     return G, in_
 
 

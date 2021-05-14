@@ -469,7 +469,9 @@ class DBHelper:
         :return: DataFrame with all responses
         """
         self.conn.commit()
+        self.logger.debug("Method start")
         users = list(self.get_users())
+        self.logger.debug(users)
         # for each user get all the info
         matrix = []
 

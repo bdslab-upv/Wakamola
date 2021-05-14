@@ -508,11 +508,16 @@ def create_graph():
     This method updates the graph
     and moves it to the apache folder
     """
+    import time
     # update the files
     # first return is the graph, second the ids
+    t0 = time.perf_counter()
     _, ids_ = update_graph_files()
-    # create the
+    logger.debug(f"Elapsed time in updating graph: {time.perf_counter() - t0}")
+    # create the html
+    t0 = time.perf_counter()
     create_html()
+    logger.debug(f"Elapsed time in creating html: {time.perf_counter() - t0}")
     # move the file to /var/www
     subprocess.call(["mv {}_es.html /var/www/html/index.html".format(network_filename)], shell=True)
     logger.info("moved to apache!")
@@ -840,5 +845,9 @@ if __name__ == '__main__':
     BOT_USERNAME = environ.get('BOT_USERNAME_WAKAMOLA')
     # URL to interact with the API
     URL = "https://api.telegram.org/bot{}/".format(TOKEN)
+
+    # Create the network before starting the main loop
+    # TODO optimize this crap
+    #create_graph()
 
     main()

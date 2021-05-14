@@ -1,13 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # Code created by Manuel Portoles
+# Edited and optimized (still on it!) by Vicent Blanes
 
 import json
 import networkx as nx
-import csv
+import pandas as pd
+import logging
+
+
+logging.basicConfig(level=logging.INFO)
 
 
 def create_html(filename='netweb'):
+    logger = logging.getLogger(__name__)
+    logger.setLevel(level=logging.INFO)
+    logger.error(f"Funcion create_html")
     graph_data = {'nodes': [], 'links': []}
 
     # ---------------------------------------------------------------
@@ -25,25 +33,18 @@ def create_html(filename='netweb'):
     # ---------------------------------------------------------------
     # -------------VALORES DE ENTRADA (csv)--------------------------
     # ---------------------------------------------------------------
-    csv_BMI = []
-    csv_score_activity = []
-    csv_score_nutrition = []
-    csv_id_telegram = []
-    csv_wakaestado = []
-    csv_score_social = []
+    csv_data = pd.read_csv('ficheros_p/desglose.csv', sep=';')
 
-    with open('ficheros_p/desglose.csv', mode='r') as csv_file:
-        csv_reader = csv.DictReader(csv_file, delimiter=';')
-        line_count = 0
-        for row in csv_reader:
-            if line_count > 0:
-                csv_BMI.append(row["BMI"])
-                csv_score_activity.append(row["score_activity"])
-                csv_score_nutrition.append(row["score_nutrition"])
-                csv_id_telegram.append(row["user"])
-                csv_wakaestado.append(row["wakaestado"])
-                csv_score_social.append(row["social"])
-            line_count += 1
+
+    logger.error(f"desglose line count: {csv_data.shape}")
+    logger.error(csv_data.columns.values)
+    line_count = csv_data.shape[0]
+    csv_id_telegram = list(csv_data.user)
+    csv_BMI = list(csv_data.BMI)
+    csv_score_activity = list(csv_data.score_activity)
+    csv_score_nutrition = list(csv_data.score_nutrition)
+    csv_score_social = list(csv_data.social)
+    csv_wakaestado = list(csv_data.wakaestado)
 
     # ---------------------------------------------------------------
     # ------------- CARACTERIZACIÓN DE LOS NODOS---------------------
@@ -60,57 +61,55 @@ def create_html(filename='netweb'):
 
         # Cruce de idnodo con tabla CSV
         value_index = 0
+        
+
         if str(ids[node][1]) in csv_id_telegram:
             value_index = csv_id_telegram.index(str(ids[node][1]))
 
-        txtstr_en = "ID_Node: " + str(node) + " / "
-        txtstr_en = txtstr_en + "ID_Variable: " + str(ids[node][0][1]) + " / "
-        txtstr_en = txtstr_en + "Comunity: " + str(agrupaciones[node]) + " / "
-        txtstr_en = txtstr_en + "BMI: " + str(round(float(csv_BMI[value_index].replace(",", ".")), 2)) + " / "
-        txtstr_en = txtstr_en + "Activity Score: " + str(
-            round(float(csv_score_activity[value_index].replace(",", ".")), 2)) + " / "
-        txtstr_en = txtstr_en + "Diet Score: " + str(
-            round(float(csv_score_nutrition[value_index].replace(",", ".")), 2)) + " / "
-        txtstr_en = txtstr_en + "Social Score: " + str(
-            round(float(csv_score_social[value_index].replace(",", ".")), 2)) + " / "
-        txtstr_en = txtstr_en + "Wakastatus Score: " + str(round(float(csv_wakaestado[value_index].replace(",", "."))))
+        logger.error(f"value_index: {value_index}")
+        
+        # English version (This could be parametrized and merged!!)
+        txtstr_en = f"ID_Node: {node} / "
+        txtstr_en = txtstr_en + f"ID_Variable: {ids[node][0][1]} / "
+        txtstr_en = txtstr_en + f"Comunity: {agrupaciones[node]} / "
+        txtstr_en = txtstr_en + f"BMI: {round(csv_BMI[value_index], 2)} / "
+        txtstr_en = txtstr_en + f"Activity Score: {round(csv_score_activity[value_index], 2)} /"
+        txtstr_en = txtstr_en + f"Diet Score: {round(csv_score_nutrition[value_index], 2)} / "
+        txtstr_en = txtstr_en + f"Social Score: {round(csv_score_social[value_index], 2)} / "
+        txtstr_en = txtstr_en + f"Wakastatus Score: {round(csv_wakaestado[value_index])}"
+        
+        # Spanish version
+        txtstr_es = f"ID_Node: {node} / "
+        txtstr_es = txtstr_es + f"ID_Variable: {ids[node][0][1]} / "
+        txtstr_es = txtstr_es + f"Comunidad: {agrupaciones[node]} / "
+        txtstr_es = txtstr_es + f"IMC: {round(csv_BMI[value_index], 2)} /"
+        txtstr_es = txtstr_es + f"Puntuación de actividad: {round(csv_score_activity[value_index], 2)} / "
+        txtstr_es = txtstr_es + f"Puntuación nutritional: {round(csv_score_nutrition[value_index], 2)} / "
+        txtstr_es = txtstr_es + f"Puntuación red social: {round(csv_score_social[value_index], 2)} / "
+        txtstr_es = txtstr_es + f"Puntuación Wakaestado: {round(csv_wakaestado[value_index])}"
 
-        txtstr_es = "ID_Node: " + str(node) + " / "
-        txtstr_es = txtstr_es + "ID_Variable: " + str(ids[node][0][1]) + " / "
-        txtstr_es = txtstr_es + "Comunidad: " + str(agrupaciones[node]) + " / "
-        txtstr_es = txtstr_es + "IMC: " + str(round(float(csv_BMI[value_index].replace(",", ".")), 2)) + " / "
-        txtstr_es = txtstr_es + "Puntuación de actividad: " + str(
-            round(float(csv_score_activity[value_index].replace(",", ".")), 2)) + " / "
-        txtstr_es = txtstr_es + "Puntuación nutritional : " + str(
-            round(float(csv_score_nutrition[value_index].replace(",", ".")), 2)) + " / "
-        txtstr_es = txtstr_es + "Puntuación red social: " + str(
-            round(float(csv_score_social[value_index].replace(",", ".")), 2)) + " / "
-        txtstr_es = txtstr_es + "Puntuación Wakaestado : " + str(
-            round(float(csv_wakaestado[value_index].replace(",", "."))))
 
         listado_nodos.append(-1)
-        if round(float(csv_BMI[value_index].replace(",", "."))) > 0:
-            if round(float(csv_score_activity[value_index].replace(",", "."))) > 0:
-                if round(float(csv_wakaestado[value_index].replace(",", "."))) > 0:
-                    if round(float(csv_score_nutrition[value_index].replace(",", "."))) > 0:
+        if round(csv_BMI[value_index]) > 0:
+            if round(csv_score_activity[value_index]) > 0:
+                if round(csv_wakaestado[value_index]) > 0:
+                    if round(csv_score_nutrition[value_index]) > 0:
                         nodos_validos.append(node)
                         graph_data['nodes'].append({
                             "id": node,
-                            "name": str(round(float(csv_wakaestado[value_index].replace(",", ".")))),
-                            "color": str(round(float(csv_BMI[value_index].replace(",", ".")), 2)),
+                            "name": str(round(csv_wakaestado[value_index], 2)),
+                            "color": str(round(csv_BMI[value_index], 2)),
                             "grupo": str(agrupaciones[node]),
                             "p_ID": str(node),
                             "p_ID_Telegram": str(ids[node][1]),
                             "p_ID_Variable": str(ids[node][0][1]),
                             "p_Particion": str(agrupaciones[node]),
                             "csv_id_telegram": str(csv_id_telegram[value_index]),
-                            "csv_BMI": str(round(float(csv_BMI[value_index].replace(",", ".")), 2)),
-                            "csv_score_activity": str(
-                                round(float(csv_score_activity[value_index].replace(",", ".")), 2)),
-                            "csv_score_nutrition": str(
-                                round(float(csv_score_nutrition[value_index].replace(",", ".")), 2)),
-                            "csv_score_social": str(round(float(csv_score_social[value_index].replace(",", ".")), 2)),
-                            "csv_wakaestado": str(round(float(csv_wakaestado[value_index].replace(",", ".")))),
+                            "csv_BMI": str(round(csv_BMI[value_index], 2)),
+                            "csv_score_activity": str(round(csv_score_activity[value_index], 2)),
+                            "csv_score_nutrition": str(round(csv_score_nutrition[value_index], 2)),
+                            "csv_score_social": str(round(csv_score_social[value_index], 2)),
+                            "csv_wakaestado": str(round(csv_wakaestado[value_index])),
                             "texto_en": txtstr_en,
                             "texto_es": txtstr_es,
                         })
