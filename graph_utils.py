@@ -5,7 +5,8 @@ for the sake of order, everything will ne encapsulated as methods
 
 import pickle
 import networkx as nx
-from utils import create_database_connection, timeit
+from utils import create_database_connection
+from debug import timeit
 import collections
 import community
 import numpy as np
@@ -75,11 +76,12 @@ def read_wakamola_answers(in_, date_filt=None):
     # now df should have a 'date' column
     df = db.complete_table(date_filt=date_filt)
     new_df = []
-    for index, row in df.iterrows():
+    index = 0
+    for row in df.itertuples():
         # need to this to edit the rows
-        aux_ = dict(row)
+        aux_ = row._asdict()
         u = aux_["user"]
-        
+        # TODO estos dos metodos se pueden cachear
         comp = db.check_completed(u)
         _, info = obesity_risk(u, comp, network=True)
         # add the risk from the class models
@@ -92,6 +94,8 @@ def read_wakamola_answers(in_, date_filt=None):
         aux_["social"] = info["network"]
         new_df.append(aux_)
         in_[u] = (in_[u], index)
+        index += 1
+    logger.info(index)
     return pd.DataFrame(new_df), in_
 
 @timeit

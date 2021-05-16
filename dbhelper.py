@@ -1,11 +1,10 @@
+from functools import lru_cache
 from os import listdir, environ
 import pandas as pd
 import mysql.connector as mariadb
 import logging
 from base64 import b64encode, b64decode
-from deprecated import deprecated
-import datetime
-from utils import timeit, get_daily_food_items
+from debug import timeit
 
 
 class DBHelper:
@@ -573,3 +572,21 @@ class DBHelper:
         self.cursor.close()
         for el in rs:
             yield el
+
+
+# Aid method for the function complete_table
+@lru_cache()
+def get_daily_food_items() -> set:
+    # Creates a set with the questions numbers of phase 2
+    # which need daility multiplication
+    daily_set = set()
+    table = pd.read_csv('food_model.csv', sep=';')
+    for row in table.itertuples():
+        question_number = int(row.Item) + 1
+        if row.Daily.strip().lower() == 'yes':
+            daily_set.add(question_number)
+    return daily_set
+
+
+if __name__ == '__main__':
+    pass
