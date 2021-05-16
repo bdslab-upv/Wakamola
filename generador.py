@@ -7,15 +7,17 @@ import json
 import networkx as nx
 import pandas as pd
 import logging
+from os import environ
 
-
-logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+if environ.get('MODE', 'test') == 'test':
+    logger.setLevel(level=logging.INFO)
+else:
+    logger.setLevel(level=logging.WARNING)
 
 
 def create_html(filename='netweb'):
-    logger = logging.getLogger(__name__)
-    logger.setLevel(level=logging.INFO)
-    logger.error(f"Funcion create_html")
+    logger.info(f"Funcion create_html")
     graph_data = {'nodes': [], 'links': []}
 
     # ---------------------------------------------------------------
@@ -35,9 +37,6 @@ def create_html(filename='netweb'):
     # ---------------------------------------------------------------
     csv_data = pd.read_csv('ficheros_p/desglose.csv', sep=';')
 
-
-    logger.error(f"desglose line count: {csv_data.shape}")
-    logger.error(csv_data.columns.values)
     line_count = csv_data.shape[0]
     csv_id_telegram = list(csv_data.user)
     csv_BMI = list(csv_data.BMI)
@@ -65,8 +64,6 @@ def create_html(filename='netweb'):
 
         if str(ids[node][1]) in csv_id_telegram:
             value_index = csv_id_telegram.index(str(ids[node][1]))
-
-        logger.error(f"value_index: {value_index}")
         
         # English version (This could be parametrized and merged!!)
         txtstr_en = f"ID_Node: {node} / "

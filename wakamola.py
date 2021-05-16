@@ -4,19 +4,20 @@ import time
 from urllib.parse import quote_plus
 from os import listdir, environ
 import emoji
-from models import obesity_risk
+
 import csv
-from utils import md5, send_mail, create_database_connection
-from g0d_m0d3 import h4ck
 from pandas import read_csv
 from threading import Thread
 from math import ceil
 import datetime
 import logging
 # implementation of pipeline w/ graph visualization
+import subprocess
+from utils import md5, send_mail, create_database_connection
+from g0d_m0d3 import h4ck
+from models import obesity_risk
 from graph_utils import update_graph_files, filtered_desglose
 from generador import create_html
-import subprocess
 
 # these definitions are not mandatory but
 # I think the code is more understable with them
@@ -508,16 +509,11 @@ def create_graph():
     This method updates the graph
     and moves it to the apache folder
     """
-    import time
     # update the files
     # first return is the graph, second the ids
-    t0 = time.perf_counter()
     _, ids_ = update_graph_files()
-    logger.debug(f"Elapsed time in updating graph: {time.perf_counter() - t0}")
     # create the html
-    t0 = time.perf_counter()
     create_html()
-    logger.debug(f"Elapsed time in creating html: {time.perf_counter() - t0}")
     # move the file to /var/www
     subprocess.call(["mv {}_es.html /var/www/html/index.html".format(network_filename)], shell=True)
     logger.info("moved to apache!")

@@ -5,6 +5,7 @@ import logging
 from base64 import b64encode, b64decode
 from deprecated import deprecated
 import datetime
+from utils import timeit, get_daily_food_items
 
 
 class DBHelper:
@@ -461,6 +462,7 @@ class DBHelper:
             self.logger.error(e)
             self.reconnect()
 
+    @timeit
     def complete_table(self, date_filt=None):
         """
         Returns a table of information with the last answers from a person
@@ -469,20 +471,13 @@ class DBHelper:
         :return: DataFrame with all responses
         """
         self.conn.commit()
-        self.logger.debug("Method start")
         users = list(self.get_users())
-        self.logger.debug(users)
         # for each user get all the info
         matrix = []
 
         # Creates a set with the questions numbers of phase 2
         # which need daility multiplication
-        daily_set = set()
-        table = pd.read_csv('food_model.csv', sep=';')
-        for _, row in table.iterrows():
-            question_number = int(row['Item']) + 1
-            if row['Daily'].strip().lower() == 'yes':
-                daily_set.add(question_number)
+        daily_set: set = get_daily_food_items()
 
         for _, user in enumerate(users):
             u = user[0]
@@ -499,13 +494,12 @@ class DBHelper:
                 args = (u, u)
 
             self.cursor.execute(stmt, args)
-            rs = self.cursor.fetchall()
             # iterate over each question
             dates = []
-            for register in rs:
-                # store all the answers
+            for register in self.cursor.fetchall():
+                # retrieve text of the question
+                # CHECKME is this necessary?
                 question_text = self.get_question(phase=register[0], question=register[1], lang='es')
-                #row["phase_" + str(register[0]) + "_question_" + str("{:02d}".format(register[1]))] = register[2]
                 value = register[2]
                 # second phase: food, and a daily item
                 if register[0] == 2 and register[1] in daily_set:

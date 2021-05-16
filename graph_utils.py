@@ -5,7 +5,7 @@ for the sake of order, everything will ne encapsulated as methods
 
 import pickle
 import networkx as nx
-from utils import create_database_connection
+from utils import create_database_connection, timeit
 import collections
 import community
 import numpy as np
@@ -15,15 +15,15 @@ from models import obesity_risk
 import logging
 from os import environ
 
-logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+if environ["MODE"] == 'test':
+    logger.setLevel(logging.INFO)
+else:
+    logger.setLevel(logging.WARNING)
 
+@timeit
 def create_graph(store=False):
     logger = logging.getLogger("create_graph_function")
-    if environ["MODE"] == 'test':
-        logger.setLevel(logging.INFO)
-    else:
-        logger.setLevel(logging.WARNING)
-
     db = create_database_connection()
     # query the relationships
     relationships = db.get_relationships()
@@ -62,7 +62,7 @@ def create_graph(store=False):
         pickle.dump(in_, open("ids_graph_ids_telegram.p", "wb"))
     return G, in_
 
-
+@timeit
 def read_wakamola_answers(in_, date_filt=None):
     '''
     This method is adapted from the original
@@ -94,7 +94,7 @@ def read_wakamola_answers(in_, date_filt=None):
         in_[u] = (in_[u], index)
     return pd.DataFrame(new_df), in_
 
-
+@timeit
 def find_communities(G):
     """
     Partition of the graph using the Louvain partition algorithm
