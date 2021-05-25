@@ -478,7 +478,7 @@ class DBHelper:
         # which need daility multiplication
         daily_set: set = get_daily_food_items()
 
-        for _, user in enumerate(users):
+        for user in users:
             u = user[0]
             self.cursor = self.conn.cursor()
             row = {"user": u}
@@ -560,6 +560,7 @@ class DBHelper:
             self.reconnect()
             return None
 
+    @timeit
     def get_users(self):
         """
         :return: Generator with all hashed IDs on the system
@@ -570,8 +571,7 @@ class DBHelper:
         self.cursor.execute(stmt)
         rs = self.cursor.fetchall()
         self.cursor.close()
-        for el in rs:
-            yield el
+        return [el for el in rs]
 
 
 # Aid method for the function complete_table

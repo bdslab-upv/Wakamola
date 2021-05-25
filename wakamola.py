@@ -19,6 +19,8 @@ from models import obesity_risk
 from graph_utils import update_graph_files, filtered_desglose
 from generador import create_html
 
+from singleton import NetworkCache
+
 # these definitions are not mandatory but
 # I think the code is more understable with them
 global URL
@@ -687,8 +689,10 @@ def handle_updates(updates):
             text, correct_ = check_answer(text, status)
             if correct_:
                 # store the user response
+                network_cache = NetworkCache()
                 db.add_answer(id_user=md5(chat), phase=status[0], question=status[1], message_id=message_id,
                               answer=text)
+                network_cache.remove_from_cache(md5(chat))
 
             else:
                 send_message(languages[lang]['numeric_response'], chat)
@@ -822,8 +826,7 @@ if __name__ == '__main__':
     statistics_word = environ.get('STATISTICS').lower()
     # network
     network_pass = environ.get('NETWORK_PASSWORD').lower()
-    
-    
+
     # languages
     languages = load_languages()
     # images
@@ -844,6 +847,6 @@ if __name__ == '__main__':
 
     # Create the network before starting the main loop
     # TODO optimize this crap
-    #create_graph()
+    # create_graph()
 
     main()

@@ -13,23 +13,23 @@ class Singleton(type):
 
 class NetworkCache(metaclass=Singleton):
     def __init__(self):
-        # TODO load the cached values
-        self.cache: dict = {}
-        self.forbid_cache: set = set()
+        self.__cache: dict = {}
+        self.__forbid_cache: set = set()
 
     def remove_from_cache(self, hashed_id: str):
-        self.forbid_cache.add(hashed_id)
+        self.__forbid_cache.add(hashed_id)
 
     def get_cached_value(self, hashed_id: str):
-        if hashed_id in self.forbid_cache:
+        if hashed_id in self.__forbid_cache or hashed_id not in self.__cache:
             return (False,)
         else:
-            return True, self.cache.get(hashed_id)
+            return True, self.__cache.get(hashed_id)
 
     # TODO, set un typing on the value
-    def cache_value(self, hashed_id: str, to_cache_value):
-        if hashed_id in self.forbid_cache:
-            self.forbid_cache.remove(hashed_id)
-        self.cache[hashed_id] = to_cache_value
+    def cache_value(self, hashed_id: str, to_cache_value: dict):
+        if hashed_id in self.__forbid_cache:
+            self.__forbid_cache.remove(hashed_id)
+        self.__cache[hashed_id] = to_cache_value
 
-
+    def get_cache(self):
+        return self.__cache

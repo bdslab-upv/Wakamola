@@ -15,6 +15,8 @@ import scipy.stats as stats
 from models import obesity_risk
 import logging
 from os import environ
+from singleton import NetworkCache
+from sys import getsizeof
 
 logger = logging.getLogger(__name__)
 if environ["MODE"] == 'test':
@@ -72,6 +74,8 @@ def read_wakamola_answers(in_, date_filt=None):
     including the row of the df.
     IMPORTANT: the responses taken are filtered by date
     '''
+    # new cache
+    net_cache = NetworkCache()
     db = create_database_connection()
     # now df should have a 'date' column
     df = db.complete_table(date_filt=date_filt)
@@ -81,9 +85,15 @@ def read_wakamola_answers(in_, date_filt=None):
         # need to this to edit the rows
         aux_ = row._asdict()
         u = aux_["user"]
-        # TODO estos dos metodos se pueden cachear
-        comp = db.check_completed(u)
-        _, info = obesity_risk(u, comp, network=True)
+        cache_value: tuple = net_cache.get_cached_value(u)
+        if not cache_value[0]:
+            comp = db.check_completed(u)
+            _, info = obesity_risk(u, comp, network=True)
+            # cache this thing
+            net_cache.cache_value(hashed_id=u, to_cache_value=info)
+        else:
+            info = cache_value[1]
+
         # add the risk from the class models
         # BMI itself is more informative than score
         aux_["BMI"] = info["bmi"]
@@ -96,7 +106,9 @@ def read_wakamola_answers(in_, date_filt=None):
         in_[u] = (in_[u], index)
         index += 1
     logger.info(index)
+    logger.info(f"Cache size: {getsizeof(net_cache.get_cache())} bytes")
     return pd.DataFrame(new_df), in_
+
 
 @timeit
 def find_communities(G):
