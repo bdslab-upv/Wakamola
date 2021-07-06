@@ -20,8 +20,8 @@ var width = window.innerWidth * 0.6;
 var height = 1000;
 
 // Definimos una serie de constantes a utilizar despues
-var padding_manu = 0;
-var radio_nodo = 10;
+var padding_manu = 100;
+var radio_nodo = 7;
 var distancia_nodos = 3; // separacion entre nodos
 var difuminado = 0.6;
 var seleccionado = window.location.search
@@ -42,8 +42,8 @@ var color_selected = "BMI";
 var force = d3.layout.force()
 .linkStrength(0.1)
 .friction(0.9)
-.linkDistance(20)
-.charge(-40)
+.linkDistance(5)
+.charge(-15)
 .gravity(0.05)
 .theta(0)
 .alpha(0)
